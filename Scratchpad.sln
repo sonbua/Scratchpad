@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scratchpad", "Scratchpad\Scratchpad.csproj", "{BB3F86D5-1A66-4C06-B938-8CB622517A48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scratchpad.Tests", "Scratchpad.Tests\Scratchpad.Tests.csproj", "{E8AB9EFC-59D0-4A34-85A4-BE6F34818E0B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB3F86D5-1A66-4C06-B938-8CB622517A48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB3F86D5-1A66-4C06-B938-8CB622517A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB3F86D5-1A66-4C06-B938-8CB622517A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB3F86D5-1A66-4C06-B938-8CB622517A48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8AB9EFC-59D0-4A34-85A4-BE6F34818E0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8AB9EFC-59D0-4A34-85A4-BE6F34818E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8AB9EFC-59D0-4A34-85A4-BE6F34818E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8AB9EFC-59D0-4A34-85A4-BE6F34818E0B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
