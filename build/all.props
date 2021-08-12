@@ -1,20 +1,20 @@
 <Project>
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <LangVersion>9</LangVersion>
-        <IsPackable>false</IsPackable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>9</LangVersion>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <BuildDirectory>$(MSBuildThisFileDirectory)</BuildDirectory>
-    </PropertyGroup>
+  <PropertyGroup>
+    <BuildDirectory>$(MSBuildThisFileDirectory)</BuildDirectory>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <IsUnitTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsUnitTestProject>
-        <IsIntegrationTestProject Condition="$(MSBuildProjectName.EndsWith('.IntegrationTests'))">true</IsIntegrationTestProject>
-        <IsTestProject Condition="'$(IsUnitTestProject)' == 'true' or '$(IsIntegrationTestProject)' == 'true'">true</IsTestProject>
-    </PropertyGroup>
+  <PropertyGroup>
+    <IsUnitTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsUnitTestProject>
+    <IsIntegrationTestProject Condition="$(MSBuildProjectName.EndsWith('.IntegrationTests'))">true</IsIntegrationTestProject>
+    <IsTestProject Condition="'$(IsUnitTestProject)' == 'true' or '$(IsIntegrationTestProject)' == 'true'">true</IsTestProject>
+  </PropertyGroup>
 
-    <Import Project="$(BuildDirectory)tests.props" Condition="'$(IsTestProject)' == 'true'" />
+  <Import Project="$(BuildDirectory)tests.props" Condition="'$(IsTestProject)' == 'true'" />
 </Project>
