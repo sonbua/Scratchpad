@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scratchpad", "Scratchpad\Scratchpad.csproj", "{BB3F86D5-1A66-4C06-B938-8CB622517A48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scratchpad", "src\Scratchpad\Scratchpad.csproj", "{BB3F86D5-1A66-4C06-B938-8CB622517A48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scratchpad.Tests", "Scratchpad.Tests\Scratchpad.Tests.csproj", "{E8AB9EFC-59D0-4A34-85A4-BE6F34818E0B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scratchpad.Tests", "test\Scratchpad.Tests\Scratchpad.Tests.csproj", "{E8AB9EFC-59D0-4A34-85A4-BE6F34818E0B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8531FA3B-7332-4F6C-8238-DC2BFD539173}"
 EndProject

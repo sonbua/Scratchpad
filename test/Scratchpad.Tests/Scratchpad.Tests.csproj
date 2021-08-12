@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Scratchpad\Scratchpad.csproj" />
+      <ProjectReference Include="..\..\src\Scratchpad\Scratchpad.csproj" />
     </ItemGroup>
 
 </Project>
