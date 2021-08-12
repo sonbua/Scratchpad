@@ -4,4 +4,16 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <LangVersion>9</LangVersion>
     </PropertyGroup>
+
+    <PropertyGroup>
+        <BuildDirectory>$(MSBuildThisFileDirectory)</BuildDirectory>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IsUnitTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsUnitTestProject>
+        <IsIntegrationTestProject Condition="$(MSBuildProjectName.EndsWith('.IntegrationTests'))">true</IsIntegrationTestProject>
+        <IsTestProject Condition="'$(IsUnitTestProject)' == 'true' or '$(IsIntegrationTestProject)' == 'true'">true</IsTestProject>
+    </PropertyGroup>
+
+    <Import Project="$(BuildDirectory)tests.props" Condition="'$(IsTestProject)' == 'true'" />
 </Project>

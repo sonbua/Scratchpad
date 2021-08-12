@@ -11,6 +11,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{0222A418-5EAE-4A5E-B391-4F38023F10A7}"
 ProjectSection(SolutionItems) = preProject
 	build\all.props = build\all.props
+	build\tests.props = build\tests.props
 EndProjectSection
 EndProject
 Global
