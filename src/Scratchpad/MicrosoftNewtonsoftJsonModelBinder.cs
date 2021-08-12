@@ -12,7 +12,7 @@ namespace Scratchpad
     // (son.nguyen@episerver.com)
     public static class MicrosoftNewtonsoftJsonModelBinder
     {
-        public static T Bind<T>(string json)
+        public static T? Bind<T>(string json)
         {
             var modelStateDictionary = new ModelStateDictionary();
 
@@ -30,7 +30,7 @@ namespace Scratchpad
             // Extracted with small modification from
             // https://github.com/dotnet/aspnetcore/blob/29cd71c8f7af272cdced7e941c3cd45a28861428/src/Mvc/Mvc.NewtonsoftJson/src/NewtonsoftJsonInputFormatter.cs#L225
             // (son.nguyen@episerver.com)
-            void ErrorHandler(object sender, ErrorEventArgs e)
+            void ErrorHandler(object? sender, ErrorEventArgs e)
             {
                 // When ErrorContext.Path does not include ErrorContext.Member, add Member to form full path.
                 var path = e.ErrorContext.Path;
@@ -39,15 +39,15 @@ namespace Scratchpad
                 if (addMember)
                 {
                     // Path.Member case (path.Length < member.Length) needs no further checks.
-                    if (path.Length == member.Length)
+                    if (path.Length == member?.Length)
                     {
                         // Add Member in Path.Memb case but not for Path.Path.
                         addMember = !string.Equals(path, member, StringComparison.Ordinal);
                     }
-                    else if (path.Length > member.Length)
+                    else if (path.Length > member?.Length)
                     {
                         // Finally, check whether Path already ends with Member.
-                        if (member[0] == '[')
+                        if (member?[0] == '[')
                         {
                             addMember = !path.EndsWith(member, StringComparison.Ordinal);
                         }
@@ -118,7 +118,7 @@ namespace Scratchpad
             /// <param name="prefix">The prefix to use.</param>
             /// <param name="propertyName">The property name.</param>
             /// <returns>The property model name.</returns>
-            public static string CreatePropertyModelName(string prefix, string propertyName)
+            public static string CreatePropertyModelName(string prefix, string? propertyName)
             {
                 if (string.IsNullOrEmpty(prefix))
                 {
