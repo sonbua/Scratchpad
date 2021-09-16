@@ -7,4 +7,10 @@ namespace WebApplication.IntegrationTests.TestSetup
     {
         public const string Name = "WebApplication integration tests";
     }
+
+    [CollectionDefinition(Name, DisableParallelization = true)]
+    public class OtherIntegrationTestCollection : ICollectionFixture<SiteFixture>
+    {
+        public const string Name = "Just another WebApplication integration tests";
+    }
 }

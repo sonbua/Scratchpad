@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApplication.Configuration;
 
 namespace WebApplication
 {
@@ -11,6 +12,13 @@ namespace WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddOptions<SomeOptions>();
+            services.Configure<SomeOptions>(options =>
+            {
+                options.Configured = true;
+                SomeOptions.StaticConfigured = true;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

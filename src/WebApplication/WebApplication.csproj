@@ -2,4 +2,12 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="WebApplication.IntegrationTests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Configuration\ConfigureSomePostConfigureOptions.cs" />
+  </ItemGroup>
 </Project>
