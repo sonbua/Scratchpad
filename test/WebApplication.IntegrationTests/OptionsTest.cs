@@ -20,9 +20,9 @@ namespace WebApplication.IntegrationTests
         public async Task Configure_WhenConsumingIOptions_ShouldRunConfigure()
         {
             const string endpoint = OptionsConsumerController.RoutePrefix;
-            var postConfigured = await _fixture.Client.GetStringAsync(endpoint);
+            var isConfigured = await _fixture.Client.GetStringAsync(endpoint);
 
-            Assert.Equal(true.ToString(), postConfigured);
+            Assert.Equal(true.ToString(), isConfigured);
         }
     }
 
