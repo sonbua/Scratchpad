@@ -8,29 +8,28 @@ using WebApplication.Controllers;
 using WebApplication.IntegrationTests.TestSetup;
 using Xunit;
 
-namespace WebApplication.IntegrationTests
+namespace WebApplication.IntegrationTests;
+
+[Collection(IntegrationTestCollection.Name)]
+public class ValidationControllerTest
 {
-    [Collection(IntegrationTestCollection.Name)]
-    public class ValidationControllerTest
+    private readonly SiteFixture _fixture;
+
+    public ValidationControllerTest(SiteFixture fixture)
     {
-        private readonly SiteFixture _fixture;
+        _fixture = fixture;
+    }
 
-        public ValidationControllerTest(SiteFixture fixture)
-        {
-            _fixture = fixture;
-        }
+    [Fact]
+    public async Task Get_WhenValidatingModel_WhichFails_ShouldReturnBadRequest()
+    {
+        var response = await _fixture.Client.GetAsync(ValidationController.Route + "?firstName=john&lastName=doe");
 
-        [Fact]
-        public async Task Get_WhenValidatingModel_WhichFails_ShouldReturnBadRequest()
-        {
-            var response = await _fixture.Client.GetAsync(ValidationController.Route + "?firstName=john&lastName=doe");
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        var errors = problem!.Errors.Values.SelectMany(x => x).ToImmutableArray();
 
-            var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-            var errors = problem!.Errors.Values.SelectMany(x => x).ToImmutableArray();
-
-            Assert.Single(errors, "Error from ShortCircuitAttribute");
-        }
+        Assert.Single(errors, "Error from ShortCircuitAttribute");
     }
 }

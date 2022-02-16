@@ -3,28 +3,27 @@ using System.Threading.Tasks;
 using WebApplication.IntegrationTests.TestSetup;
 using Xunit;
 
-namespace WebApplication.IntegrationTests
+namespace WebApplication.IntegrationTests;
+
+[Collection(IntegrationTestCollection.Name)]
+public class HelloWorldTest
 {
-    [Collection(IntegrationTestCollection.Name)]
-    public class HelloWorldTest
+    private readonly SiteFixture _fixture;
+
+    public HelloWorldTest(SiteFixture fixture)
     {
-        private readonly SiteFixture _fixture;
+        _fixture = fixture;
+    }
 
-        public HelloWorldTest(SiteFixture fixture)
-        {
-            _fixture = fixture;
-        }
+    [Fact]
+    public async Task WhenRequestRootPath_ShouldReturnResponse()
+    {
+        var response = await _fixture.Client.GetAsync("/");
 
-        [Fact]
-        public async Task WhenRequestRootPath_ShouldReturnResponse()
-        {
-            var response = await _fixture.Client.GetAsync("/");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var content = await response.Content.ReadAsStringAsync();
 
-            var content = await response.Content.ReadAsStringAsync();
-
-            Assert.Equal("Hello World!", content);
-        }
+        Assert.Equal("Hello World!", content);
     }
 }

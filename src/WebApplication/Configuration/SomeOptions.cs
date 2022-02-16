@@ -1,22 +1,21 @@
 using System;
 
-namespace WebApplication.Configuration
+namespace WebApplication.Configuration;
+
+public class SomeOptions : IDisposable
 {
-    public class SomeOptions : IDisposable
+    // For testing
+    internal static bool? StaticConfigured;
+
+    public SomeOptions()
     {
-        // For testing
-        internal static bool? StaticConfigured;
+        Configured = false;
+    }
 
-        public SomeOptions()
-        {
-            Configured = false;
-        }
+    public bool Configured { get; set; }
 
-        public bool Configured { get; set; }
-
-        public void Dispose()
-        {
-            StaticConfigured = null;
-        }
+    public void Dispose()
+    {
+        StaticConfigured = null;
     }
 }

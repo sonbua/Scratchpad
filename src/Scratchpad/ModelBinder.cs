@@ -1,12 +1,11 @@
 using Newtonsoft.Json;
 
-namespace Scratchpad
+namespace Scratchpad;
+
+public static class ModelBinder
 {
-    public static class ModelBinder
+    public static T? Bind<T>(string json)
     {
-        public static T? Bind<T>(string json)
-        {
-            return JsonConvert.DeserializeObject<T>(json);
-        }
+        return JsonConvert.DeserializeObject<T>(json);
     }
 }
