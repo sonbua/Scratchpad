@@ -85,7 +85,7 @@ namespace Scratchpad
         private static string ToErrorMessage(this ModelStateDictionary modelStateDictionary)
         {
             var shortErrorMessages =
-                modelStateDictionary.ToDictionary(x => x.Key, x => x.Value.Errors.First().ErrorMessage);
+                modelStateDictionary.ToDictionary(x => x.Key, x => x.Value!.Errors.First().ErrorMessage);
 
             return JsonConvert.SerializeObject(shortErrorMessages);
         }

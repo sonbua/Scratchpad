@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>9</LangVersion>
+    <LangVersion>10</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
