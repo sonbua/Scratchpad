@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using WebApplication.Configuration;
 using WebApplication.Controllers;
 using WebApplication.IntegrationTests.TestSetup;
 using Xunit;
@@ -23,26 +22,5 @@ public class OptionsTest
         var isConfigured = await _fixture.Client.GetStringAsync(endpoint);
 
         Assert.Equal(true.ToString(), isConfigured);
-    }
-}
-
-[Collection(OtherIntegrationTestCollection.Name)]
-public class OtherOptionsTest
-{
-    private readonly SiteFixture _fixture;
-
-    public OtherOptionsTest(SiteFixture fixture)
-    {
-        _fixture = fixture;
-    }
-
-    [Fact]
-    public async Task Configure_WhenNotConsumingIOptions_ShouldNotRunConfigure()
-    {
-        const string endpoint = NoOptionsConsumerController.RoutePrefix;
-        var response = await _fixture.Client.GetAsync(endpoint);
-
-        Assert.True(response.IsSuccessStatusCode);
-        Assert.Null(SomeOptions.StaticConfigured);
     }
 }

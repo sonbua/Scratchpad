@@ -14,11 +14,7 @@ public class Startup
         services.AddMvc();
 
         services.AddOptions<SomeOptions>();
-        services.Configure<SomeOptions>(options =>
-        {
-            options.Configured = true;
-            SomeOptions.StaticConfigured = true;
-        });
+        services.Configure<SomeOptions>(options => options.Configured = true);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
