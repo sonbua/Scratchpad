@@ -12,11 +12,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{0222A418
 ProjectSection(SolutionItems) = preProject
 	build\all.props = build\all.props
 	build\tests.props = build\tests.props
+	build\dependencies.props = build\dependencies.props
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "src\WebApplication\WebApplication.csproj", "{93D20403-0751-4256-A73B-9E5CF022F9B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication.IntegrationTests", "test\WebApplication.IntegrationTests\WebApplication.IntegrationTests.csproj", "{C2052AE0-5518-4F48-874A-C01ABC6136D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{2049B58F-D413-4FF5-950E-18275A3D1A3D}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
