@@ -1,5 +1,6 @@
 <Project>
   <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="FluentAssertions.Analyzers" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />

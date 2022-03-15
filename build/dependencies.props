@@ -13,6 +13,7 @@
 
     <!-- Dependencies for test projects -->
     <ItemGroup>
+        <PackageReference Update="BenchmarkDotNet" Version="0.13.1" />
         <PackageReference Update="FluentAssertions" Version="6.5.1" />
         <PackageReference Update="FluentAssertions.Analyzers" Version="0.16.0" />
         <PackageReference Update="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.2" />
