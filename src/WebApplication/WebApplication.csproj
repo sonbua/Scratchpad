@@ -10,4 +10,8 @@
   <ItemGroup>
     <Compile Remove="Configuration\ConfigureSomePostConfigureOptions.cs" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reusables\Reusables.csproj" />
+  </ItemGroup>
 </Project>

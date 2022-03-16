@@ -1,9 +1,11 @@
+using System;
 using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Options;
+using Reusables;
 using WebApplication.Configuration;
 
 namespace WebApplication.Controllers;
@@ -29,19 +31,17 @@ public class OptionBinderController : ControllerBase
     [HttpPost(RoutePrefix)]
     public IActionResult Parse(string json)
     {
-        var configuration = ConfigurationFromJson(json);
+        var configuration = ConfigurationFactory(json);
 
         configuration.Bind(_options.Value);
 
         return Ok(_options.Value);
     }
 
-    private static ConfigurationRoot ConfigurationFromJson(string json)
-    {
-        var optionsStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
-        var configurationSource = new JsonStreamConfigurationSource { Stream = optionsStream };
-        var configurationProvider = new JsonStreamConfigurationProvider(configurationSource);
-
-        return new ConfigurationRoot(new IConfigurationProvider[] { configurationProvider });
-    }
+    private static Func<string, ConfigurationRoot> ConfigurationFactory =>
+        Piper.Pipe((string json) => Encoding.UTF8.GetBytes(json))
+            .Pipe(bytes => new MemoryStream(bytes))
+            .Pipe(stream => new JsonStreamConfigurationSource { Stream = stream })
+            .Pipe(source => new JsonStreamConfigurationProvider(source))
+            .Pipe(provider => new ConfigurationRoot(new IConfigurationProvider[] { provider }));
 }
