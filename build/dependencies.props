@@ -1,10 +1,4 @@
 <Project>
-    <!-- Analyzers -->
-    <ItemGroup>
-        <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0" />
-        <PackageReference Update="Roslynator.Analyzers" Version="4.0.2" />
-    </ItemGroup>
-
     <!-- Common dependencies -->
     <ItemGroup>
         <PackageReference Update="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.2" />

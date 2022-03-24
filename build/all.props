@@ -4,18 +4,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>10</LangVersion>
     <IsPackable>false</IsPackable>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Roslynator.Analyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 
   <PropertyGroup>
     <BuildDirectory>$(MSBuildThisFileDirectory)</BuildDirectory>
@@ -24,7 +14,7 @@
   <PropertyGroup>
     <IsUnitTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsUnitTestProject>
     <IsIntegrationTestProject Condition="$(MSBuildProjectName.EndsWith('.IntegrationTests'))">true</IsIntegrationTestProject>
-    <IsTestProject Condition="'$(IsUnitTestProject)' == 'true' or '$(IsIntegrationTestProject)' == 'true'">true</IsTestProject>
+    <IsTestProject Condition=" '$(IsUnitTestProject)' == 'true' or '$(IsIntegrationTestProject)' == 'true'">true</IsTestProject>
   </PropertyGroup>
 
   <Import Project="$(BuildDirectory)tests.props" Condition="'$(IsTestProject)' == 'true'" />
