@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Controllers;
 using WebApplication.IntegrationTests.TestSetup;
@@ -32,4 +33,18 @@ public class ValidationControllerTest
 
         Assert.Single(errors, "Error from ShortCircuitAttribute");
     }
+
+    [Fact]
+    public async Task Post_CanConvertStringToIntegerAutomatically()
+    {
+        var response = await _fixture.Client.PostAsJsonAsync(ValidationController.Route, new { value = "5" });
+
+        response.Should().BeSuccessful();
+
+        var responseModel = await response.Content.ReadFromJsonAsync<ValidationResponseModel>();
+        responseModel.Should().NotBeNull()
+            .And.Subject.Should().BeEquivalentTo(new { Value = 5 });
+    }
 }
+
+public record ValidationResponseModel(int Value);

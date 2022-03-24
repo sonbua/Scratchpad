@@ -14,8 +14,14 @@ public class ValidationController : ControllerBase
     [HttpGet]
     public IActionResult Get([FromQuery] [ShortCircuit] Person person) => throw new NotImplementedException();
 
+    [Route(Route)]
+    [HttpPost]
+    public IActionResult Post(ValidationModel model) => Ok(model);
+
     public record Person(string FirstName, string LastName);
 }
+
+public record ValidationModel(int Value);
 
 [AttributeUsage(AttributeTargets.Parameter)]
 public class ShortCircuitAttribute : ValidationAttribute
