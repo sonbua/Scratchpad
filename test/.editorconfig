@@ -1,0 +1,49 @@
+# LearnTestingFrameworks.Tests project EditorConfig
+
+##########################################
+# Test Project Settings
+##########################################
+
+# This file overrides some of the default rules that does not apply to Test projects.
+
+[*.cs]
+dotnet_analyzer_diagnostic.severity = suggestion # Lower default severity for all analyzer diagnostics
+
+dotnet_diagnostic.CA1707.severity = none        # Identifiers should not contain underscores - Test methods can have underscores
+dotnet_diagnostic.CA1507.severity = suggestion  # Use nameof to express symbol names - Common to name Theory parameters same as ArgumentNullException parameter
+dotnet_diagnostic.CA1711.severity = suggestion  # Identifiers should not have incorrect suffix - Test classes often use descriptive names that triggers this
+dotnet_diagnostic.CA1716.severity = suggestion  # Identifiers should not match keywords - Prioritize descriptive names in tests over this
+
+dotnet_diagnostic.IDE0051.severity = suggestion # Remove unused private members - Used for testing
+dotnet_diagnostic.CA1805.severity = suggestion # Do not initialize unnecessarily
+dotnet_diagnostic.CA2211.severity = suggestion # Non-constant fields should not be visible
+dotnet_diagnostic.CA1051.severity = suggestion
+
+dotnet_naming_symbols.any_spec_definition.applicable_kinds           = class, field
+dotnet_naming_symbols.any_spec_definition.applicable_accessibilities = *
+
+dotnet_naming_style.all_lower.capitalization  = all_lower
+dotnet_naming_style.all_lower.word_separator  = _
+
+dotnet_naming_rule.spec_naming.symbols  = any_spec_definition
+dotnet_naming_rule.spec_naming.style    = all_lower
+dotnet_naming_rule.spec_naming.severity = warning
+
+dotnet_naming_rule.other_public_protected_fields_disallowed_rule.severity = none
+
+dotnet_style_require_accessibility_modifiers = never:suggestion
+dotnet_style_readonly_field = false
+
+
+# IDE0044: Add readonly modifier
+dotnet_diagnostic.IDE0044.severity = none
+
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = none
+
+# IDE0052: Remove unread private members
+dotnet_diagnostic.IDE0052.severity = none
+
+# CA2211: Non-constant fields should not be visible
+dotnet_diagnostic.CA2211.severity = none
+

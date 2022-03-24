@@ -7,6 +7,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8531FA3B-7332-4F6C-8238-DC2BFD539173}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F0A57F16-1253-4758-ABFC-A39F0A6B49AA}"
+	ProjectSection(SolutionItems) = preProject
+		test\.editorconfig = test\.editorconfig
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{0222A418-5EAE-4A5E-B391-4F38023F10A7}"
 ProjectSection(SolutionItems) = preProject
@@ -24,6 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{2049B5
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 		.gitignore = .gitignore
+		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnTestingFrameworks.Tests", "test\LearnTestingFrameworks.Tests\LearnTestingFrameworks.Tests.csproj", "{D14B4BE5-279D-4B66-83B3-32DBA7DD34DE}"
