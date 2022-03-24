@@ -11,6 +11,14 @@
     <BuildDirectory>$(MSBuildThisFileDirectory)</BuildDirectory>
   </PropertyGroup>
 
+  <PropertyGroup Label="Redirect output path to RAM disk" Condition="Exists('R:\dotnet-build')">
+    <SolutionBuildDir>R:\dotnet-build\$(SolutionName)</SolutionBuildDir>
+    <ProjectBuildDir>$(SolutionBuildDir)\$(MSBuildProjectName)</ProjectBuildDir>
+
+    <BaseOutputPath>$(ProjectBuildDir)\bin\</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(ProjectBuildDir)\obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
   <PropertyGroup>
     <IsUnitTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsUnitTestProject>
     <IsIntegrationTestProject Condition="$(MSBuildProjectName.EndsWith('.IntegrationTests'))">true</IsIntegrationTestProject>
