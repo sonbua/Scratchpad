@@ -1,16 +1,16 @@
 <Project>
     <!-- Common dependencies -->
     <ItemGroup>
-        <PackageReference Update="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.2" />
+        <PackageReference Update="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.4" />
         <PackageReference Update="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
     <!-- Dependencies for test projects -->
     <ItemGroup>
         <PackageReference Update="BenchmarkDotNet" Version="0.13.1" />
-        <PackageReference Update="FluentAssertions" Version="6.5.1" />
-        <PackageReference Update="FluentAssertions.Analyzers" Version="0.16.0" />
-        <PackageReference Update="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.2" />
+        <PackageReference Update="FluentAssertions" Version="6.6.0" />
+        <PackageReference Update="FluentAssertions.Analyzers" Version="0.17.2" />
+        <PackageReference Update="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.4" />
         <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.1.0" />
         <PackageReference Update="Machine.Specifications" Version="1.0.0" />
         <PackageReference Update="Machine.Specifications.Runner.VisualStudio" Version="2.10.2" />
