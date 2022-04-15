@@ -29,8 +29,6 @@ dotnet_naming_rule.spec_naming.symbols  = any_spec_definition
 dotnet_naming_rule.spec_naming.style    = all_lower
 dotnet_naming_rule.spec_naming.severity = warning
 
-dotnet_naming_rule.other_public_protected_fields_disallowed_rule.severity = none
-
 dotnet_style_require_accessibility_modifiers = never:suggestion
 dotnet_style_readonly_field = false
 

@@ -310,7 +310,7 @@ dotnet_naming_symbols.other_public_protected_fields_group.applicable_accessibili
 dotnet_naming_symbols.other_public_protected_fields_group.applicable_kinds           = field
 dotnet_naming_rule.other_public_protected_fields_disallowed_rule.symbols             = other_public_protected_fields_group
 dotnet_naming_rule.other_public_protected_fields_disallowed_rule.style               = disallowed_style
-dotnet_naming_rule.other_public_protected_fields_disallowed_rule.severity            = error
+dotnet_naming_rule.other_public_protected_fields_disallowed_rule.severity            = none
 
 ##########################################
 # StyleCop Field Naming Rules
@@ -351,7 +351,7 @@ dotnet_naming_symbols.stylecop_private_fields_group.applicable_accessibilities =
 dotnet_naming_symbols.stylecop_private_fields_group.applicable_kinds           = field
 dotnet_naming_rule.stylecop_private_fields_must_be_underscore_camel_case_rule.symbols     = stylecop_private_fields_group
 dotnet_naming_rule.stylecop_private_fields_must_be_underscore_camel_case_rule.style       = underscore_camel_case_style
-dotnet_naming_rule.stylecop_private_fields_must_be_underscore_camel_case_rule.severity    = warning
+dotnet_naming_rule.stylecop_private_fields_must_be_underscore_camel_case_rule.severity    = none
 #dotnet_naming_rule.stylecop_private_fields_must_be_camel_case_rule.symbols     = stylecop_private_fields_group
 #dotnet_naming_rule.stylecop_private_fields_must_be_camel_case_rule.style       = camel_case_style
 #dotnet_naming_rule.stylecop_private_fields_must_be_camel_case_rule.severity    = warning
