@@ -31,4 +31,28 @@ public class AsyncAndExceptionTest
 
         result.Should().Be("catch branch");
     }
+
+    [Fact]
+    public void Result_OnException_ShouldThrowAggregateException()
+    {
+        var action = () => FaultedMethodAsync().Result;
+
+        var exception = Assert.Throws<AggregateException>(action);
+        Assert.IsType<ArgumentException>(exception.InnerException);
+    }
+
+    [Fact]
+    public void GetAwaiterGetResult_OnException_ShouldThrowRealException()
+    {
+        var action = () => FaultedMethodAsync().GetAwaiter().GetResult();
+
+        Assert.Throws<ArgumentException>(action);
+    }
+
+#pragma warning disable CS1998
+    static async Task<string> FaultedMethodAsync()
+#pragma warning restore CS1998
+    {
+        throw new ArgumentException();
+    }
 }
