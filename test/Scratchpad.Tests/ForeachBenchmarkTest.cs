@@ -9,10 +9,7 @@ namespace Scratchpad.Tests;
 public class ForeachBenchmarkTest
 {
     [Fact]
-    public void RunBenchmark()
-    {
-        BenchmarkRunner.Run<ForeachOnArrayVsListVsEnumerable>();
-    }
+    public void RunBenchmark() => BenchmarkRunner.Run<ForeachOnArrayVsListVsEnumerable>();
 
     [MemoryDiagnoser]
     public class ForeachOnArrayVsListVsEnumerable
