@@ -19,8 +19,15 @@ dotnet_diagnostic.CA1805.severity = suggestion # Do not initialize unnecessarily
 dotnet_diagnostic.CA2211.severity = suggestion # Non-constant fields should not be visible
 dotnet_diagnostic.CA1051.severity = suggestion
 
+dotnet_naming_symbols.any_spec_definition.applicable_kinds           = class, field
+dotnet_naming_symbols.any_spec_definition.applicable_accessibilities = *
+
 dotnet_naming_style.all_lower.capitalization  = all_lower
 dotnet_naming_style.all_lower.word_separator  = _
+
+dotnet_naming_rule.spec_naming.symbols  = any_spec_definition
+dotnet_naming_rule.spec_naming.style    = all_lower
+dotnet_naming_rule.spec_naming.severity = warning
 
 dotnet_style_require_accessibility_modifiers = never:suggestion
 dotnet_style_readonly_field = false
