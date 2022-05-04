@@ -8,7 +8,7 @@ namespace Scratchpad.Tests;
 
 public class ForeachBenchmarkTest
 {
-    [Fact]
+    [Fact(Skip = "Benchmark")]
     public void RunBenchmark() => BenchmarkRunner.Run<ForeachOnArrayVsListVsEnumerable>();
 
     [MemoryDiagnoser]

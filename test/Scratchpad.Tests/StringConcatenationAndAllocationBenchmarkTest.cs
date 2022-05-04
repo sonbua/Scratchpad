@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Scratchpad.Tests;
 
-public class StringConcatenationAndAllocation
+public class StringConcatenationAndAllocationBenchmarkTest
 {
     [Fact]
     public void EnsureStringBuilderApproachReturnsSameSqlCommand()
@@ -18,7 +18,7 @@ public class StringConcatenationAndAllocation
         Assert.Equal(concatApproach, builderApproach);
     }
 
-    [Fact]
+    [Fact(Skip = "Benchmark")]
     public void RunBenchmarks() => BenchmarkRunner.Run<Benchmarks>();
 
     [MemoryDiagnoser]
