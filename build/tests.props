@@ -3,6 +3,8 @@
     <PackageReference Include="BenchmarkDotNet" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="FluentAssertions.Analyzers" />
+    <PackageReference Include="FsUnit" />
+    <PackageReference Include="FsUnit.xUnit" />
     <PackageReference Include="Machine.Specifications" />
     <PackageReference Include="Machine.Specifications.Runner.VisualStudio" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
