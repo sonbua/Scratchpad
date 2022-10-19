@@ -1,6 +1,7 @@
 <Project>
     <!-- Common dependencies -->
     <ItemGroup>
+        <PackageReference Update="FSharp.Data" Version="4.2.9" />
         <PackageReference Update="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.6" />
         <PackageReference Update="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>

@@ -1,16 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
 
-        <IsPackable>false</IsPackable>
-        <GenerateProgramFile>false</GenerateProgramFile>
-    </PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <GenerateProgramFile>false</GenerateProgramFile>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <Compile Include="CultureInfoTest.fs" />
-        <Compile Include="WhatDayOfWeek.fs" />
-        <Compile Include="Program.fs" />
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FirefoxHistory.fs" />
+    <Compile Include="CultureInfoTest.fs" />
+    <Compile Include="WhatDayOfWeek.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
 
 </Project>

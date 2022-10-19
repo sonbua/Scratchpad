@@ -3,6 +3,7 @@
     <PackageReference Include="BenchmarkDotNet" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="FluentAssertions.Analyzers" />
+    <PackageReference Include="FSharp.Data" />
     <PackageReference Include="FsUnit" />
     <PackageReference Include="FsUnit.xUnit" />
     <PackageReference Include="Machine.Specifications" />
