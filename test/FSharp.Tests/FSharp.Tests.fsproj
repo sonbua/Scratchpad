@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="FirefoxData.fs" />
     <Compile Include="FirefoxHistory.fs" />
     <Compile Include="CultureInfoTest.fs" />
     <Compile Include="WhatDayOfWeek.fs" />
