@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\..\src\Scratchpad\Scratchpad.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
   </ItemGroup>
 </Project>
