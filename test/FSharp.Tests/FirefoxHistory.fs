@@ -12,8 +12,7 @@ module History =
           PathSegments: string list }
 
     [<Literal>]
-    let source =
-        "C:\\Users\\song\\Downloads\\moz_places.json"
+    let source = "TestData\\moz_places.json"
 
     type Places = JsonProvider<source>
 

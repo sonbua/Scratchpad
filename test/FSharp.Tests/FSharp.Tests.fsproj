@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="TestData\moz_places.json" />
     <Compile Include="FirefoxData.fs" />
     <Compile Include="FirefoxHistory.fs" />
     <Compile Include="CultureInfoTest.fs" />
