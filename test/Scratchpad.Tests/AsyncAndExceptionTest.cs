@@ -46,6 +46,8 @@ public class AsyncAndExceptionTest
     {
         var action = () => FaultedMethodAsync().GetAwaiter().GetResult();
 
+        // commit 1
+
         Assert.Throws<ArgumentException>(action);
     }
 
