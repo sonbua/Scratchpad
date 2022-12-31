@@ -25,7 +25,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{2049B58F-D413-4FF5-950E-18275A3D1A3D}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
-		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
 		.gitignore = .gitignore
 		.editorconfig = .editorconfig
 	EndProjectSection
