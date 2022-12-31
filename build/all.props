@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Redirect output path to RAM disk" Condition="Exists('R:\dotnet-build')">
+    <SolutionName Condition=" $(SolutionName) == '' ">Scratchpad</SolutionName>
     <SolutionBuildDir>R:\dotnet-build\$(SolutionName)</SolutionBuildDir>
     <ProjectBuildDir>$(SolutionBuildDir)\$(MSBuildProjectName)</ProjectBuildDir>
 
