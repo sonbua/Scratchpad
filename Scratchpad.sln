@@ -15,7 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{0222A418
 ProjectSection(SolutionItems) = preProject
 	build\all.props = build\all.props
 	build\tests.props = build\tests.props
-	build\dependencies.props = build\dependencies.props
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "src\WebApplication\WebApplication.csproj", "{93D20403-0751-4256-A73B-9E5CF022F9B6}"
