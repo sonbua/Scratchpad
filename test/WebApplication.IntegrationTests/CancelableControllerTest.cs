@@ -2,9 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentAssertions;
 using WebApplication.IntegrationTests.TestSetup;
-using Xunit;
 
 namespace WebApplication.IntegrationTests;
 

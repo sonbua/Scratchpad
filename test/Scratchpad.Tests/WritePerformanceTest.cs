@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FizzWare.NBuilder;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace Scratchpad.Tests;

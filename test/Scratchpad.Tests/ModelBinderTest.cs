@@ -1,6 +1,5 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Xunit;
 
 namespace Scratchpad.Tests;
 

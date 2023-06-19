@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace WebApplication.IntegrationTests.TestSetup;
+﻿namespace WebApplication.IntegrationTests.TestSetup;
 
 [CollectionDefinition(Name, DisableParallelization = true)]
 public class IntegrationTestCollection : ICollectionFixture<SiteFixture>

@@ -1,8 +1,6 @@
 using System.Linq;
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Xunit;
 
 namespace Scratchpad.Tests;
 

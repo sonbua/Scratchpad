@@ -3,11 +3,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Controllers;
 using WebApplication.IntegrationTests.TestSetup;
-using Xunit;
 
 namespace WebApplication.IntegrationTests;
 

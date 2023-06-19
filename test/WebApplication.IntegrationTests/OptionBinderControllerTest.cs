@@ -3,10 +3,8 @@ using System.Net.Http.Json;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-using FluentAssertions;
 using WebApplication.Controllers;
 using WebApplication.IntegrationTests.TestSetup;
-using Xunit;
 
 namespace WebApplication.IntegrationTests;
 

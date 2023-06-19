@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using FluentAssertions;
 using Machine.Specifications;
 
 namespace LearnTestingFrameworks.Tests;

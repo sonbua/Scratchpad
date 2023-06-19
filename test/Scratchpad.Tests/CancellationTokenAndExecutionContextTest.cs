@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Threading;
 using Microsoft.Extensions.Primitives;
-using Xunit;
 
 namespace Scratchpad.Tests;
 

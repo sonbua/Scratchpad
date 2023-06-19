@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using Xunit;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Scratchpad.Tests;

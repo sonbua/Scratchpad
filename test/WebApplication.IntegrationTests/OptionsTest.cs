@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using WebApplication.Controllers;
 using WebApplication.IntegrationTests.TestSetup;
-using Xunit;
 
 namespace WebApplication.IntegrationTests;
 

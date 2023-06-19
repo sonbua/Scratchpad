@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.Linq;
-using FluentAssertions;
 using Machine.Specifications;
 
 namespace LearnTestingFrameworks.Tests;

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
-using Xunit;
 
 namespace Scratchpad.Tests;
 
