@@ -27,6 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{2049B5
 		Directory.Packages.props = Directory.Packages.props
 		.gitignore = .gitignore
 		.editorconfig = .editorconfig
+		global.json = global.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnTestingFrameworks.Tests", "test\LearnTestingFrameworks.Tests\LearnTestingFrameworks.Tests.csproj", "{D14B4BE5-279D-4B66-83B3-32DBA7DD34DE}"
