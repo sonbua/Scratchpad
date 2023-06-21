@@ -18,12 +18,14 @@ public class AsyncLocalTest
     {
         Accessor.Context.Value = "hello";
 
-        Task.Run(() =>
-        {
-            Assert.Equal("hello", Accessor.Context.Value);
+        Task.Run(
+                () =>
+                {
+                    Assert.Equal("hello", Accessor.Context.Value);
 
-            Accessor.Context.Value = "tampered";
-        }).Wait();
+                    Accessor.Context.Value = "tampered";
+                })
+            .Wait();
 
         Assert.Equal("hello", Accessor.Context.Value);
     }
