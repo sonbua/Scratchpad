@@ -45,6 +45,11 @@ public class HttpContextAccessorTest
 
         accessor.HttpContext.Should()
             .BeNull(because: "HttpContext object trapped in AsyncLocals has been cleared in another place");
+
+        await Task.Delay(1000);
+
+        accessor.HttpContext.Should()
+            .BeNull(because: "HttpContext object trapped in AsyncLocals has been cleared in another place");
     }
 
     // from Johan Björnfot
