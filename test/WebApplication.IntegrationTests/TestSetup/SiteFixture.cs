@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace WebApplication.IntegrationTests.TestSetup;
 
@@ -7,12 +8,11 @@ public class SiteFixture
 {
     public SiteFixture()
     {
-        ServiceFixture = new ApiServiceFixture<Startup>();
-        Services = ServiceFixture.Services;
-        Client = ServiceFixture.CreateDefaultClient();
-    }
+        var appFactory = new WebApplicationFactory<Program>();
 
-    public ApiServiceFixture<Startup> ServiceFixture { get; }
+        Services = appFactory.Services;
+        Client = appFactory.CreateDefaultClient();
+    }
 
     public IServiceProvider Services { get; }
 

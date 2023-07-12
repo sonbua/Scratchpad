@@ -1,16 +1,39 @@
-using Microsoft.AspNetCore.Hosting;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApplication.Configuration;
 
-namespace WebApplication;
+var builder = Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
-public static class Program
+services.AddMvc();
+
+services.AddOptions<SomeOptions>();
+services.Configure<SomeOptions>(options => options.Configured = true);
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
 {
-    public static void Main(string[] args)
-    {
-        CreateHostBuilder(args).Build().Run();
-    }
+    app.UseDeveloperExceptionPage();
+}
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+app.UseRouting();
+
+app.UseEndpoints(
+    endpoints =>
+    {
+        endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
+        endpoints.MapControllers();
+    });
+
+app.Run();
+
+// ReSharper disable UnusedMember.Global
+[SuppressMessage("Design", "CA1050:Declare types in namespaces")]
+public partial class Program
+{
+    // Expose the Program class for use with WebApplicationFactory<T>
 }
