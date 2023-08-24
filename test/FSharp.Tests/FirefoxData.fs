@@ -22,9 +22,8 @@ module Data =
           "write.as" ]
         |> List.map (fun x -> Regex(x, RegexOptions.Compiled))
 
-    let isWhitelisted domain =
-        whitelist
-        |> List.exists (fun x -> domain |> x.IsMatch)
+    let isWhitelisted (domain: string) =
+        whitelist |> List.exists (fun pattern -> domain |> pattern.IsMatch)
 
     let tryDelete (dir: DirectoryInfo) =
         try

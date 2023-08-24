@@ -22,12 +22,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 
-app.UseEndpoints(
-    endpoints =>
-    {
-        endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
-        endpoints.MapControllers();
-    });
+app.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
+app.MapControllers();
 
 app.Run();
 
