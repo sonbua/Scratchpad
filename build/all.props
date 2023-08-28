@@ -8,6 +8,8 @@
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <!-- NU1803: You are running the 'restore' operation with an 'HTTP' source, 'http://api.source/index.json'. Non-HTTPS access will be removed in a future version. Consider migrating to an 'HTTPS' source. -->
+    <NoWarn>$(NoWarn);NU1803</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
