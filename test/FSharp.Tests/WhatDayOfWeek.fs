@@ -10,35 +10,8 @@ let countDaysUpToYear year =
 
     year * 365 + year / 4 - century + century / 4
 
-let leapYearMonthToDayMap =
-    [ 0
-      31
-      29
-      31
-      30
-      31
-      30
-      31
-      31
-      30
-      31
-      30
-      31 ]
-
-let commonYearMonthToDayMap =
-    [ 0
-      31
-      28
-      31
-      30
-      31
-      30
-      31
-      31
-      30
-      31
-      30
-      31 ]
+let leapYearMonthToDayMap = [ 0; 31; 29; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ]
+let commonYearMonthToDayMap = [ 0; 31; 28; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ]
 
 let isLeapYear year =
     let mod' x y = y % x = 0
@@ -65,21 +38,15 @@ let daysInMonth year month =
     |> List.item month
 
 let countDaysInYearUpToMonth year month =
-    [ 1 .. (month - 1) ]
-    |> List.map (daysInMonth year)
-    |> List.sum
+    [ 1 .. (month - 1) ] |> List.map (daysInMonth year) |> List.sum
 
 let countDays (year, month, day) =
-    countDaysUpToYear year
-    + countDaysInYearUpToMonth year month
-    + day
+    countDaysUpToYear year + countDaysInYearUpToMonth year month + day
 
-let whatDayOfWeek =
-    countDays >> (fun x -> x % 7) >> enum<DayOfWeek>
+let whatDayOfWeek = countDays >> (fun x -> x % 7) >> enum<DayOfWeek>
 
 [<Theory>]
 [<InlineData(2022, 7, 5, DayOfWeek.Tuesday)>]
 [<InlineData(2022, 1, 1, DayOfWeek.Saturday)>]
 let ``Given year month day Should return correct day of week`` year month day (expected: DayOfWeek) =
-    whatDayOfWeek (year, month, day)
-    |> should equal expected
+    whatDayOfWeek (year, month, day) |> should equal expected

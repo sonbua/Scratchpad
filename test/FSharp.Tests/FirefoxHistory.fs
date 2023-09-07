@@ -22,9 +22,7 @@ module History =
             | null
             | ""
             | "/" -> []
-            | path ->
-                path.Split([| '/' |], StringSplitOptions.RemoveEmptyEntries)
-                |> Array.toList
+            | path -> path.Split([| '/' |], StringSplitOptions.RemoveEmptyEntries) |> Array.toList
 
         { Authority = uri.Authority
           PathSegments = uri.LocalPath |> toSegments }
