@@ -5,6 +5,5 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
-    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 </Project>
