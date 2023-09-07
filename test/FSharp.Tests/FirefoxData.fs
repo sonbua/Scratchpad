@@ -4,13 +4,12 @@ open System
 open System.IO
 open System.Text.RegularExpressions
 
-module Data =
-    let path =
-        "C:\\Users\\song\\AppData\\Roaming\\librewolf\\Profiles\\5d5x89ro.default-default\\storage\\default\\"
-
-    let whitelist =
+module Domain =
+    let private whitelist =
         [ "moz-extension"
           "accounts.google.com\^userContextId=1"
+          "app.slack.com"
+          "chat.zalo.me\^userContextId=1"
           "duckduckgo.com"
           "ep\.se"
           "github.com"
@@ -25,25 +24,29 @@ module Data =
     let isWhitelisted (domain: string) =
         whitelist |> List.exists (fun pattern -> domain |> pattern.IsMatch)
 
+module Data =
     let tryDelete (dir: DirectoryInfo) =
         try
             dir.Delete(true)
-        with
-        | _ -> ()
+        with _ ->
+            ()
 
     let tap action value =
         action value |> ignore
         value
 
+    let path =
+        "C:\\Users\\song\\AppData\\Roaming\\librewolf\\Profiles\\5d5x89ro.default-default\\storage\\default\\"
+
     let action =
-        let notExcluded = isWhitelisted >> not
+        let shouldRemove = Domain.isWhitelisted >> not
 
         path
         |> Directory.EnumerateDirectories
+        |> Seq.map DirectoryInfo
+        |> Seq.where ((fun x -> x.Name) >> shouldRemove)
+        |> Seq.map (tap Console.WriteLine)
         |> Seq.toList
-        |> List.map DirectoryInfo
-        |> List.where (fun x -> x.Name |> notExcluded)
-        |> List.map (tap Console.WriteLine)
 
 // side-effect
-// action |> Seq.iter tryDelete
+// action |> List.iter tryDelete
