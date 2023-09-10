@@ -3,6 +3,7 @@ namespace Firefox
 open System
 open System.IO
 open System.Text.RegularExpressions
+open Reusables
 
 module Domain =
     let private whitelist =
@@ -30,10 +31,6 @@ module Data =
             dir.Delete(true)
         with _ ->
             ()
-
-    let tap action value =
-        action value |> ignore
-        value
 
     let path =
         "C:\\Users\\song\\AppData\\Roaming\\librewolf\\Profiles\\5d5x89ro.default-default\\storage\\default\\"
