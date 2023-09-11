@@ -1,4 +1,4 @@
-module FSharp.Tests.WhatDayOfWeek
+module WhatDayOfWeek
 
 open System
 open FsUnit
