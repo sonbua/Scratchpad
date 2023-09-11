@@ -10,9 +10,6 @@ let countDaysUpToYear year =
 
     year * 365 + year / 4 - century + century / 4
 
-let leapYearMonthToDayMap = [ 0; 31; 29; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ]
-let commonYearMonthToDayMap = [ 0; 31; 28; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ]
-
 let (|LeapYear|CommonYear|) year =
     let mod' x y = y % x = 0
 
@@ -24,9 +21,9 @@ let (|LeapYear|CommonYear|) year =
 
 let daysInMonth year month =
     match year with
-    | LeapYear -> leapYearMonthToDayMap
-    | CommonYear -> commonYearMonthToDayMap
-    |> List.item month
+    | LeapYear -> [ 31; 29; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ] // number of days in each month in a leap year
+    | CommonYear -> [ 31; 28; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ]
+    |> List.item (month - 1)
 
 let countDaysInYearUpToMonth year month =
     [ 1 .. (month - 1) ] |> List.map (daysInMonth year) |> List.sum
