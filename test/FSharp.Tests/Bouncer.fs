@@ -48,13 +48,25 @@ module internal Bouncers =
 
 module BouncerShift =
     open Bouncers
+    open Reusables
 
     type BouncerShift = private BouncerShift of Map<string, Bouncer>
 
+    type BouncerShiftProblem =
+        | BouncerAlreadyGuarding
+        | AtLeastTwoGuarding
+        | BouncerAlreadyHavingABreak
+        | BouncerIsNotGuarding
+        | Exceeding100People
+
     type private Start = string list -> BouncerShift
-    type private StartGuarding = string -> BouncerShift -> BouncerShift
-    type private ScheduleBreakFor = string -> BouncerShift -> BouncerShift
-    type private ReportNewPeople = string -> int -> BouncerShift -> BouncerShift
+
+    type private StartGuarding = string -> BouncerShift -> Result<BouncerShift, BouncerShiftProblem * BouncerShift>
+
+    type private ScheduleBreakFor = string -> BouncerShift -> Result<BouncerShift, BouncerShiftProblem * BouncerShift>
+
+    type private ReportNewPeople =
+        string -> int -> BouncerShift -> Result<BouncerShift, BouncerShiftProblem * BouncerShift>
 
     let start: Start =
         let ensureAtLeastThreeBouncers names =
@@ -72,46 +84,60 @@ module BouncerShift =
             |> BouncerShift
 
     let startGuarding: StartGuarding =
-        let startGuarding' bouncer =
-            match bouncer with
-            | HavingABreak rested -> rested |> startGuarding |> Bouncer.Guarding
-            | Guarding _ -> bouncer
+        fun name (BouncerShift bouncerMap) ->
+            let bouncer = bouncerMap |> Map.find name
 
-        fun name (BouncerShift bouncerMap) -> bouncerMap |> Map.change name (Option.map startGuarding') |> BouncerShift
+            match bouncer with
+            | Guarding _ -> Error(BouncerAlreadyGuarding, BouncerShift bouncerMap)
+            | HavingABreak rested ->
+                rested
+                |> startGuarding
+                |> Bouncer.Guarding
+                |> fun guard -> bouncerMap |> Map.change2 name guard
+                |> BouncerShift
+                |> Ok
 
     let scheduleBreakFor: ScheduleBreakFor =
-        let ensureAtLeastThreeGuards bouncerMap =
+        let lessThanThreeGuarding bouncerMap =
             let guardCount =
-                bouncerMap |> Map.toSeq |> Seq.map snd |> Seq.filter isGuarding |> Seq.length
+                bouncerMap |> Map.filter (fun _ bouncer -> bouncer |> isGuarding) |> Map.count
 
-            if guardCount < 3 then
-                failwith "There must be at least two bouncers guarding."
-
-        let haveABreak' bouncer =
-            match bouncer with
-            | Guarding guard -> guard |> haveABreak |> Bouncer.HavingABreak
-            | HavingABreak _ -> bouncer
+            guardCount < 3
 
         fun name (BouncerShift bouncerMap) ->
-            ensureAtLeastThreeGuards bouncerMap
+            if bouncerMap |> lessThanThreeGuarding then
+                Error(AtLeastTwoGuarding, BouncerShift bouncerMap)
+            else
+                let bouncer = bouncerMap |> Map.find name
 
-            bouncerMap |> Map.change name (Option.map haveABreak') |> BouncerShift
+                match bouncer with
+                | HavingABreak _ -> Error(BouncerAlreadyHavingABreak, BouncerShift bouncerMap)
+                | Guarding guard ->
+                    guard
+                    |> haveABreak
+                    |> Bouncer.HavingABreak
+                    |> fun rested -> bouncerMap |> Map.change2 name rested
+                    |> BouncerShift
+                    |> Ok
 
     let reportNewPeople: ReportNewPeople =
-        let wouldBeLessThan100PeopleWith newPeople bouncerMap =
+        let wouldExceed100PeopleWith newPeople bouncerMap =
             let partyingPeople = bouncerMap |> Map.toSeq |> Seq.map snd |> Seq.sumBy count
 
-            partyingPeople + newPeople <= 100
-
-        let reportNewPeople' newPeople bouncer =
-            match bouncer with
-            | Guarding guard -> guard |> reportNewPeople newPeople |> Bouncer.Guarding
-            | HavingABreak _ -> failwithf $"{bouncer |> name} is currently not guarding."
+            partyingPeople + newPeople > 100
 
         fun name newPeople (BouncerShift bouncerMap) ->
-            if wouldBeLessThan100PeopleWith newPeople bouncerMap then
-                bouncerMap
-                |> Map.change name (Option.map (reportNewPeople' newPeople))
-                |> BouncerShift
+            if bouncerMap |> wouldExceed100PeopleWith newPeople then
+                Error(Exceeding100People, BouncerShift bouncerMap)
             else
-                failwith "There should be no more than 100 people in the party."
+                let bouncer = bouncerMap |> Map.find name
+
+                match bouncer with
+                | HavingABreak _ -> Error(BouncerIsNotGuarding, BouncerShift bouncerMap)
+                | Guarding guard ->
+                    guard
+                    |> reportNewPeople newPeople
+                    |> Bouncer.Guarding
+                    |> fun guard -> bouncerMap |> Map.change2 name guard
+                    |> BouncerShift
+                    |> Ok
