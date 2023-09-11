@@ -1,4 +1,4 @@
-module FSharp.Tests
+namespace FSharp.Tests
 
 module internal Bouncers =
     type GuardingBouncer = private GuardingBouncer of name: string * count: int
