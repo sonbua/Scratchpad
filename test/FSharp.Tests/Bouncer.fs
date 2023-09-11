@@ -17,22 +17,19 @@ module internal Bouncers =
     type private StartShift = string -> HavingABreakBouncer
 
     let isGuarding: IsGuarding =
-        fun bouncer ->
-            match bouncer with
-            | Guarding _ -> true
-            | _ -> false
+        function
+        | Guarding _ -> true
+        | _ -> false
 
     let name: Name =
-        fun bouncer ->
-            match bouncer with
-            | Guarding(GuardingBouncer(name, _)) -> name
-            | HavingABreak(HavingABreakBouncer(name, _)) -> name
+        function
+        | Guarding(GuardingBouncer(name, _)) -> name
+        | HavingABreak(HavingABreakBouncer(name, _)) -> name
 
     let count: Count =
-        fun bouncer ->
-            match bouncer with
-            | Guarding(GuardingBouncer(_, count)) -> count
-            | HavingABreak(HavingABreakBouncer(_, count)) -> count
+        function
+        | Guarding(GuardingBouncer(_, count)) -> count
+        | HavingABreak(HavingABreakBouncer(_, count)) -> count
 
     let startGuarding: StartGuarding =
         fun (HavingABreakBouncer(name, count)) -> GuardingBouncer(name, count)
@@ -85,17 +82,17 @@ module BouncerShift =
 
     let startGuarding: StartGuarding =
         fun name (BouncerShift bouncerMap) ->
-            let bouncer = bouncerMap |> Map.find name
-
-            match bouncer with
-            | Guarding _ -> Error(BouncerAlreadyGuarding, BouncerShift bouncerMap)
-            | HavingABreak rested ->
-                rested
-                |> startGuarding
-                |> Bouncer.Guarding
-                |> fun guard -> bouncerMap |> Map.change2 name guard
-                |> BouncerShift
-                |> Ok
+            bouncerMap
+            |> Map.find name
+            |> function
+                | Guarding _ -> Error(BouncerAlreadyGuarding, BouncerShift bouncerMap)
+                | HavingABreak rested ->
+                    rested
+                    |> startGuarding
+                    |> Bouncer.Guarding
+                    |> fun guard -> bouncerMap |> Map.change2 name guard
+                    |> BouncerShift
+                    |> Ok
 
     let scheduleBreakFor: ScheduleBreakFor =
         let lessThanThreeGuarding bouncerMap =
@@ -108,17 +105,17 @@ module BouncerShift =
             if bouncerMap |> lessThanThreeGuarding then
                 Error(AtLeastTwoGuarding, BouncerShift bouncerMap)
             else
-                let bouncer = bouncerMap |> Map.find name
-
-                match bouncer with
-                | HavingABreak _ -> Error(BouncerAlreadyHavingABreak, BouncerShift bouncerMap)
-                | Guarding guard ->
-                    guard
-                    |> haveABreak
-                    |> Bouncer.HavingABreak
-                    |> fun rested -> bouncerMap |> Map.change2 name rested
-                    |> BouncerShift
-                    |> Ok
+                bouncerMap
+                |> Map.find name
+                |> function
+                    | HavingABreak _ -> Error(BouncerAlreadyHavingABreak, BouncerShift bouncerMap)
+                    | Guarding guard ->
+                        guard
+                        |> haveABreak
+                        |> Bouncer.HavingABreak
+                        |> fun rested -> bouncerMap |> Map.change2 name rested
+                        |> BouncerShift
+                        |> Ok
 
     let reportNewPeople: ReportNewPeople =
         let wouldExceed100PeopleWith newPeople bouncerMap =
@@ -130,14 +127,14 @@ module BouncerShift =
             if bouncerMap |> wouldExceed100PeopleWith newPeople then
                 Error(Exceeding100People, BouncerShift bouncerMap)
             else
-                let bouncer = bouncerMap |> Map.find name
-
-                match bouncer with
-                | HavingABreak _ -> Error(BouncerIsNotGuarding, BouncerShift bouncerMap)
-                | Guarding guard ->
-                    guard
-                    |> reportNewPeople newPeople
-                    |> Bouncer.Guarding
-                    |> fun guard -> bouncerMap |> Map.change2 name guard
-                    |> BouncerShift
-                    |> Ok
+                bouncerMap
+                |> Map.find name
+                |> function
+                    | HavingABreak _ -> Error(BouncerIsNotGuarding, BouncerShift bouncerMap)
+                    | Guarding guard ->
+                        guard
+                        |> reportNewPeople newPeople
+                        |> Bouncer.Guarding
+                        |> fun guard -> bouncerMap |> Map.change2 name guard
+                        |> BouncerShift
+                        |> Ok
