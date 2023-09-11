@@ -13,20 +13,11 @@ let countDaysUpToYear year =
 let leapYearMonthToDayMap = [ 0; 31; 29; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ]
 let commonYearMonthToDayMap = [ 0; 31; 28; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ]
 
-let isLeapYear year =
-    let mod' x y = y % x = 0
-
-    match year with
-    | _ when (mod' 400 year) -> true
-    | _ when mod' 100 year -> false
-    | _ when mod' 4 year -> true
-    | _ -> false
-
 let (|LeapYear|CommonYear|) year =
     let mod' x y = y % x = 0
 
     match year with
-    | _ when (mod' 400 year) -> LeapYear
+    | _ when mod' 400 year -> LeapYear
     | _ when mod' 100 year -> CommonYear
     | _ when mod' 4 year -> LeapYear
     | _ -> CommonYear
