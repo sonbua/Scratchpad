@@ -15,7 +15,12 @@
     <Compile Include="CultureInfoTest.fs" />
     <Compile Include="WhatDayOfWeek.fs" />
     <Compile Include="Bouncer.fs" />
+    <Compile Include="GitLog.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fake.Core.Target" />
   </ItemGroup>
 
 </Project>
