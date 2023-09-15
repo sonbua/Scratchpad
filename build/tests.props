@@ -2,20 +2,17 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />
     <PackageReference Include="FluentAssertions" />
-    <PackageReference Include="FluentAssertions.Analyzers" />
+    <PackageReference Include="FluentAssertions.Analyzers" PrivateAssets="all" />
     <PackageReference Include="FSharp.Data" />
     <PackageReference Include="FsUnit" />
     <PackageReference Include="FsUnit.xUnit" />
     <PackageReference Include="Machine.Specifications" />
-    <PackageReference Include="Machine.Specifications.Runner.VisualStudio" />
+    <PackageReference Include="Machine.Specifications.Runner.VisualStudio" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NBuilder" />
     <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
