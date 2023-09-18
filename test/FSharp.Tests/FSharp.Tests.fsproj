@@ -16,6 +16,7 @@
     <Compile Include="WhatDayOfWeek.fs" />
     <Compile Include="Bouncer.fs" />
     <Compile Include="GitLog.fs" />
+    <Compile Include="TrangTrang.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

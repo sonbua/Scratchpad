@@ -20,3 +20,19 @@ module String =
         | _ -> text
 
     let emptyIfNull = defaultIfNull ""
+
+module Result =
+    let isOk =
+        function
+        | Ok _ -> true
+        | Error _ -> false
+
+    let isError =
+        function
+        | Error _ -> true
+        | Ok _ -> false
+
+    let okValue result =
+        match result with
+        | Error _ -> failwith "Is Error!"
+        | Ok value -> value
