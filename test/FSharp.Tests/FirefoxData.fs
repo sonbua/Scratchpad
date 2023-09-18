@@ -33,7 +33,7 @@ module Data =
             ()
 
     let path =
-        "C:\\Users\\song\\AppData\\Roaming\\librewolf\\Profiles\\5d5x89ro.default-default\\storage\\default\\"
+        @"C:\Users\song\AppData\Roaming\librewolf\Profiles\5d5x89ro.default-default\storage\default\"
 
     let action =
         let shouldRemove = Domain.isWhitelisted >> not
