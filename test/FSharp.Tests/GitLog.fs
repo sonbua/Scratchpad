@@ -1,15 +1,17 @@
-module Scratchpad
+module GitLog
 
 open System.Text.RegularExpressions
 open Fake.Core
 open Reusables
+open Xunit
+open Xunit.Abstractions
 
-let matches pattern text =
+let private matches pattern text =
     let regexMatches pattern textSingleLine = Regex.Matches(textSingleLine, pattern)
 
     text |> regexMatches pattern |> Seq.map (fun m -> m.Value)
 
-let extractJiraIds' textSingleLine =
+let private extractJiraIds' textSingleLine =
     let idPattern =
         let projects = [ "CMS"; "HAPI" ]
         projects |> String.concat "|" |> (fun x -> $"({x})-\d+")
@@ -37,5 +39,9 @@ let extractJiraIds repoName mainBranch featureBranch =
 
     ids |> Seq.distinct |> Seq.sort |> Seq.toList
 
-let headless = extractJiraIds "content-rest-api" "origin/master" "develop"
-let core = extractJiraIds "content-platform" "origin/master" "release/12.18.0"
+type Tests(helper: ITestOutputHelper) =
+    [<Theory>]
+    [<InlineData("content-rest-api", "origin/master", "develop")>]
+    [<InlineData("content-platform", "origin/master", "origin/release/12.18.0")>]
+    member _.``Extract Jira IDs`` repoName mainBranch featureBranch =
+        extractJiraIds repoName mainBranch featureBranch |> sprintf "%A" |> helper.WriteLine
