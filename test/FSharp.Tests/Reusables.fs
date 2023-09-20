@@ -32,7 +32,7 @@ module Result =
         | Error _ -> true
         | Ok _ -> false
 
-    let okValue result =
+    let get result =
         match result with
         | Error _ -> failwith "Is Error!"
         | Ok value -> value
