@@ -25,13 +25,8 @@ let extractJiraIds repoName mainBranch featureBranch =
     |> CreateProcess.fromRawCommand "git"
     |> CreateProcess.withWorkingDirectory (@"C:\repo\" + repoName)
     |> CreateProcess.redirectOutput
-    |> CreateProcess.withOutputEvents
-        (fun line ->
-            line
-            |> String.emptyIfNull
-            |> extractJiraIds'
-            |> Seq.append ids
-            |> fun xs -> ids <- xs)
+    |> CreateProcess.withOutputEventsNotNull
+        (fun line -> line |> extractJiraIds' |> Seq.append ids |> (fun xs -> ids <- xs))
         ignore
     |> CreateProcess.ensureExitCode
     |> Proc.run
@@ -43,5 +38,7 @@ type Tests(helper: ITestOutputHelper) =
     [<Theory>]
     [<InlineData("content-rest-api", "origin/master", "develop")>]
     [<InlineData("content-platform", "origin/master", "origin/release/12.18.0")>]
-    member _.``Extract Jira IDs`` repoName mainBranch featureBranch =
-        extractJiraIds repoName mainBranch featureBranch |> sprintf "%A" |> helper.WriteLine
+    let ``Extract Jira IDs`` repoName mainBranch featureBranch =
+        extractJiraIds repoName mainBranch featureBranch
+        |> sprintf "%A"
+        |> helper.WriteLine
