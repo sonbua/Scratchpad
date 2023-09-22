@@ -17,6 +17,7 @@
     <Compile Include="Bouncer.fs" />
     <Compile Include="GitLog.fs" />
     <Compile Include="TrangTrang.fs" />
+    <Compile Include="GitBatchPull.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

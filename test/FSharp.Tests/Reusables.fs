@@ -4,6 +4,9 @@ let tap action value =
     action value |> ignore
     value
 
+module Seq =
+    let any xs = xs |> Seq.isEmpty |> not
+
 module Map =
     let change2 (key: 'Key) (newValue: 'T) =
         Map.change key (Option.map (fun _ -> newValue))
@@ -36,3 +39,8 @@ module Result =
         match result with
         | Error _ -> failwith "Is Error!"
         | Ok value -> value
+
+    let getEither (result: Result<'T, 'T>) =
+        match result with
+        | Ok x -> x
+        | Error x -> x
