@@ -43,7 +43,7 @@ let gitBatchPull: GitBatchPull =
             | _ -> result.Result.Error |> toOutput |> Error
 
     let gitPull (Repo repo) =
-        CreateProcess.fromRawCommandLine "git" "pull"
+        CreateProcess.fromRawCommandLine "git" "pull --prune"
         |> CreateProcess.withWorkingDirectory repo
         |> CreateProcess.redirectOutput
         |> Proc.run
