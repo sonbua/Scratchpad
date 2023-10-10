@@ -4,6 +4,9 @@ let tap action value =
     action value |> ignore
     value
 
+let inline stringf format (x: 'a) =
+    (^a: (member ToString: string -> string) (x, format))
+
 module Seq =
     let any xs = xs |> Seq.isEmpty |> not
 
