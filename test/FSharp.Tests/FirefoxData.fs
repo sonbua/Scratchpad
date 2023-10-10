@@ -3,7 +3,6 @@ namespace Firefox
 open System
 open System.IO
 open System.Text.RegularExpressions
-open Reusables
 
 module Domain =
     let private whitelist =

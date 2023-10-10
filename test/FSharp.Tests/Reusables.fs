@@ -1,3 +1,4 @@
+[<AutoOpen>]
 module Reusables
 
 let tap action value =

@@ -5,7 +5,6 @@ open System.IO
 open System.Reactive.Linq
 open Fake.Core
 open Microsoft.FSharp.Collections
-open Reusables
 open Xunit
 open Xunit.Abstractions
 

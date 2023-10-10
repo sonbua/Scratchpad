@@ -3,7 +3,6 @@ module VnEconomyRss
 open System
 open System.Text.RegularExpressions
 open FSharp.Data
-open Reusables
 open Xunit
 open Xunit.Abstractions
 

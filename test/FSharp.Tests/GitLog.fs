@@ -2,7 +2,6 @@ module GitLog
 
 open System.Text.RegularExpressions
 open Fake.Core
-open Reusables
 open Xunit
 open Xunit.Abstractions
 
