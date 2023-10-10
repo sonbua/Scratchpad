@@ -79,6 +79,7 @@ type Carrier =
     | MobiFone
     | VinaPhone
     | Viettel
+    | Vietnamobile
     | Unknown of string
 
 module Carrier =
@@ -89,6 +90,7 @@ module Carrier =
         | nameof Viettel -> Viettel
         | nameof MobiFone -> MobiFone
         | "Vinaphone" -> VinaPhone
+        | nameof Vietnamobile -> Vietnamobile
         | number -> Unknown number
 
 // Report
