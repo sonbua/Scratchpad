@@ -1,10 +1,6 @@
 [<AutoOpen>]
 module Reusables
 
-let tap action value =
-    action value |> ignore
-    value
-
 let inline stringf format (x: 'a) =
     (^a: (member ToString: string -> string) (x, format))
 
