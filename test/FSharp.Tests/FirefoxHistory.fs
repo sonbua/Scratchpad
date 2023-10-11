@@ -12,26 +12,30 @@ module History =
         { Authority: string
           PathSegments: string list }
 
+    module UrlPart =
+        type private Create = Uri -> UrlPart
+
+        let create: Create =
+            fun uri ->
+                let toSegments path =
+                    match path with
+                    | null
+                    | ""
+                    | "/" -> []
+                    | path -> path.Split([| '/' |], StringSplitOptions.RemoveEmptyEntries) |> toList
+
+                { Authority = uri.Authority
+                  PathSegments = uri.LocalPath |> toSegments }
+
     [<Literal>]
     let source = "TestData\\moz_places.json"
 
     type Places = JsonProvider<source>
 
-    let urlPart (uri: Uri) =
-        let toSegments path =
-            match path with
-            | null
-            | ""
-            | "/" -> []
-            | path -> path.Split([| '/' |], StringSplitOptions.RemoveEmptyEntries) |> toList
-
-        { Authority = uri.Authority
-          PathSegments = uri.LocalPath |> toSegments }
-
     let urlParts =
         Places.GetSamples()
         |> sortByDescending (fun x -> x.LastVisitDate |> Option.defaultValue 0L)
-        |> map (fun x -> x.Url |> Uri |> urlPart)
+        |> map (fun x -> x.Url |> Uri |> UrlPart.create)
         |> toList
 
     type Reports(console: ITestOutputHelper) =
