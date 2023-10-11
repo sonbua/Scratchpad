@@ -59,8 +59,8 @@ let gitBatchPull: GitBatchPull =
             $"Current branch '{branch |> Branch.name}' is not one of the major branches (master, main, develop)."
             |> Output
             |> Error
-        |> Result.map (fun output -> (branch, output))
-        |> Result.mapError (fun output -> (branch, output))
+        |> Result.map (tuple2 branch)
+        |> Result.mapError (tuple2 branch)
 
     let gitPull' repo =
         repo
@@ -74,7 +74,7 @@ let gitBatchPull: GitBatchPull =
         |> filter Repo.isGitRepo
         |> map Repo
         |> Observable.ToObservable
-        |> map (fun repo -> (repo, repo |> gitPull' |> Result.getEither))
+        |> map (fun repo -> (repo, repo |> gitPull' |> either id id))
         |> map (fun (repo, (branch, output)) -> (repo, branch, output))
 
 type Tests(helper: ITestOutputHelper) =

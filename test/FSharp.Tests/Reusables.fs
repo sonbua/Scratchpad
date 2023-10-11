@@ -34,13 +34,3 @@ module Result =
         function
         | Error _ -> true
         | Ok _ -> false
-
-    let get result =
-        match result with
-        | Error _ -> failwith "Is Error!"
-        | Ok value -> value
-
-    let getEither (result: Result<'T, 'T>) =
-        match result with
-        | Ok x -> x
-        | Error x -> x
