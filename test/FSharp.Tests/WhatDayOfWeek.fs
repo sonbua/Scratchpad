@@ -1,6 +1,7 @@
 module WhatDayOfWeek
 
 open System
+open FSharpPlus
 open FsUnit
 open Xunit
 
@@ -23,10 +24,10 @@ let daysInMonth year month =
     match year with
     | LeapYear -> [ 31; 29; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ] // number of days in each month in a leap year
     | CommonYear -> [ 31; 28; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ]
-    |> List.item (month - 1)
+    |> item (month - 1)
 
 let countDaysInYearUpToMonth year month =
-    [ 1 .. (month - 1) ] |> List.map (daysInMonth year) |> List.sum
+    [ 1 .. (month - 1) ] |> map (daysInMonth year) |> sum
 
 let countDays (year, month, day) =
     countDaysUpToYear year + countDaysInYearUpToMonth year month + day

@@ -24,6 +24,10 @@
 
   <ItemGroup>
     <PackageReference Include="Fake.Core.Target" />
+    <PackageReference Include="FSharpPlus" />
+    <PackageReference Include="FSharp.Data" />
+    <PackageReference Include="FsUnit" />
+    <PackageReference Include="FsUnit.xUnit" />
   </ItemGroup>
 
 </Project>

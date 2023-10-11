@@ -2,6 +2,7 @@ module GitLog
 
 open System.Text.RegularExpressions
 open Fake.Core
+open FSharpPlus
 open Xunit
 open Xunit.Abstractions
 
@@ -15,7 +16,7 @@ let private extractJiraIds' textSingleLine =
         let projects = [ "CMS"; "HAPI" ]
         projects |> String.concat "|" |> (fun x -> $"({x})-\d+")
 
-    textSingleLine |> matches idPattern |> Seq.distinct |> Seq.sort
+    textSingleLine |> matches idPattern |> distinct |> sort
 
 let extractJiraIds repoName mainBranch featureBranch =
     let mutable ids = Seq.empty
@@ -31,7 +32,7 @@ let extractJiraIds repoName mainBranch featureBranch =
     |> Proc.run
     |> ignore
 
-    ids |> Seq.distinct |> Seq.sort |> Seq.toList
+    ids |> distinct |> sort |> toList
 
 type Tests(helper: ITestOutputHelper) =
     [<Theory>]

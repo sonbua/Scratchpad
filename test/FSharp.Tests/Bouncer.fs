@@ -1,5 +1,7 @@
 module BouncerShift
 
+open FSharpPlus
+
 module internal Bouncers =
     type GuardingBouncer = private GuardingBouncer of name: string * count: int
     type HavingABreakBouncer = private HavingABreakBouncer of name: string * count: int
@@ -61,7 +63,7 @@ type private ReportNewPeople = string -> int -> BouncerShift -> Result<BouncerSh
 
 let start: Start =
     let ensureAtLeastThreeBouncers names =
-        let count = names |> List.length
+        let count = names |> length
 
         if count < 3 then
             failwith "Require at least three bouncers."
@@ -70,7 +72,7 @@ let start: Start =
         ensureAtLeastThreeBouncers names
 
         names
-        |> List.map (fun name -> (name, name |> startShift |> Bouncer.HavingABreak))
+        |> map (fun name -> (name, name |> startShift |> Bouncer.HavingABreak))
         |> Map.ofList
         |> BouncerShift
 
@@ -113,7 +115,7 @@ let scheduleBreakFor: ScheduleBreakFor =
 
 let reportNewPeople: ReportNewPeople =
     let wouldExceed100PeopleWith newPeople bouncerMap =
-        let partyingPeople = bouncerMap |> Map.toSeq |> Seq.map snd |> Seq.sumBy count
+        let partyingPeople = bouncerMap |> Map.toSeq |> map snd |> Seq.sumBy count
 
         partyingPeople + newPeople > 100
 

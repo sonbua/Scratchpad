@@ -4,6 +4,7 @@ open System
 open System.IO
 open System.Reactive.Linq
 open Fake.Core
+open FSharpPlus
 open Microsoft.FSharp.Collections
 open Xunit
 open Xunit.Abstractions
@@ -29,7 +30,7 @@ module Repo =
 type private GitBatchPull = string -> IObservable<Repo * Branch * Output>
 
 let gitBatchPull: GitBatchPull =
-    let toOutput = String.trim >> Output
+    let toOutput = String.trimWhiteSpaces >> Output
 
     let getCurrentBranch (Repo repo) =
         CreateProcess.fromRawCommandLine "git" "branch --show-current"
@@ -38,7 +39,7 @@ let gitBatchPull: GitBatchPull =
         |> Proc.run
         |> fun result ->
             match result.ExitCode with
-            | 0 -> result.Result.Output |> String.trim |> Branch |> Ok
+            | 0 -> result.Result.Output |> String.trimWhiteSpaces |> Branch |> Ok
             | _ -> result.Result.Error |> toOutput |> Error
 
     let gitPull (Repo repo) =
@@ -70,11 +71,11 @@ let gitBatchPull: GitBatchPull =
     fun parentDir ->
         parentDir
         |> Directory.EnumerateDirectories
-        |> Seq.filter Repo.isGitRepo
-        |> Seq.map Repo
+        |> filter Repo.isGitRepo
+        |> map Repo
         |> Observable.ToObservable
-        |> Observable.map (fun repo -> (repo, repo |> gitPull' |> Result.getEither))
-        |> Observable.map (fun (repo, (branch, output)) -> (repo, branch, output))
+        |> map (fun repo -> (repo, repo |> gitPull' |> Result.getEither))
+        |> map (fun (repo, (branch, output)) -> (repo, branch, output))
 
 type Tests(helper: ITestOutputHelper) =
     [<Theory>]

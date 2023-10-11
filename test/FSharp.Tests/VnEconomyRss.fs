@@ -1,7 +1,7 @@
 module VnEconomyRss
 
-open System
 open System.Text.RegularExpressions
+open FSharpPlus
 open FSharp.Data
 open Xunit
 open Xunit.Abstractions
@@ -26,16 +26,13 @@ type Test(helper: ITestOutputHelper) =
     let ``Blog chứng khoán - last 7 entries`` () =
         RssFeed.GetSample()
         |> (fun x -> x.Channel.Items)
-        |> Array.toList
-        |> Seq.where (fun x -> x.Category = "Chứng khoán")
-        |> Seq.where (fun x -> x.Title.StartsWith "Blog chứng khoán")
-        |> Seq.sortByDescending (fun x -> x.PubDate)
-        |> Seq.chunkBySize 7
-        |> Seq.head
-        |> Seq.map (fun x ->
+        |> filter (fun x -> x.Category = "Chứng khoán")
+        |> filter (fun x -> x.Title.StartsWith "Blog chứng khoán")
+        |> sortByDescending (fun x -> x.PubDate)
+        |> limit 7
+        |> map (fun x ->
             { Title = x.Title
-              Published = x.PubDate.UtcDateTime |> DateOnly.FromDateTime |> stringf "dd/MM/yyyy"
+              Published = x.PubDate.UtcDateTime |> stringf "dd/MM/yyyy"
               Abstract = x.Description |> charDecode
               Link = x.Link })
-        |> Seq.map (sprintf "%A" >> helper.WriteLine)
-        |> Seq.toList
+        |> iter (sprintf "%A" >> helper.WriteLine)

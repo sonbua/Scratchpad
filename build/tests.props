@@ -3,9 +3,6 @@
     <PackageReference Include="BenchmarkDotNet" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="FluentAssertions.Analyzers" PrivateAssets="all" />
-    <PackageReference Include="FSharp.Data" />
-    <PackageReference Include="FsUnit" />
-    <PackageReference Include="FsUnit.xUnit" />
     <PackageReference Include="Machine.Specifications" />
     <PackageReference Include="Machine.Specifications.Runner.VisualStudio" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />

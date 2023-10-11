@@ -2,6 +2,7 @@ namespace Firefox
 
 open System
 open FsUnit
+open FSharpPlus
 open FSharp.Data
 open Xunit
 open Xunit.Abstractions
@@ -17,21 +18,21 @@ module History =
     type Places = JsonProvider<source>
 
     let urlPart (uri: Uri) =
-        let toSegments (path: string) : string list =
+        let toSegments path =
             match path with
             | null
             | ""
             | "/" -> []
-            | path -> path.Split([| '/' |], StringSplitOptions.RemoveEmptyEntries) |> Array.toList
+            | path -> path.Split([| '/' |], StringSplitOptions.RemoveEmptyEntries) |> toList
 
         { Authority = uri.Authority
           PathSegments = uri.LocalPath |> toSegments }
 
     let urlParts =
         Places.GetSamples()
-        |> Array.toList
-        |> List.sortByDescending (fun x -> Option.defaultValue 0L x.LastVisitDate)
-        |> List.map (fun x -> x.Url |> Uri |> urlPart)
+        |> sortByDescending (fun x -> x.LastVisitDate |> Option.defaultValue 0L)
+        |> map (fun x -> x.Url |> Uri |> urlPart)
+        |> toList
 
     type Reports(console: ITestOutputHelper) =
         let writeln = console.WriteLine
@@ -40,11 +41,11 @@ module History =
         member _.``Count by authority, count >= 5``() =
             urlParts
             |> List.countBy (fun x -> x.Authority)
-            |> List.where (fun (_, count) -> count >= 5)
-            |> List.map fst
+            |> filter (fun (_, count) -> count >= 5)
+            |> map fst
 
             // side-effect
-            |> List.iter writeln
+            |> iter writeln
 
         [<Fact>]
         member _.``Count by authority and first path's segment, count >= 5``() =
@@ -55,12 +56,12 @@ module History =
                 | x :: _ -> $"/{x}"
 
             let authorityAndFirstPathSegment urlPart =
-                $"{urlPart.Authority}{firstPathSegment urlPart.PathSegments}"
+                $"{urlPart.Authority}{urlPart.PathSegments |> firstPathSegment}"
 
             urlParts
             |> List.countBy authorityAndFirstPathSegment
-            |> List.where (fun (_, count) -> count >= 5)
-            |> List.map fst
+            |> filter (fun (_, count) -> count >= 5)
+            |> map fst
 
             // side-effect
-            |> List.iter writeln
+            |> iter writeln

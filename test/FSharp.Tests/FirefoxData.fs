@@ -3,6 +3,7 @@ namespace Firefox
 open System
 open System.IO
 open System.Text.RegularExpressions
+open FSharpPlus
 
 module Domain =
     let private whitelist =
@@ -19,10 +20,10 @@ module Domain =
           "stackblitz.com"
           "todoist.com"
           "write.as" ]
-        |> List.map (fun x -> Regex(x, RegexOptions.Compiled))
+        |> map (fun x -> Regex(x, RegexOptions.Compiled))
 
     let isWhitelisted (domain: string) =
-        whitelist |> List.exists (fun pattern -> domain |> pattern.IsMatch)
+        whitelist |> exists (fun pattern -> domain |> pattern.IsMatch)
 
 module Data =
     let tryDelete (dir: DirectoryInfo) =
@@ -39,10 +40,9 @@ module Data =
 
         path
         |> Directory.EnumerateDirectories
-        |> Seq.map DirectoryInfo
-        |> Seq.where ((fun x -> x.Name) >> shouldRemove)
-        |> Seq.map (tap Console.WriteLine)
-        |> Seq.toList
+        |> map DirectoryInfo
+        |> filter ((fun (x: DirectoryInfo) -> x.Name) >> shouldRemove)
+        |> iter (string >> Console.WriteLine)
 
 // side-effect
 // action |> List.iter tryDelete

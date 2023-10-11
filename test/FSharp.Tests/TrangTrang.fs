@@ -1,6 +1,7 @@
 module TrangTrang
 
 open System.Text.RegularExpressions
+open FSharpPlus
 open FSharp.Data
 open FsUnit
 open Xunit
@@ -13,8 +14,10 @@ type Reporter =
     | Name of string
 
 module Reporter =
-    let map (name: string option) =
-        match name with
+    type private Create = string option -> Reporter
+
+    let create: Create =
+        function
         | None -> Reporter.Anonymous
         | Some "Ẩn Danh" -> Reporter.Anonymous
         | Some n -> Reporter.Name n
@@ -54,7 +57,7 @@ module Comment =
     let private div2ToReportEntry (comment: Comment.Div2) =
         { Category = comment.H3 |> Option.defaultValue "No category"
           Description = comment.P.Value
-          Reporter = comment.Divs[1].Span |> Reporter.map }
+          Reporter = comment.Divs[1].Span |> Reporter.create }
 
     let toReportEntry: ToReportEntry =
         fun commentDiv ->
@@ -112,7 +115,7 @@ module Report =
             let normalizedNumber =
                 bodyElement.CssSelect("header.p > h2").Head.InnerText().ToString()
                 |> regexMatches "Số (\d+)"
-                |> Seq.head
+                |> head
                 |> fun x -> x.Groups[1].Value
 
             let numberDetailsSection =
@@ -129,11 +132,11 @@ module Report =
 
             let entries =
                 commentSection
-                |> List.map string
-                |> List.map Comment.Parse
-                |> List.map Comment.toReportEntry
-                |> List.filter Result.isOk
-                |> List.map Result.get
+                |> map string
+                |> map Comment.Parse
+                |> map Comment.toReportEntry
+                |> filter Result.isOk
+                |> map Result.get
                 |> ReportEntries.create
 
             { Number = normalizedNumber
@@ -145,7 +148,7 @@ type Tests(helper: ITestOutputHelper) =
         {| Carrier = report.Carrier
            Comments =
             report.Entries
-            |> List.map (fun entry ->
+            |> map (fun entry ->
                 {| Category = entry.Category
                    Description = entry.Description |}) |}
 
