@@ -66,10 +66,8 @@ module Comment =
             else
                 commentDiv.Divs[1] |> div2ToReportEntry |> Ok
 
-type ReportEntries = ReportEntry list
-
 module ReportEntries =
-    type private Create = ReportEntry list -> ReportEntries
+    type private Create = ReportEntry list -> ReportEntry list
 
     let create: Create =
         function
@@ -83,6 +81,8 @@ type Carrier =
     | VinaPhone
     | Viettel
     | Vietnamobile
+    /// Example: 0598413212
+    | Gmobile
     | Unknown of string
 
 module Carrier =
@@ -94,13 +94,14 @@ module Carrier =
         | nameof MobiFone -> MobiFone
         | "Vinaphone" -> VinaPhone
         | nameof Vietnamobile -> Vietnamobile
+        | nameof Gmobile -> Gmobile
         | number -> Unknown number
 
 // Report
 type Report =
     { Number: string
       Carrier: Carrier
-      Entries: ReportEntries }
+      Entries: ReportEntry list }
 
 module Report =
     type private Get = string -> Report
@@ -155,6 +156,7 @@ type Tests(helper: ITestOutputHelper) =
     [<Theory>]
     [<InlineData("0342486872")>]
     [<InlineData("0904637134")>]
+    [<InlineData("0598413212")>]
     [<InlineData("0942750429")>] // Clean
     let ``Get report`` number =
         number |> Report.get |> toReportDto |> sprintf "%A" |> helper.WriteLine
