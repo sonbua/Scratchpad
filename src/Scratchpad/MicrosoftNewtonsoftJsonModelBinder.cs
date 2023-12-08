@@ -19,7 +19,7 @@ public static class MicrosoftNewtonsoftJsonModelBinder
         var serializerSettings = new JsonSerializerSettings { Error = ErrorHandler };
         var model = JsonConvert.DeserializeObject<T>(json, serializerSettings);
 
-        if (modelStateDictionary.Any())
+        if (modelStateDictionary.Count == 0)
         {
             var message = modelStateDictionary.ToErrorMessage();
             throw new Exception(message);
@@ -130,7 +130,7 @@ public static class MicrosoftNewtonsoftJsonModelBinder
                 return prefix ?? string.Empty;
             }
 
-            if (propertyName.StartsWith("[", StringComparison.Ordinal))
+            if (propertyName.StartsWith('['))
             {
                 // The propertyName might represent an indexer access, in which case combining
                 // with a 'dot' would be invalid. This case occurs only when called from ValidationVisitor.
