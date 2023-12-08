@@ -9,7 +9,7 @@ open Xunit.Abstractions
 let private matches pattern text =
     let regexMatches pattern textSingleLine = Regex.Matches(textSingleLine, pattern)
 
-    text |> regexMatches pattern |> Seq.map (fun m -> m.Value)
+    text |> regexMatches pattern |> Seq.map _.Value
 
 let private extractJiraIds' textSingleLine =
     let idPattern =

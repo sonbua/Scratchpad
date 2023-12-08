@@ -19,17 +19,18 @@ type FeedItem =
 
 type Test(helper: ITestOutputHelper) =
     let charDecode input =
-        let charCodeToString = fun (m: Match) -> m.Groups[1].Value |> int |> char |> string
+        let charCodeToString (m: Match) =
+            m.Groups[1].Value |> int |> char |> string
+
         Regex.Replace(input, "\#(\d+);", charCodeToString)
 
     [<Fact>]
-    let ``Blog chứng khoán - last 7 entries`` () =
+    member _.``Blog chứng khoán - last 7 entries``() =
         RssFeed.GetSample()
-        |> (fun x -> x.Channel.Items)
+        |> _.Channel.Items
         |> filter (fun x -> x.Category = "Chứng khoán")
         |> filter (fun x -> x.Title.StartsWith "Blog chứng khoán")
-        |> sortByDescending (fun x -> x.PubDate)
-        |> limit 7
+        |> sortByDescending _.PubDate
         |> map (fun x ->
             { Title = x.Title
               Published = x.PubDate.UtcDateTime |> stringf "dd/MM/yyyy"

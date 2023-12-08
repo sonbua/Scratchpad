@@ -110,16 +110,16 @@ module Report =
 
         fun number ->
             let url = $"https://www.trangtrang.com/{number}.html"
-            let bodyElement = url |> ReportProvider.Load |> (fun x -> x.Lists.Html.Body())
+            let bodyElement = url |> ReportProvider.Load |> _.Lists.Html.Body()
 
             let normalizedNumber =
                 bodyElement.CssSelect("header.p > h2").Head.InnerText().ToString()
                 |> regexMatches "Số (\d+)"
                 |> head
-                |> fun x -> x.Groups[1].Value
+                |> _.Groups[1].Value
 
             let numberDetailsSection =
-                bodyElement |> fun x -> x.CssSelect("div.bc > nav > ul > li")
+                bodyElement |> _.CssSelect("div.bc > nav > ul > li")
 
             let carrier =
                 match numberDetailsSection.Length with
@@ -128,7 +128,7 @@ module Report =
                 | _ -> "Unknown"
                 |> Carrier.create
 
-            let commentSection = bodyElement |> fun x -> x.CssSelect("#nhan-xet > .r")
+            let commentSection = bodyElement |> _.CssSelect("#nhan-xet > .r")
 
             let entries =
                 commentSection

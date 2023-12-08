@@ -44,7 +44,7 @@ module History =
         [<Fact>]
         member _.``Count by authority, count >= 5``() =
             urlParts
-            |> List.countBy (fun x -> x.Authority)
+            |> List.countBy _.Authority
             |> filter (fun (_, count) -> count >= 5)
             |> map fst
 
