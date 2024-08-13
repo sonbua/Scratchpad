@@ -1,19 +1,25 @@
-module CultureInfoTest
+module CultureInfo.Tests
 
 open System.Globalization
-open Xunit
+open Expecto
+open Expecto.Flip
 
-[<Theory>]
-[<InlineData("fr", "fr-FR")>]
-[<InlineData("en", "en-US")>]
-[<InlineData("vi", "vi-VN")>]
-[<InlineData("es", "es-ES")>]
-let ``Given neutral culture name When creating specific culture Then returns default specific culture name``
-    (
-        cultureName,
-        defaultSpecificCultureName
-    ) =
-    let specificCulture =
-        CultureInfo.CreateSpecificCulture(cultureName)
+[<Tests>]
+let specs =
+    testList
+        "CultureInfo.CreateSpecificCulture()"
+        [ // theory data
+          let defaultSpecificCultureTheoryData =
+              [ "fr", "fr-FR"
+                "en", "en-US"
+                "vi", "vi-VN"
+                "es", "es-ES" ]
 
-    Assert.Equal(defaultSpecificCultureName, specificCulture.Name)
+          testTheory
+              "Given neutral culture name When creating specific culture"
+              defaultSpecificCultureTheoryData
+              (fun (cultureName, defaultSpecificCultureName) ->
+                  let specificCulture = CultureInfo.CreateSpecificCulture(cultureName)
+
+                  specificCulture.Name
+                  |> Expect.equal "Should return default specific culture name" defaultSpecificCultureName) ]
