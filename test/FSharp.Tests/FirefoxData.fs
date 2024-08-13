@@ -44,5 +44,5 @@ module Data =
         |> filter ((fun (x: DirectoryInfo) -> x.Name) >> shouldRemove)
         |> iter (string >> Console.WriteLine)
 
-// side-effect
+// Side effect
 // action |> List.iter tryDelete
