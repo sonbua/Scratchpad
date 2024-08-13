@@ -20,6 +20,7 @@
     <Compile Include="VnEconomyRss.fs" />
     <Compile Include="CopyPackagesToThisWeek.fs" />
     <Compile Include="LongmanActivator.fs" />
+    <Compile Include="Logseq.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

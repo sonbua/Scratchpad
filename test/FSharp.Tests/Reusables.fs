@@ -24,6 +24,15 @@ module String =
 
     let emptyIfNull = defaultIfNull ""
 
+module List =
+    /// Like List.skip but rather than throwing System.ArgumentException, it returns an empty list if the number of
+    /// skipped items is greater than the length of the list.
+    let skipSafe count list =
+        if list |> List.length |> (<) count then
+            list |> List.skip count
+        else
+            []
+
 module Result =
     let isOk =
         function
