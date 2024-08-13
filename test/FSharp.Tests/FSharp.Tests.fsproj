@@ -21,6 +21,8 @@
     <Compile Include="CopyPackagesToThisWeek.fs" />
     <Compile Include="LongmanActivator.fs" />
     <Compile Include="Logseq.fs" />
+    <Compile Include="Longman.fs" />
+    <Compile Include="Longman.Tests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

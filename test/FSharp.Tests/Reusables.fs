@@ -33,6 +33,10 @@ module List =
         else
             []
 
+module Option =
+    let ifWith predicate onTrue inp =
+        if inp |> predicate then Some(inp |> onTrue) else None
+
 module Result =
     let isOk =
         function
