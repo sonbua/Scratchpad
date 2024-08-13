@@ -7,6 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Fake.Core.Target" />
+    <PackageReference Include="FSharp.Data" />
+    <PackageReference Include="FSharpPlus" />
+    <PackageReference Include="FsUnit.xUnit" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="FluentAssertions" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="TestData\moz_places.json" />
     <Compile Include="Reusables.fs" />
     <Compile Include="FirefoxData.fs" />
@@ -25,13 +39,6 @@
     <Compile Include="Longman.Tests.fs" />
     <Compile Include="UriUtils.fs" />
     <Compile Include="Program.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Fake.Core.Target" />
-    <PackageReference Include="FSharpPlus" />
-    <PackageReference Include="FSharp.Data" />
-    <PackageReference Include="FsUnit.xUnit" />
   </ItemGroup>
 
 </Project>

@@ -1,19 +1,7 @@
 <Project>
-  <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" />
-    <PackageReference Include="FluentAssertions" />
-    <PackageReference Include="FluentAssertions.Analyzers" PrivateAssets="all" />
-    <PackageReference Include="Machine.Specifications" />
-    <PackageReference Include="Machine.Specifications.Runner.VisualStudio" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NBuilder" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
-  </ItemGroup>
 
   <ItemGroup>
-    <Using Include="FluentAssertions" />
-    <Using Include="Xunit" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
   </ItemGroup>
+
 </Project>
