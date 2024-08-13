@@ -47,3 +47,43 @@ module Result =
         function
         | Error _ -> true
         | Ok _ -> false
+
+module Uri =
+    open System
+    open System.Text.RegularExpressions
+
+    [<Literal>]
+    let private patternString =
+        "(?:http|ftp)s?:\\/\\/"
+        + "(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\\.)+(?:[A-Z]{2,6}\\.?|[A-Z0-9-]{2,}\\.?)|" // domain
+        + "localhost|"
+        + "\\d{1,3}\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})" // IP
+        + "(?::\\d{2,6})?" // port
+        + "(\/[=&\\w\\-\\.\\:\\#\\?\\\\/\\~]*)?"
+
+    [<Literal>]
+    let private patternStringExact = "^" + patternString + "$"
+
+    let private urlPattern =
+        Regex(
+            patternString,
+            RegexOptions.IgnoreCase
+            ||| RegexOptions.ExplicitCapture
+            ||| RegexOptions.Compiled
+        )
+
+    let private urlPatternExact =
+        Regex(
+            patternStringExact,
+            RegexOptions.IgnoreCase
+            ||| RegexOptions.ExplicitCapture
+            ||| RegexOptions.Compiled
+        )
+
+    let isValid (input: string) = urlPatternExact.IsMatch(input)
+
+    let extractUriStrings =
+        urlPattern.Matches >> Seq.map _.Value
+
+    let extract =
+        extractUriStrings >> Seq.map Uri

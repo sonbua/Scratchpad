@@ -23,6 +23,7 @@
     <Compile Include="Logseq.fs" />
     <Compile Include="Longman.fs" />
     <Compile Include="Longman.Tests.fs" />
+    <Compile Include="UriUtils.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
