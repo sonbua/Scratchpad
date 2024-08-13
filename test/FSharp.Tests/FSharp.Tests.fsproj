@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Expecto" />
     <PackageReference Include="Fake.Core.Target" />
     <PackageReference Include="FSharp.Data" />
     <PackageReference Include="FSharpPlus" />
     <PackageReference Include="FsUnit.xUnit" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+    <PackageReference Include="YoloDev.Expecto.TestSdk" />
   </ItemGroup>
 
   <ItemGroup>

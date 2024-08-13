@@ -1,26 +1,36 @@
-module UriUtils
+module UriUtils.Tests
 
-open FSharpPlus
+open System
+open Expecto
+open Expecto.Flip
 
-let f text =
-    text |> Uri.extract |> map _.Authority |> distinct
+[<Tests>]
+let specs =
+    testList
+        "UriUtils"
+        [ // theory data
+          let validUris =
+              [ "http://example.com"
+                "https://example.com"
+                "ftp://example.com"
+                "ftps://example.com" ]
 
+          testTheory "Given valid URI" validUris (fun uri ->
+              uri
+              |> Uri.isValid
+              |> Expect.isTrue "When applying `Uri.isValid` should return valid")
 
-open Xunit
-open FsUnit.Xunit
+          // theory data
+          let singleUriTexts =
+              [ "13:45:43​fsprojects.github.io​3​https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js​script​--",
+                Uri "https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js" ]
 
-[<Theory>]
-[<InlineData("http://example.com")>]
-[<InlineData("https://example.com")>]
-[<InlineData("ftp://example.com")>]
-[<InlineData("ftps://example.com")>]
-let ``Given URL`` url = url |> Uri.isValid |> should be True
+          testTheory "Given text containing single URI" singleUriTexts (fun (text, expectedUri) ->
+              let matches = text |> Uri.extract
 
-[<Theory>]
-[<InlineData("13:45:43​fsprojects.github.io​3​https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js​script​--",
-             "https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js")>]
-let ``Given text containing single URL`` text expectedUrl =
-    let matches = text |> Uri.extract
+              matches
+              |> Expect.hasLength "Should have single item" 1
 
-    matches |> Seq.length |> should equal 1
-    matches |> Seq.exactlyOne |> should equal expectedUrl
+              matches
+              |> Seq.exactlyOne
+              |> Expect.equal "Should extract correct URI" expectedUri) ]
