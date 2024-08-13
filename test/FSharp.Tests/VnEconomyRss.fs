@@ -14,8 +14,13 @@ type RssFeed = XmlProvider<RssFeedUrl>
 type FeedItem =
     { Title: string
       Published: string
-      Abstract: string
       Link: string }
+
+module RssFeedItem =
+    let toFeedItem (item: RssFeed.Item) =
+        { Title = item.Title |> String.trimWhiteSpaces
+          Published = item.PubDate.UtcDateTime |> stringf "dd/MM/yyyy"
+          Link = item.Link }
 
 type Test(helper: ITestOutputHelper) =
     let charDecode input =
@@ -25,15 +30,10 @@ type Test(helper: ITestOutputHelper) =
         Regex.Replace(input, "\#(\d+);", charCodeToString)
 
     [<Fact>]
-    member _.``Blog chứng khoán - last 7 entries``() =
+    member _.``Blog chứng khoán``() =
         RssFeed.GetSample()
         |> _.Channel.Items
-        |> filter (fun x -> x.Category = "Chứng khoán")
-        |> filter (fun x -> x.Title.StartsWith "Blog chứng khoán")
+        |> filter (fun x -> x.Title.Contains "Blog chứng khoán")
         |> sortByDescending _.PubDate
-        |> map (fun x ->
-            { Title = x.Title
-              Published = x.PubDate.UtcDateTime |> stringf "dd/MM/yyyy"
-              Abstract = x.Description |> charDecode
-              Link = x.Link })
+        |> map RssFeedItem.toFeedItem
         |> iter (sprintf "%A" >> helper.WriteLine)
