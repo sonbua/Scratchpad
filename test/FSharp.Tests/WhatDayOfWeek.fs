@@ -2,16 +2,14 @@ module WhatDayOfWeek
 
 open System
 open FSharpPlus
-open FsUnit
-open Xunit
 
-let countDaysUpToYear year =
+let private countDaysUpToYear year =
     let year = year - 1
     let century = year / 100
 
     year * 365 + year / 4 - century + century / 4
 
-let (|LeapYear|CommonYear|) year =
+let private (|LeapYear|CommonYear|) year =
     let mod' x y = y % x = 0
 
     match year with
@@ -20,22 +18,37 @@ let (|LeapYear|CommonYear|) year =
     | _ when mod' 4 year -> LeapYear
     | _ -> CommonYear
 
-let daysInMonth year month =
+let private daysInMonth year month =
     match year with
     | LeapYear -> [ 31; 29; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ] // number of days in each month in a leap year
     | CommonYear -> [ 31; 28; 31; 30; 31; 30; 31; 31; 30; 31; 30; 31 ]
     |> item (month - 1)
 
-let countDaysInYearUpToMonth year month =
-    [ 1 .. (month - 1) ] |> map (daysInMonth year) |> sum
+let private countDaysInYearUpToMonth year month =
+    [ 1 .. (month - 1) ]
+    |> map (daysInMonth year)
+    |> sum
 
-let countDays (year, month, day) =
-    countDaysUpToYear year + countDaysInYearUpToMonth year month + day
+let private countDays (year, month, day) =
+    countDaysUpToYear year
+    + countDaysInYearUpToMonth year month
+    + day
 
 let whatDayOfWeek = countDays >> (fun x -> x % 7) >> enum<DayOfWeek>
 
-[<Theory>]
-[<InlineData(2022, 7, 5, DayOfWeek.Tuesday)>]
-[<InlineData(2022, 1, 1, DayOfWeek.Saturday)>]
-let ``Given year month day Should return correct day of week`` year month day (expected: DayOfWeek) =
-    whatDayOfWeek (year, month, day) |> should equal expected
+
+open Expecto
+open Expecto.Flip
+
+[<Tests>]
+let specs =
+    testList
+        "WhatDayOfWeek"
+        [ // theory data
+          let yearMonthDayTheoryData =
+              [ 2022, 7, 5, DayOfWeek.Tuesday
+                2022, 1, 1, DayOfWeek.Saturday ]
+
+          testTheory "Given year month day" yearMonthDayTheoryData (fun (year, month, day, expected: DayOfWeek) ->
+              whatDayOfWeek (year, month, day)
+              |> Expect.equal "Should return correct day of week" expected) ]
