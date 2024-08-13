@@ -19,6 +19,7 @@
     <Compile Include="GitBatchPull.fs" />
     <Compile Include="VnEconomyRss.fs" />
     <Compile Include="CopyPackagesToThisWeek.fs" />
+    <Compile Include="LongmanActivator.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
