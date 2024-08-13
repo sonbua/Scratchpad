@@ -5,82 +5,91 @@ open System.IO
 open System.Reactive.Linq
 open Fake.Core
 open FSharpPlus
-open Microsoft.FSharp.Collections
-open Xunit
-open Xunit.Abstractions
-
-type Output = private Output of string
-
-// Branch
-type Branch = private Branch of string
-
-module Branch =
-    let name (Branch branch) = branch
-
-    let isMajorBranch (Branch branch) =
-        [ "master"; "main"; "develop" ] |> List.contains branch
 
 // Repo
 type Repo = private Repo of string
 
 module Repo =
-    let isGitRepo dir =
-        [| dir; ".git" |] |> Path.Combine |> Directory.Exists
+    let create dir =
+        match Path.Combine [| dir; ".git" |] |> Directory.Exists with
+        | true -> Ok(Repo dir)
+        | false -> Error $"'{dir}' is not a Git repository."
 
-type private GitBatchPull = string -> IObservable<Repo * Branch * Output>
+    let value (Repo name) = name
 
-let gitBatchPull: GitBatchPull =
-    let toOutput = String.trimWhiteSpaces >> Output
+// Branch
+type Branch = { Name: string; Repo: Repo }
 
-    let getCurrentBranch (Repo repo) =
-        CreateProcess.fromRawCommandLine "git" "branch --show-current"
-        |> CreateProcess.withWorkingDirectory repo
-        |> CreateProcess.redirectOutput
-        |> Proc.run
-        |> fun result ->
-            match result.ExitCode with
-            | 0 -> result.Result.Output |> String.trimWhiteSpaces |> Branch |> Ok
-            | _ -> result.Result.Error |> toOutput |> Error
+module Branch =
+    let private majorBranchNames = [ "master"; "main"; "develop" ]
 
-    let gitPull (Repo repo) =
-        CreateProcess.fromRawCommandLine "git" "pull --prune"
-        |> CreateProcess.withWorkingDirectory repo
-        |> CreateProcess.redirectOutput
-        |> Proc.run
-        |> fun result ->
-            match result.ExitCode with
-            | 0 -> result.Result.Output |> toOutput |> Ok
-            | _ -> result.Result.Error |> toOutput |> Error
+    let create repo branchName =
+        { Name = branchName |> String.trimWhiteSpaces
+          Repo = repo }
 
-    let gitPullBranch repo branch =
-        if branch |> Branch.isMajorBranch then
-            repo |> gitPull
-        else
-            $"Current branch '{branch |> Branch.name}' is not one of the major branches (master, main, develop)."
-            |> Output
+    let isMajorBranch branch =
+        majorBranchNames |> List.contains branch.Name
+
+type GitPullError =
+    | NotAGitRepo of string
+    | GetCurrentBranchError of (Repo * string)
+    | NotAMajorBranch of (Branch * string)
+    | CannotPull of (Branch * string)
+
+let private toRepo: string -> Result<Repo, GitPullError> =
+    Repo.create >> Result.mapError NotAGitRepo
+
+let private getCurrentBranch repo : Result<Branch, GitPullError> =
+    CreateProcess.fromRawCommandLine "git" "branch --show-current"
+    |> CreateProcess.withWorkingDirectory (repo |> Repo.value)
+    |> CreateProcess.redirectOutput
+    |> Proc.run
+    |> fun result ->
+        match result.ExitCode with
+        | 0 -> result.Result.Output |> Branch.create repo |> Ok
+        | _ ->
+            (repo, result.Result.Error)
+            |> GetCurrentBranchError
             |> Error
-        |> Result.map (tuple2 branch)
-        |> Result.mapError (tuple2 branch)
 
-    let gitPull' repo =
-        repo
-        |> getCurrentBranch
-        |> Result.mapError (fun output -> (Branch "", output))
-        |> Result.bind (gitPullBranch repo)
+let private rejectNonMajorBranch branch : Result<Branch, GitPullError> =
+    if branch |> Branch.isMajorBranch then
+        Ok branch
+    else
+        $"Current branch, '{branch.Name}', is not one of the major branches (master, main, develop)."
+        |> tuple2 branch
+        |> NotAMajorBranch
+        |> Error
 
-    fun parentDir ->
-        parentDir
-        |> Directory.EnumerateDirectories
-        |> filter Repo.isGitRepo
-        |> map Repo
-        |> Observable.ToObservable
-        |> map (fun repo -> (repo, repo |> gitPull' |> either id id))
-        |> map (fun (repo, (branch, output)) -> (repo, branch, output))
+let private gitPullBranch branch : Result<Branch * string, GitPullError> =
+    CreateProcess.fromRawCommandLine "git" "pull --prune"
+    |> CreateProcess.withWorkingDirectory (branch.Repo |> Repo.value)
+    |> CreateProcess.redirectOutput
+    |> Proc.run
+    |> fun result ->
+        match result.ExitCode with
+        | 0 -> (branch, result.Result.Output) |> Ok
+        | _ -> CannotPull(branch, result.Result.Error) |> Error
+
+let private gitPull: string -> Result<Branch * string, GitPullError> =
+    toRepo
+    >=> getCurrentBranch
+    >=> rejectNonMajorBranch
+    >=> gitPullBranch
+
+let gitBatchPull: string -> IObservable<Result<Branch * string, GitPullError>> =
+    Directory.EnumerateDirectories
+    >> Observable.ToObservable
+    >> map gitPull
+
+
+open Xunit
+open Xunit.Abstractions
 
 type Tests(helper: ITestOutputHelper) =
     [<Theory>]
     [<InlineData(@"C:\repo\")>]
-    [<InlineData(@"C:\repo\archived\")>]
+    [<InlineData(@"C:\repo\_\")>]
     let ``Perform "git pull" against all subdirectories`` parentDir =
         parentDir
         |> gitBatchPull
