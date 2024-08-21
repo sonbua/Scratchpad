@@ -87,3 +87,18 @@ module Uri =
 
     let extract =
         extractUriStrings >> Seq.map Uri
+
+
+open Microsoft.FSharp.Quotations.Patterns
+open Microsoft.FSharp.Reflection
+
+/// Credit: https://stackoverflow.com/a/11798829
+let rec ofCase =
+    function
+    | Lambda(_, expr)
+    | Let(_, _, expr) -> ofCase expr
+    | NewTuple exprs -> fun value -> exprs |> Seq.map ofCase |> Seq.exists ((|>) value)
+    | NewUnionCase(uci, _) ->
+        let utr = FSharpValue.PreComputeUnionTagReader uci.DeclaringType
+        box >> utr >> (=) uci.Tag
+    | _ -> failwith "Expression is not union case."
