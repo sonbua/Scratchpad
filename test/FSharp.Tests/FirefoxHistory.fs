@@ -1,71 +1,71 @@
-namespace Firefox
+module Firefox.History
 
 open System
-open FsUnit
-open FSharpPlus
 open FSharp.Data
-open Xunit
-open Xunit.Abstractions
+open FSharpPlus
 
-module History =
-    type UrlPart =
-        { Authority: string
-          PathSegments: string list }
+type UrlPart =
+    { Authority: string
+      PathSegments: string list }
 
-    module UrlPart =
-        type private Create = Uri -> UrlPart
+module UrlPart =
+    let private toSegments path =
+        match path with
+        | null
+        | ""
+        | "/" -> []
+        | path ->
+            path.Split([| '/' |], StringSplitOptions.RemoveEmptyEntries)
+            |> toList
 
-        let create: Create =
-            fun uri ->
-                let toSegments path =
-                    match path with
-                    | null
-                    | ""
-                    | "/" -> []
-                    | path -> path.Split([| '/' |], StringSplitOptions.RemoveEmptyEntries) |> toList
+    let create (uri: Uri): UrlPart =
+        { Authority = uri.Authority
+          PathSegments = uri.LocalPath |> toSegments }
 
-                { Authority = uri.Authority
-                  PathSegments = uri.LocalPath |> toSegments }
+    let cutoffToFirstPathSegment urlPart =
+        match urlPart.PathSegments with
+        | [] -> urlPart.Authority
+        | [ x ]
+        | x :: _ -> $"{urlPart.Authority}/{x}"
 
-    [<Literal>]
-    let source = "TestData\\moz_places.json"
+[<Literal>]
+let source = "TestData\\moz_places.json"
 
-    type Places = JsonProvider<source>
+type Places = JsonProvider<source>
 
-    let urlParts =
-        Places.GetSamples()
-        |> sortByDescending (fun x -> x.LastVisitDate |> Option.defaultValue 0L)
-        |> map (fun x -> x.Url |> Uri |> UrlPart.create)
-        |> toList
 
-    type Reports(console: ITestOutputHelper) =
-        let writeln = console.WriteLine
+open Expecto
+open Expecto.Logging
 
-        [<Fact>]
-        member _.``Count by authority, count >= 5``() =
+[<Tests>]
+let specs =
+    testList "FirefoxHistory" [
+        let logger = Log.createHiera [| "Firefox"; "History" |]
+        let writeln = Message.eventX >> logger.info
+
+        let urlParts =
+            Places.GetSamples()
+            |> map (fun x -> x.Url |> Uri |> UrlPart.create)
+            |> toList
+
+        test "Count by authority, count >= 5" {
             urlParts
             |> List.countBy _.Authority
             |> filter (fun (_, count) -> count >= 5)
+            |> sortByDescending snd
             |> map fst
 
-            // side-effect
-            |> iter writeln
+            // Side effect
+            |> (sprintf "%A" >> writeln)
+        }
 
-        [<Fact>]
-        member _.``Count by authority and first path's segment, count >= 5``() =
-            let firstPathSegment (segments: string list) =
-                match segments with
-                | [] -> ""
-                | [ x ]
-                | x :: _ -> $"/{x}"
-
-            let authorityAndFirstPathSegment urlPart =
-                $"{urlPart.Authority}{urlPart.PathSegments |> firstPathSegment}"
-
+        test "Count by authority and first path's segment, count >= 5" {
             urlParts
-            |> List.countBy authorityAndFirstPathSegment
+            |> List.countBy UrlPart.cutoffToFirstPathSegment
             |> filter (fun (_, count) -> count >= 5)
+            |> sortByDescending snd
             |> map fst
 
-            // side-effect
-            |> iter writeln
+            // Side effect
+            |> (sprintf "%A" >> writeln)
+        } ]

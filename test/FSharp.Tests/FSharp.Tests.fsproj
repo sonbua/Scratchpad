@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="TestData\moz_places.json" />
+    <Content Include="TestData\moz_places.json" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="Reusables.fs" />
     <Compile Include="FirefoxData.fs" />
     <Compile Include="FirefoxHistory.fs" />
