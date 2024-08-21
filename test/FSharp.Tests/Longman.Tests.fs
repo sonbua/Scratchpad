@@ -1,273 +1,215 @@
 module LongmanTests
 
+open Expecto
+open Expecto.Flip
 open FSharpPlus
 open Longman
-open FsUnit
-open Xunit
 
-type Tests() =
-    [<Theory>]
-    [<InlineData("because")>]
-    member x.``WordFamily: No word family`` query =
-         let actualWordFamily = query |> lookup |> _.WordFamily
+[<Tests>]
+let specs =
+    testList "LDOCE" [
+        // theory data
+        let noWordFamilyTheoryData = [ "because" ]
+        testTheory "WordFamily: No word family" noWordFamilyTheoryData (fun query ->
+            let actualWordFamily = query |> lookup |> _.WordFamily
+            actualWordFamily |> Expect.equal "Should have no word family" None)
 
-         actualWordFamily |> should equal None
+        // theory data
+        let hasWordFamilyTheoryData = [ "compensation", [ "compensation"; "compensatory"; "compensate" ] ]
+        testTheory "WordFamily: Has word family" hasWordFamilyTheoryData (fun (query, wordFamily: string list) ->
+            let actualWordFamily = query |> lookup |> _.WordFamily |> Option.get
+            actualWordFamily |> Expect.sequenceEqual "Should have word family" wordFamily)
 
+        // theory data
+        let noEntryIdTheoryData = [ "example"; "include"; "get above" ]
+        testTheory "Entry: Id (no ID)" noEntryIdTheoryData (fun query ->
+            let entry = query |> lookup |> _.Entries |> Seq.exactlyOne
+            entry.Id |> Expect.isNone "There should be no ID")
 
-    static member WordFamilies: seq<obj []> = [
-        [| "compensation"; [| "compensation"; "compensatory"; "compensate" |] |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.WordFamilies)>]
-    member x.``WordFamily: Has word family`` query (wordFamily: string []) =
-         let actualWordFamily = query |> lookup |> _.WordFamily |> Option.get
+        // theory data
+        let wordTheoryData =
+            [ "else", Word "else"
+              "get about", PhrasalVerb "get about" ]
+        testTheory "Entry: Word" wordTheoryData (fun (query, word: Word) ->
+            let entry = query |> lookup |> _.Entries |> head
+            entry.Word |> Expect.equal "Should have word" word)
 
-         actualWordFamily |> should equalSeq wordFamily
+        // theory data
+        let multipleEntriesTheoryData = [ "because"; "case" ]
+        testTheory "Entry: Number (multiple entries)" multipleEntriesTheoryData (fun query ->
+            let entries = query |> lookup |> _.Entries
+            (entries.Length, 1) |> Expect.isGreaterThan "Should be more than one entry"
+            entries.Head.No |> Expect.equal "Entries should be numbered" (Some 1))
 
-    [<Theory>]
-    [<InlineData("example")>]
-    [<InlineData("include")>]
-    [<InlineData("get above")>]
-    member x.``Entry: Id (no ID)`` query =
-        let entry = query |> lookup |> _.Entries |> Seq.exactlyOne
+        // theory data
+        let singleEntryTheoryData = [ "example"; "include"; "get above" ]
+        testTheory "Entry: Number (single entry)" singleEntryTheoryData (fun query ->
+            let entry = query |> lookup |> _.Entries |> Seq.exactlyOne
+            entry.No |> Expect.isNone "Should not be numbered")
 
-        entry.Id |> should equal None
+        // theory data
+        let pronunciationTranscriptionsTheoryData =
+            [ "case", [ "keɪs" ]
+              "can", [ "kən"; "kæn" ]
+              "some", [ "səm"; "sʌm" ] ]
+        testTheory "Entry: Pronunciation: Transcriptions" pronunciationTranscriptionsTheoryData
+            (fun (query, transcriptions: string list) ->
+                 let entry = query |> lookup |> _.Entries |> head
+                 let actualTranscriptions = entry.Pronunciation.Transcriptions
+                 actualTranscriptions |> Expect.sequenceEqual "Should contain transcriptions" transcriptions)
 
+        // theory data
+        let pronunciationAmericanVariantTheoryData =
+            [ "biology", "-ˈɑːl-"
+              "work", "wɜːrk" ]
+        testTheory "Entry: Pronunciation: American variant" pronunciationAmericanVariantTheoryData
+            (fun (query, americanVariant: string) ->
+                 let entry = query |> lookup |> _.Entries |> head
+                 let actualAmericanVariant = entry.Pronunciation.AmericanVariant
+                 actualAmericanVariant |> Expect.equal "Should exist American variant" (Some americanVariant))
 
-    static member Words: seq<obj []> = [
-        [| "else"; Word "else" |]
-        [| "get about"; PhrasalVerb "get about" |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.Words)>]
-    member x.``Entry: Word`` query (word: Word) =
-        let entry = query |> lookup |> _.Entries |> head
+        // theory data
+        let pronunciationAudioFiles =
+            [ "can", [ (British, "https://www.ldoceonline.com/media/english/breProns/ld44can.mp3?version=1.2.71")
+                       (American, "https://www.ldoceonline.com/media/english/ameProns/l3can.mp3?version=1.2.71") ] ]
+        testTheory "Entry: Pronunciation: Audio files" pronunciationAudioFiles
+            (fun (query, audios: (Label * string) list) ->
+                 let entry = query |> lookup |> _.Entries |> head
+                 entry.Pronunciation.Audio |> Expect.sequenceEqual "Should have audios" audios)
 
-        entry.Word |> should equal word
+        // theory data
+        let senseNoDefinitionTheoryData =
+            [ "word", "word__2"
+              "else", "else__2" ]
+        testTheory "Entry: Senses: Sense: No definition" senseNoDefinitionTheoryData
+            (fun (query, senseId) ->
+                 let entry = query |> lookup |> _.Entries |> head
+                 let actualDefinition =
+                     entry
+                     |> _.Senses
+                     |> List.pick (function
+                         | Sense sense when sense.Id = Some senseId -> Some sense
+                         | _ -> None)
+                     |> _.Definition
+                 actualDefinition |> Expect.isNone "Should be None")
 
-    [<Theory>]
-    [<InlineData("because")>]
-    [<InlineData("case")>]
-    member x.``Entry: Number (multiple entries)`` query =
-        let entries = query |> lookup |> _.Entries
+        // theory data
+        let simpleExampleWithAudioTheoryData =
+            [ "get about", "get-about__1", Simple { Text = "She’s 80 now, and doesn’t get about much anymore."; Audio = "https://www.ldoceonline.com/media/english/exaProns/ldoce6exa_00386.mp3?version=1.2.71" }
+              "get about", "get-about__2", Simple { Text = "I don’t really want this to get about."; Audio = "https://www.ldoceonline.com/media/english/exaProns/p008-001290263.mp3?version=1.2.71" } ]
+        testTheory "Entry: Senses: Sense: Examples: Simple example with audio" simpleExampleWithAudioTheoryData
+            (fun (query, senseId, simpleExample) ->
+                 let entry = query |> lookup |> _.Entries |> head
+                 let actualExample =
+                     entry
+                     |> _.Senses
+                     |> List.pick (function
+                         | Sense sense when sense.Id = Some senseId -> Some sense
+                         | _ -> None)
+                     |> _.Examples
+                     |> head
+                 actualExample |> Expect.equal "Should equal simple example" simpleExample)
 
-        entries.Length |> should be (greaterThan 1)
-        entries.Head.No |> should equal (Some 1)
+        // theory data
+        let senseThesaurusesTheoryData =
+            [ "go", "go__7", [ "become" ]
+              "revise", "revise__2", [ "learn"; "study" ] ]
+        testTheory "Entry: Senses: Sense: Thesauruses" senseThesaurusesTheoryData
+            (fun (query, senseId, thesauruses: string list) ->
+                 let entry = query |> lookup |> _.Entries |> head
+                 let actualThesauruses =
+                     entry
+                     |> _.Senses
+                     |> List.pick (function
+                         | Sense sense when sense.Id = Some senseId -> Some sense
+                         | _ -> None)
+                     |> _.Thesauruses
+                 actualThesauruses |> Expect.sequenceEqual "Should have thesauruses" thesauruses)
 
-    [<Theory>]
-    [<InlineData("example")>]
-    [<InlineData("include")>]
-    [<InlineData("get above")>]
-    member x.``Entry: Number (single entry)`` query =
-        let entry = query |> lookup |> _.Entries |> Seq.exactlyOne
+        // theory data
+        let senseCrossRefsTheoryData =
+            [ "get", "get__13", [ "get (somebody) somewhere/anywhere/nowhere" ] ]
+        testTheory "Entry: Senses: Sense: Cross references" senseCrossRefsTheoryData
+            (fun (query, senseId, crossRefs) ->
+                 let entry = query |> lookup |> _.Entries |> head
+                 let actualCrossRefs =
+                     entry
+                     |> _.Senses
+                     |> List.pick (function
+                         | Sense sense when sense.Id = Some senseId -> Some sense
+                         | _ -> None)
+                     |> _.CrossRefs
+                 actualCrossRefs |> Expect.sequenceEqual "Should have sense's cross references" crossRefs)
 
-        entry.No |> should equal None
+        // theory data
+        let subsenseGroupDefinitionTheoryData =
+            [ "else", "else__1", 0, "besides or in addition to someone or something"
+              "else", "else__1", 1, "used to talk about a different person, thing, place etc" ]
+        testTheory "Entry: Senses: SubsenseGroup: Subsenses: Definition" subsenseGroupDefinitionTheoryData
+            (fun (query, subsenseGroupId, subsenseIndex, definition) ->
+                 let entry = query |> lookup |> _.Entries |> head
+                 let actualDefinition =
+                     entry
+                     |> _.Senses
+                     |> List.pick (function
+                         | SubsenseGroup group when group.Id = Some subsenseGroupId -> Some group
+                         | _ -> None)
+                     |> _.Subsenses
+                     |> List.item subsenseIndex
+                     |> _.Definition
+                 actualDefinition |> Expect.equal "Should have definition" (Some definition))
 
+        // theory data
+        let subsenseGroupTheoryData = [ "else", "else__1", 2 ]
+        testTheory "Entry: Senses: SubsenseGroup: Subsenses: Count" subsenseGroupTheoryData
+            (fun (query, senseId, subsenseCount) ->
+                 let entry = query |> lookup |> _.Entries |> head
+                 let subsenses =
+                     entry
+                     |> _.Senses
+                     |> List.pick (function
+                         | SubsenseGroup group when group.Id = Some senseId -> Some group
+                         | _ -> None)
+                     |> _.Subsenses
+                 subsenses |> Expect.hasLength "Should have correct subsense count" subsenseCount)
 
-    static member PronunciationTranscriptions: seq<obj []> = [
-        [| "case"; [ "keɪs" ] |]
-        [| "can"; [ "kən"; "kæn" ] |]
-        [| "some"; [ "səm"; "sʌm" ] |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.PronunciationTranscriptions)>]
-    member x.``Entry: Pronunciation: Transcriptions`` query (transcriptions: string list) =
-        let entry = query |> lookup |> _.Entries |> head
-        let actualTranscriptions = entry.Pronunciation.Transcriptions
+        // theory data
+        let subsenseGroupThesaurusesTheoryData =
+            [ "get", "get__4", [ "buy" ]
+              "get", "get__5", [ "earn" ] ]
+        testTheory "Entry: Senses: SubsenseGroup: Thesauruses" subsenseGroupThesaurusesTheoryData
+            (fun (query, subsenseGroupId, thesauruses: string list) ->
+                 let entry = query |> lookup |> _.Entries |> head
+                 let actualThesauruses =
+                     entry
+                     |> _.Senses
+                     |> List.pick (function
+                         | SubsenseGroup group when group.Id = Some subsenseGroupId -> Some group
+                         | _ -> None)
+                     |> _.Thesauruses
+                 actualThesauruses |> Expect.sequenceEqual "Should have thesauruses" thesauruses)
 
-        actualTranscriptions |> should equalSeq transcriptions
+        // theory data
+        let subsenseGroupCrossRefsTheoryData = [ "case", "case__8", 2, [ "bookcase"; "briefcase"; "pillowcase" ] ]
+        testTheory "Entry: Senses: SubsenseGroup: Subsenses: Cross references" subsenseGroupCrossRefsTheoryData
+            (fun (query, subsenseGroupId, subsenseIndex, crossRefs) ->
+                 let entry = query |> lookup |> _.Entries |> head
+                 let actualCrossRefs =
+                     entry
+                     |> _.Senses
+                     |> List.pick (function
+                         | SubsenseGroup group when group.Id = Some subsenseGroupId -> Some group
+                         | _ -> None)
+                     |> _.Subsenses
+                     |> List.item subsenseIndex
+                     |> _.CrossRefs
+                 actualCrossRefs |> Expect.sequenceEqual "Should have subsense's cross references" crossRefs)
 
-    [<Theory>]
-    [<InlineData("biology", "-ˈɑːl-")>]
-    [<InlineData("work", "wɜːrk")>]
-    member x.``Entry: Pronunciation: American variant`` query (americanVariant: string) =
-        let entry = query |> lookup |> _.Entries |> head
-
-        entry.Pronunciation.AmericanVariant
-        |> should equal (Some americanVariant)
-
-
-    static member PronunciationAudioFiles: seq<obj []> = [
-        [| "can"; [
-            (British, "https://www.ldoceonline.com/media/english/breProns/ld44can.mp3?version=1.2.71")
-            (American, "https://www.ldoceonline.com/media/english/ameProns/l3can.mp3?version=1.2.71")
-        ] |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.PronunciationAudioFiles)>]
-    member x.``Entry: Pronunciation: Audio files`` query (audios: (Label * string) list) =
-        let entry = query |> lookup |> _.Entries |> head
-
-        entry.Pronunciation.Audio
-        |> should equalSeq audios
-
-    [<Theory>]
-    [<InlineData("word", "word__2")>]
-    [<InlineData("else", "else__2")>]
-    member x.``Entry: Senses: Sense: No definition`` query senseId =
-        let entry = query |> lookup |> _.Entries |> head
-
-        let actualDefinition =
-            entry
-            |> _.Senses
-            |> List.pick (function
-                | Sense sense when sense.Id = senseId -> Some sense
-                | _ -> None)
-            |> _.Definition
-
-        actualDefinition |> should equal None
-
-
-    static member SimpleExampleWithAudio: seq<obj []> = [
-        [| "get about"; "get-about__1"; Simple { Text = "She’s 80 now, and doesn’t get about much anymore."; Audio = "https://www.ldoceonline.com/media/english/exaProns/ldoce6exa_00386.mp3?version=1.2.71" } |]
-        [| "get about"; "get-about__2"; Simple { Text = "I don’t really want this to get about."; Audio = "https://www.ldoceonline.com/media/english/exaProns/p008-001290263.mp3?version=1.2.71" } |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.SimpleExampleWithAudio)>]
-    member x.``Entry: Senses: Sense: Examples: Simple example with audio`` query senseId simpleExample =
-        let entry = query |> lookup |> _.Entries |> head
-
-        let actualExample =
-            entry
-            |> _.Senses
-            |> List.pick (function
-                | Sense sense when sense.Id = senseId -> Some sense
-                | _ -> None)
-            |> _.Examples
-            |> head
-
-        actualExample |> should equal simpleExample
-
-
-    static member SenseThesauruses: seq<obj []> = [
-        [| "go"; "go__7"; [ "become" ] |]
-        [| "revise"; "revise__2"; [ "learn"; "study" ] |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.SenseThesauruses)>]
-    member x.``Entry: Senses: Sense: Thesauruses`` query senseId (thesauruses: string list) =
-        let entry = query |> lookup |> _.Entries |> head
-
-        let actualThesauruses =
-            entry
-            |> _.Senses
-            |> List.pick (function
-                | Sense sense when sense.Id = senseId -> Some sense
-                | _ -> None)
-            |> _.Thesauruses
-
-        actualThesauruses |> should equalSeq thesauruses
-
-
-    static member SenseCrossRefs: seq<obj[]> = [
-        [| "get"; "get__13"; [ "get (somebody) somewhere/anywhere/nowhere" ] |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.SenseCrossRefs)>]
-    member x.``Entry: Senses: Sense: Cross references`` query senseId crossRefs =
-        let entry = query |> lookup |> _.Entries |> head
-
-        let actualCrossRefs =
-            entry
-            |> _.Senses
-            |> List.pick (function
-                | Sense sense when sense.Id = senseId -> Some sense
-                | _ -> None)
-            |> _.CrossRefs
-
-        actualCrossRefs |> should equalSeq crossRefs
-
-
-    static member SubsenseGroupDefinition: seq<obj []> = [
-        [| "else"; "else__1"; 0; "besides or in addition to someone or something" |]
-        [| "else"; "else__1"; 1; "used to talk about a different person, thing, place etc" |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.SubsenseGroupDefinition)>]
-    member x.``Entry: Senses: SubsenseGroup: Subsenses: Definition`` query subsenseGroupId subsenseIndex definition =
-        let entry = query |> lookup |> _.Entries |> head
-
-        let actualDefinition =
-            entry
-            |> _.Senses
-            |> List.pick (function
-                | SubsenseGroup group when group.Id = subsenseGroupId -> Some group
-                | _ -> None)
-            |> _.Subsenses
-            |> List.item subsenseIndex
-            |> _.Definition
-
-        actualDefinition |> should equal (Some definition)
-
-
-    static member SubsenseGroups: seq<obj []> = [
-        [| "else"; "else__1"; 2 |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.SubsenseGroups)>]
-    member x.``Entry: Senses: SubsenseGroup: Subsenses: Count`` query senseId subsenseCount =
-        let entry = query |> lookup |> _.Entries |> head
-
-        let subsenses =
-            entry
-            |> _.Senses
-            |> List.pick (function
-                | SubsenseGroup group when group.Id = Some senseId -> Some group
-                | _ -> None)
-            |> _.Subsenses
-
-        subsenses |> should haveLength subsenseCount
-
-
-    static member SubsenseGroupThesauruses: seq<obj []> = [
-        [| "get"; "get__4"; [ "buy" ] |]
-        [| "get"; "get__5"; [ "earn" ] |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.SubsenseGroupThesauruses)>]
-    member x.``Entry: Senses: SubsenseGroup: Thesauruses`` query subsenseGroupId (thesauruses: string list) =
-        let entry = query |> lookup |> _.Entries |> head
-
-        let actualThesauruses =
-            entry
-            |> _.Senses
-            |> List.pick (function
-                | SubsenseGroup group when group.Id = subsenseGroupId -> Some group
-                | _ -> None)
-            |> _.Thesauruses
-
-        actualThesauruses |> should equalSeq thesauruses
-
-
-    static member SubsenseGroupCrossRefs: seq<obj[]> = [
-        [| "case"; "case__8"; 2; [ "bookcase"; "briefcase"; "pillowcase" ] |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.SubsenseGroupCrossRefs)>]
-    member x.``Entry: Senses: SubsenseGroup: Subsenses: Cross references`` query subsenseGroupId subsenseIndex crossRefs =
-        let entry = query |> lookup |> _.Entries |> head
-
-        let actualCrossRefs =
-            entry
-            |> _.Senses
-            |> List.pick (function
-                | SubsenseGroup group when group.Id = subsenseGroupId -> Some group
-                | _ -> None)
-            |> _.Subsenses
-            |> List.item subsenseIndex
-            |> _.CrossRefs
-
-        actualCrossRefs |> should equalSeq crossRefs
-
-
-    static member SingleCrossReferences: seq<obj []> = [
-        [| "get about"; [ "get" ] |]
-        [| "else"; [ "if nothing else"; "be something else" ] |]
-    ]
-    [<Theory>]
-    [<MemberData(nameof Tests.SingleCrossReferences)>]
-    member x.``Entry: Cross references`` query (crossRefs: string list) =
-        let entry = query |> lookup |> _.Entries |> head
-        let actualCrossRefs = entry.CrossRefs
-
-        actualCrossRefs |> should equalSeq crossRefs
+        // theory data
+        let entryCrossReferencesTheoryData =
+            [ "get about", [ "get" ]
+              "else", [ "if nothing else"; "be something else" ] ]
+        testTheory "Entry: Cross references" entryCrossReferencesTheoryData (fun (query, crossRefs: string list) ->
+            let entry = query |> lookup |> _.Entries |> head
+            let actualCrossRefs = entry.CrossRefs
+            actualCrossRefs |> Expect.sequenceEqual "This entry should have cross references" crossRefs) ]
