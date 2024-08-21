@@ -1,3 +1,4 @@
+// https://talesfrom.dev/blog/many-faces-of-ddd-aggregates-in-fsharp
 module BouncerShift
 
 open FSharpPlus
