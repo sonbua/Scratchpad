@@ -83,14 +83,17 @@ let gitBatchPull: string -> IObservable<Result<Branch * string, GitPullError>> =
     >> map gitPull
 
 
-open Xunit
-open Xunit.Abstractions
+open Expecto
+open Expecto.Logging
 
-type Tests(helper: ITestOutputHelper) =
-    [<Theory>]
-    [<InlineData(@"C:\repo\")>]
-    [<InlineData(@"C:\repo\_\")>]
-    let ``Perform "git pull" against all subdirectories`` parentDir =
-        parentDir
-        |> gitBatchPull
-        |> Observable.subscribe (sprintf "%A" >> helper.WriteLine)
+[<Tests>]
+let specs =
+    let logger = Log.create "GitBatchPull"
+    let writeln = Message.eventX >> logger.info
+    // theory data
+    let subdirsTheoryData = [
+        @"C:\repo\"
+        @"C:\repo\_\"
+    ]
+    testTheory "Perform 'git pull' against all subdirectories" subdirsTheoryData (fun parentDir ->
+        parentDir |> gitBatchPull |> Observable.subscribe (sprintf "%A" >> writeln))
