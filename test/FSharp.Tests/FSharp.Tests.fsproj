@@ -10,7 +10,9 @@
     <PackageReference Include="Expecto" />
     <PackageReference Include="Fake.Core.Target" />
     <PackageReference Include="FSharp.Data" />
+    <PackageReference Include="FSharp.Data.Dapper" />
     <PackageReference Include="FSharpPlus" />
+    <PackageReference Include="Microsoft.Data.SQLite" />
     <PackageReference Include="YoloDev.Expecto.TestSdk" />
   </ItemGroup>
 
