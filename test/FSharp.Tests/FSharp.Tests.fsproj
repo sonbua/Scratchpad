@@ -34,6 +34,7 @@
     <Compile Include="Longman.fs" />
     <Compile Include="Longman.Tests.fs" />
     <Compile Include="UriUtils.fs" />
+    <Compile Include="VozUserPosts.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
