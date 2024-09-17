@@ -77,8 +77,7 @@ module ConnectionFactory =
 [<CLIMutable>]
 type Place =
     { Id: int
-      Url: string
-      Title: string option }
+      Url: string }
 
 module Place =
     open System
@@ -130,7 +129,7 @@ module Db =
             let! places =
                 querySeqAsync {
                     script
-                        """select distinct P.id, P.url, P.title
+                        """select distinct P.id, P.url
                            from moz_places P
                              left join moz_bookmarks B on P.id = B.fk
                            where (url like '%' || @UrlPart || '%')
@@ -215,9 +214,10 @@ module Tests =
                     "?__cf_chl_rt_tk="
                     "127.0.0.1"
                     "1tudien.com"
+                    "5.vndic.net"
                     "accounts.firefox.com"
                     "accounts.google.com"
-                    "apkdone.com/?s="
+                    "apkdone.com/search/"
                     "app.datadoghq.com/account/login"
                     "app.datadoghq.com/apm"
                     "app.datadoghq.com/dashboard"
@@ -225,11 +225,13 @@ module Tests =
                     "app.navan.com"
                     "app.opsgenie.com"
                     "bonus.ly"
+                    "bot-verify.onrender.com"
                     "calendar.google.com"
                     "claude.ai/chat"
                     "claude.ai/login"
                     "claude.ai/magic-link"
                     "community.upwork.com"
+                    "confluence.sso.episerver.net/login.action?"
                     "contacts.google.com/label"
                     "contacts.google.com/person"
                     "contacts.google.com/search"
@@ -252,7 +254,6 @@ module Tests =
                     "id.zalo.me/account"
                     "info.hdbank.com.vn/subcriber"
                     "ipfs.io"
-                    "jira.sso.episerver.net/issues/?jql="
                     "jira.sso.episerver.net/login.jsp"
                     "jira.sso.episerver.net/projects"
                     "jira.sso.episerver.net/secure"
@@ -263,6 +264,7 @@ module Tests =
                     "jr.zingmp3.vn"
                     "khachhang.prudential.com.vn"
                     "libgen.is"
+                    "www.linkedin.com/authwall"
                     "localhost:50592"
                     "login.microsoftonline.com"
                     "lucid.app/users/registerOrLogin/"
@@ -274,7 +276,7 @@ module Tests =
                     "mail.google.com"
                     "mail.proton.me/login"
                     "mail.proton.me/u"
-                    "modyolo.com/?s="
+                    "modyolo.com/download/"
                     "mysignins.microsoft.com/#"
                     "nodeflair.com/salaries?page="
                     "optimizely.litmos.com"
@@ -307,6 +309,7 @@ module Tests =
                     "voz.vn/p"
                     "voz.vn/u"
                     "web.yammer.com"
+                    "world.optimizely.com/csclasslibraries"
                     "www.apkmirror.com/?post_type="
                     "www.amazon.com/s/"
                     "www.amazon.com/s?"
@@ -343,38 +346,50 @@ module Tests =
               let domainWithGarbagePlaceFilterTheoryData: (string * (Place -> bool)) list =
                   [ "addons.mozilla.org", Place.hasQuery "q"
                     "addons.mozilla.org", Place.hasQuery "utm_source"
+                    "apkdone.com", Place.hasQuery "s"
                     "asp-blogs.azurewebsites.net", Place.hasQuery "page"
                     "cheatsheetseries.owasp.org", Place.withFragment
                     "community.chocolatey.org", Place.withFragment
                     "community.e.foundation", Place.isNotFirstThreadPost
                     "community.windy.com", _.Url >> Regex.isMatch "/\\d+/.+?/\\d+"
+                    "confluence.sso.episerver.net", Place.hasQuery "src"
                     "discuss.logseq.com", Place.isNotFirstThreadPost
+                    "duckduckgo.com", Place.withFragment
                     "episerver99.sharepoint.com", Place.withFragment
                     "episerver99.sharepoint.com", _.Url >> String.isSubString "download.aspx?"
                     "episerver99.sharepoint.com", _.Url >> String.isSubString "spfxsinglesignon.aspx"
                     "episerveridentity.b2clogin.com", _.Url >> String.isSubString "/authorize?client_id="
                     "f247.com", Place.isNotFirstThreadPost
                     "forum.uipath.com", Place.isNotFirstThreadPost
+                    "forum.rescript-lang.org", Place.isNotFirstThreadPost
                     "forums.fsharp.org", Place.isNotFirstThreadPost
                     "github.com", Place.withFragment
                     "github.com", Place.hasQuery "q"
                     "github.com", Place.hasQuery "query"
                     "github.com", Place.hasQuery "tab"
                     "github.com", _.Url >> String.isSubString "/blob/"
+                    "github.com", _.Url >> String.isSubString "/commits/"
                     "github.com", _.Url >> String.isSubString "/compare/"
                     "github.com", _.Url >> String.isSubString "/releases/"
                     "github.com", _.Url >> String.isSubString "/runs/"
                     "github.com", _.Url >> String.isSubString "/tree/"
                     "github.com", _.Url >> String.isSubString "#issue"
+                    "github.com", _.Url >> Regex.isMatch "/commit/\\w{40}"
                     "github.com", _.Url >> Regex.isMatch "/issues/\\d+#"
                     "github.com", _.Url >> Regex.isMatch "/pull/\\d+#"
-                    "github.com", _.Url >> Regex.isMatch "/pull/\\d+/commits/"
-                    "github.com", _.Url >> Regex.isMatch "/pull/\\d+/files$"
+                    "github.com", _.Url >> Regex.isMatch "/pull/\\d+/commits"
+                    "github.com", _.Url >> Regex.isMatch "/pull/\\d+/files"
                     "github.com/advisories/", _.Url >> String.isSubString "dependabot?query="
                     "github.io", Place.withFragment
+                    "jira.sso.episerver.net", Place.hasQuery "jql"
                     "learn.microsoft.com", Place.withFragment
+                    "learnyouahaskell.com", Place.withFragment
                     "login.optimizely.com", _.Url >> String.isSubString "/authorize?client_id="
                     "masothue.com", Place.hasQuery "q"
+                    "modyolo.com", Place.hasQuery "s"
+                    "mullvad.net", Place.withFragment
+                    "mycroftproject.com/install.html", Place.hasQuery "id"
+                    "mycroftproject.com/search-engines.html", Place.hasQuery "name"
                     "nojaf.com", Place.withFragment
                     "nuget.optimizely.com", Place.hasQuery "q"
                     "nuget.optimizely.com", forallF [ Place.hasQuery "id"; Place.hasQuery "v" ]
@@ -384,6 +399,7 @@ module Tests =
                     "readthedocs.io", Place.withFragment
                     "ss64.com", Place.withFragment
                     "support.optimizely.com", Place.hasQuery "return_to"
+                    "thanglongkydao.com", _.Url >> Regex.isMatch "/threads/.+?/page\\d+"
                     "tienphong.vn", Place.withFragment
                     "tiki.vn", Place.hasQuery "q"
                     "vi.wikipedia.org/wiki/", Place.withFragment
@@ -391,7 +407,6 @@ module Tests =
                     "vnexpress.net", Place.hasFragment "vn_source"
                     "voz.vn", _.Url >> String.isSubString "/page-"
                     "voz.vn", _.Url >> String.isSubString "#post-"
-                    "world.optimizely.com/csclasslibraries", Place.withFragment
                     "write.as", _.Url >> String.isSubString "/edit"
                     "www.freelancer.com", Place.hasQuery "search_keyword"
                     "www.google.com", Place.hasQuery "q"
