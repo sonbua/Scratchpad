@@ -224,6 +224,7 @@ module Tests =
                     "app.datadoghq.com/logs?"
                     "app.navan.com"
                     "app.opsgenie.com"
+                    "bongban.org/search"
                     "bonus.ly"
                     "bot-verify.onrender.com"
                     "calendar.google.com"
@@ -304,10 +305,16 @@ module Tests =
                     "translate.google.com"
                     "upwork-usw2-prod-agora-file-storage.s3.us-west-2.amazonaws.com"
                     "url.de.m.mimecastprotect.com"
+                    "us3.datadoghq.com/account/login"
+                    "us3.datadoghq.com/apm"
+                    "us3.datadoghq.com/dashboard"
+                    "us3.datadoghq.com/logs?"
+                    "us3.datadoghq.com/services?"
                     "vi.m.wikipedia.org"
                     "vietstock.vn/tag"
-                    "voz.vn/p"
-                    "voz.vn/u"
+                    "voz.vn/p/"
+                    "voz.vn/search/"
+                    "voz.vn/u/"
                     "web.yammer.com"
                     "world.optimizely.com/csclasslibraries"
                     "www.apkmirror.com/?post_type="
@@ -348,6 +355,9 @@ module Tests =
                     "addons.mozilla.org", Place.hasQuery "utm_source"
                     "apkdone.com", Place.hasQuery "s"
                     "asp-blogs.azurewebsites.net", Place.hasQuery "page"
+                    "bongban.org", Place.withFragment
+                    "bongban.org", Place.hasQuery "page"
+                    "bongban.org", _.Url >> Regex.isMatch "/threads/.+?/page-\\d+"
                     "cheatsheetseries.owasp.org", Place.withFragment
                     "community.chocolatey.org", Place.withFragment
                     "community.e.foundation", Place.isNotFirstThreadPost
@@ -404,7 +414,9 @@ module Tests =
                     "tiki.vn", Place.hasQuery "q"
                     "vi.wikipedia.org/wiki/", Place.withFragment
                     "vietnamnet.vn", Place.hasFragment "vnn_source"
+                    "vneconomy.vn", Place.hasQuery "trang"
                     "vnexpress.net", Place.hasFragment "vn_source"
+                    "voz.vn", Place.hasQuery "page"
                     "voz.vn", _.Url >> String.isSubString "/page-"
                     "voz.vn", _.Url >> String.isSubString "#post-"
                     "write.as", _.Url >> String.isSubString "/edit"
