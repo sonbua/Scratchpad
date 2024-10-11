@@ -1,6 +1,7 @@
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Xunit.Abstractions;
 
 namespace Scratchpad.Tests;
 
@@ -51,6 +52,22 @@ public class ServiceCollectionExtensionsTest
         serviceProvider.GetServices<IService>()
             .Select(x => x.GetType())
             .Should().ContainInOrder(typeof(FirstComponent), typeof(SecondComponent));
+    }
+
+    [Fact]
+    public void TryAddEnumerable_SecondRegistration_ShouldOverrideFirstRegistration()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.TryAddSingleton<IService, FirstComponent>();
+
+        // Act
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IService, SecondComponent>());
+
+        // Assert
+        var serviceProvider = services.BuildServiceProvider();
+        serviceProvider.GetService<IService>()
+            .Should().BeOfType<SecondComponent>();
     }
 
     interface IService
