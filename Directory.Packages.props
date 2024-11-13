@@ -26,4 +26,9 @@
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
     <PackageVersion Include="YoloDev.Expecto.TestSdk" Version="0.14.3" />
   </ItemGroup>
+  <ItemGroup Label="Transitive dependencies with security issues">
+    <PackageVersion Include="System.Data.SqlClient" Version="4.9.0" />
+    <PackageVersion Include="System.Net.Http" Version="4.3.4" />
+    <PackageVersion Include="System.Text.Json" Version="8.0.5" />
+  </ItemGroup>
 </Project>
