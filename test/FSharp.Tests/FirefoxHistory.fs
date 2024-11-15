@@ -212,6 +212,7 @@ module Tests =
                   [ "file:///"
                     "?__cf_chl_tk="
                     "?__cf_chl_rt_tk="
+                    ".cmstest.optimizely.com"
                     "127.0.0.1"
                     "1tudien.com"
                     "5.vndic.net"
@@ -233,12 +234,14 @@ module Tests =
                     "claude.ai/magic-link"
                     "community.upwork.com"
                     "confluence.sso.episerver.net/login.action?"
+                    "confluence.sso.episerver.net/pages/viewpreviousversions.action?"
                     "contacts.google.com/label"
                     "contacts.google.com/person"
                     "contacts.google.com/search"
                     "developer.mozilla.org/en-US/search?q="
                     "dichvucong.dancuquocgia.gov.vn/portal"
                     "docs.google.com/accounts"
+                    "download.library.lol"
                     "engage.cloud.microsoft/main"
                     "episerver99.sharepoint.com/sites/"
                     "eu.docusign.net"
@@ -251,6 +254,7 @@ module Tests =
                     "go.microsoft.com"
                     "hcm55.sapsf.eu"
                     "hoachau.vn/search"
+                    "hvdic.thivien.net"
                     "id.atlassian.com"
                     "id.zalo.me/account"
                     "info.hdbank.com.vn/subcriber"
@@ -280,15 +284,24 @@ module Tests =
                     "modyolo.com/download/"
                     "mysignins.microsoft.com/#"
                     "nodeflair.com/salaries?page="
+                    "opti-dxp.datadoghq.com/account/login"
+                    "opti-dxp.datadoghq.com/apm"
+                    "opti-dxp.datadoghq.com/logs?"
                     "optimizely.litmos.com"
                     "optimizely.okta.com"
                     "outlook.office.com/mail/?"
+                    "outlook.office.com/mail/archive/"
                     "outlook.office.com/mail/id"
                     "outlook.office.com/mail/inbox"
+                    "outlook.office.com/mail/sentitems"
                     "outlook.office.com/owa"
                     "play.google.com"
+                    "prep.home.optimizely.com/callback"
+                    "prep.login.optimizely.com"
+                    "prep.turnstile.episerver.net"
                     "prod.outgoing.prod.webservices.mozgcp.net"
                     "profiler.firefox.com"
+                    "ramdajs.com/docs/#"
                     "redirect.zalo.me"
                     "rethinkdns.com/search?q="
                     "revanced.app/patches?"
@@ -309,13 +322,17 @@ module Tests =
                     "us3.datadoghq.com/apm"
                     "us3.datadoghq.com/dashboard"
                     "us3.datadoghq.com/logs?"
+                    "us3.datadoghq.com/monitors"
                     "us3.datadoghq.com/services?"
                     "vi.m.wikipedia.org"
                     "vietstock.vn/tag"
+                    "voz.vn/goto/post?"
                     "voz.vn/p/"
                     "voz.vn/search/"
                     "voz.vn/u/"
                     "web.yammer.com"
+                    "web-frameworks-benchmark.netlify.app/compare?"
+                    "web-frameworks-benchmark.netlify.app/result?"
                     "world.optimizely.com/csclasslibraries"
                     "www.apkmirror.com/?post_type="
                     "www.amazon.com/s/"
@@ -329,6 +346,12 @@ module Tests =
                     "www.google.com/maps"
                     "www.ldoceonline.com/dictionary/"
                     "www.ldoceonline.com/spellcheck/"
+                    "www.linkedin.com/404/"
+                    "www.linkedin.com/feed/"
+                    "www.linkedin.com/login"
+                    "www.linkedin.com/mynetwork/"
+                    "www.linkedin.com/mypreferences/"
+                    "www.linkedin.com/verify"
                     "www.nuget.org/packages?q="
                     "www.openstreetmap.org/search"
                     "www.quora.com/?"
@@ -353,6 +376,7 @@ module Tests =
               let domainWithGarbagePlaceFilterTheoryData: (string * (Place -> bool)) list =
                   [ "addons.mozilla.org", Place.hasQuery "q"
                     "addons.mozilla.org", Place.hasQuery "utm_source"
+                    "andrewlock.net", Place.withFragment
                     "apkdone.com", Place.hasQuery "s"
                     "asp-blogs.azurewebsites.net", Place.hasQuery "page"
                     "bongban.org", Place.withFragment
@@ -360,15 +384,24 @@ module Tests =
                     "bongban.org", _.Url >> Regex.isMatch "/threads/.+?/page-\\d+"
                     "cheatsheetseries.owasp.org", Place.withFragment
                     "community.chocolatey.org", Place.withFragment
+                    "community.chocolatey.org", Place.hasQuery "q"
                     "community.e.foundation", Place.isNotFirstThreadPost
                     "community.windy.com", _.Url >> Regex.isMatch "/\\d+/.+?/\\d+"
                     "confluence.sso.episerver.net", Place.hasQuery "src"
+                    "confluence.sso.episerver.net", Place.hasQuery "preview"
+                    "csdiy.wiki", Place.withFragment
+                    "datatracker.ietf.org", Place.withFragment
+                    "devblogs.microsoft.com", Place.withFragment
                     "discuss.logseq.com", Place.isNotFirstThreadPost
+                    "drive.google.com", Place.hasQuery "usp"
                     "duckduckgo.com", Place.withFragment
+                    "duckduckgo.com", Place.hasQuery "q"
+                    "en.wikipedia.org", Place.hasQuery "search"
                     "episerver99.sharepoint.com", Place.withFragment
                     "episerver99.sharepoint.com", _.Url >> String.isSubString "download.aspx?"
                     "episerver99.sharepoint.com", _.Url >> String.isSubString "spfxsinglesignon.aspx"
                     "episerveridentity.b2clogin.com", _.Url >> String.isSubString "/authorize?client_id="
+                    "exercism.org", _.Url >> String.isSubString "/solutions"
                     "f247.com", Place.isNotFirstThreadPost
                     "forum.uipath.com", Place.isNotFirstThreadPost
                     "forum.rescript-lang.org", Place.isNotFirstThreadPost
@@ -389,11 +422,19 @@ module Tests =
                     "github.com", _.Url >> Regex.isMatch "/pull/\\d+#"
                     "github.com", _.Url >> Regex.isMatch "/pull/\\d+/commits"
                     "github.com", _.Url >> Regex.isMatch "/pull/\\d+/files"
+                    "github.com", forallF [ _.Url >> String.isSubString "/tags"; Place.hasQuery "after" ]
                     "github.com/advisories/", _.Url >> String.isSubString "dependabot?query="
                     "github.io", Place.withFragment
+                    "hanoian.com", Place.hasQuery "start"
+                    "hanoinew.vn", Place.hasQuery "filter"
+                    "hoachau.vn", Place.withFragment
                     "jira.sso.episerver.net", Place.hasQuery "jql"
+                    "jira.sso.episerver.net/browse/", Place.hasQuery "page"
                     "learn.microsoft.com", Place.withFragment
+                    "learn.microsoft.com", Place.hasQuery "tabs"
                     "learnyouahaskell.com", Place.withFragment
+                    "localhost", Place.withFragment
+                    "localhost", Place.hasQuery "code"
                     "login.optimizely.com", _.Url >> String.isSubString "/authorize?client_id="
                     "masothue.com", Place.hasQuery "q"
                     "modyolo.com", Place.hasQuery "s"
@@ -405,26 +446,39 @@ module Tests =
                     "nuget.optimizely.com", forallF [ Place.hasQuery "id"; Place.hasQuery "v" ]
                     "optimizely.atlassian.net/servicedesk/", Place.hasQuery "token"
                     "optimizely.atlassian.net/servicedesk/", _.Url >> String.isSubString "/user/login?destination="
+                    "portal.azure.com", Place.withFragment
                     "privacyguides.org/en/", Place.withFragment
                     "readthedocs.io", Place.withFragment
                     "ss64.com", Place.withFragment
                     "support.optimizely.com", Place.hasQuery "return_to"
                     "thanglongkydao.com", _.Url >> Regex.isMatch "/threads/.+?/page\\d+"
+                    "tiemanhnhabap.gump.gg", Place.hasQuery "sid"
                     "tienphong.vn", Place.withFragment
                     "tiki.vn", Place.hasQuery "q"
-                    "vi.wikipedia.org/wiki/", Place.withFragment
                     "vietnamnet.vn", Place.hasFragment "vnn_source"
                     "vneconomy.vn", Place.hasQuery "trang"
                     "vnexpress.net", Place.hasFragment "vn_source"
+                    "voz.vn", Place.withFragment
                     "voz.vn", Place.hasQuery "page"
                     "voz.vn", _.Url >> String.isSubString "/page-"
                     "voz.vn", _.Url >> String.isSubString "#post-"
+                    "voz.vn", _.Url >> Regex.isMatch "\\.\\d+/reply"
+                    "wikipedia.org/wiki/", Place.withFragment
                     "write.as", _.Url >> String.isSubString "/edit"
+                    "www.adidas.com", Place.hasQuery "q"
+                    "www.amazon.com", Place.hasQuery "keywords"
+                    "www.amazon.com", Place.hasQuery "rh"
                     "www.freelancer.com", Place.hasQuery "search_keyword"
                     "www.google.com", Place.hasQuery "q"
                     "www.npmjs.com", Place.hasQuery "activeTab"
                     "www.npmjs.com", Place.hasQuery "q"
+                    "www.nuget.org", Place.withFragment
+                    "www.nuget.org", _.Url >> Regex.isMatch "/packages/[\\w\\.]+/\\d+\\.\\d+\\.\\d+"
                     "www.otofun.net", _.Url >> Regex.isMatch "\\.\\d+/page-\\d+"
+                    "www.reddit.com", _.Url >> String.isSubString "/comment/"
+                    "www.tabletennis11.com", Place.withFragment
+                    "www.tabletennis11.com", Place.hasQuery "q"
+                    "www.techempower.com", Place.withFragment
                     "www.voidtools.com", Place.withFragment ]
 
               testTheoryAsync
