@@ -8,16 +8,6 @@ open System.IO
 open FSharpPlus
 open Fake.IO
 
-module File =
-    let tryDelete path : Result<string, exn> =
-        try
-            File.delete path
-            Ok path
-        with exn ->
-            Error exn
-
-    let tryDeleteAll paths : Result<string, exn> list = paths |> List.map tryDelete
-
 type CleanupOptions =
     { LogRootDir: string
       CutOffTimestamp: DateTime }
@@ -67,8 +57,7 @@ let private cleanupFiles beforeCutOffTimestamp rootDir : string list =
     |> dirsToCleanup
     |> List.collect (DirectoryInfo.getFiles >> toList)
     |> filter (_.LastWriteTime >> beforeCutOffTimestamp)
-    |> map _.FullName
-    |> File.tryDeleteAll
+    |> map (_.FullName >> IO.File.tryDelete)
     |> choose Result.toOption
 
 let cleanup options : string list =
@@ -92,7 +81,7 @@ let specs =
     let logger = Log.create "RiderLog"
     let writeln = Message.eventX >> logger.info
 
-    ptest "Run cleanup" {
+    test "Run cleanup" {
         let options =
             { LogRootDir = "R:\\idea-log\\"
               CutOffTimestamp = DateTime.Now.Date }

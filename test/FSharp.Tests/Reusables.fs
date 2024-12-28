@@ -88,6 +88,17 @@ module Uri =
     let extract =
         extractUriStrings >> Seq.map Uri
 
+module IO =
+    module File =
+        open Fake.IO
+
+        let tryDelete path : Result<string, exn> =
+            try
+                File.delete path
+                Ok path
+            with exn ->
+                Error exn
+
 
 open Microsoft.FSharp.Quotations.Patterns
 open Microsoft.FSharp.Reflection
