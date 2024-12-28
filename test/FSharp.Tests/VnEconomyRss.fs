@@ -37,10 +37,14 @@ let specs =
         let logger = Log.create "VnEconomyRss"
         let writeln = Message.eventX >> logger.info
 
+        let isBlogChungKhoan (x: RssFeed.Item) =
+            x.Title.Contains "Blog chứng khoán"
+            || String.isSubString "vneconomy.vn/blog-chung-khoan-" x.Link
+
         test "Blog chứng khoán" {
             RssFeed.GetSample()
             |> _.Channel.Items
-            |> filter (fun x -> x.Title.Contains "Blog chứng khoán")
+            |> filter isBlogChungKhoan
             |> sortByDescending _.PubDate
             |> map RssFeedItem.toFeedItem
             |> (sprintf "%A" >> writeln)
