@@ -216,6 +216,7 @@ module Tests =
                     "127.0.0.1"
                     "1tudien.com"
                     "5.vndic.net"
+                    "account.proton.me/authorize?"
                     "accounts.firefox.com"
                     "accounts.google.com"
                     "apkdone.com/search/"
@@ -240,6 +241,7 @@ module Tests =
                     "contacts.google.com/search"
                     "developer.mozilla.org/en-US/search?q="
                     "dichvucong.dancuquocgia.gov.vn/portal"
+                    "dictionary.cambridge.org"
                     "docs.google.com/accounts"
                     "download.library.lol"
                     "engage.cloud.microsoft/main"
@@ -291,6 +293,7 @@ module Tests =
                     "optimizely.okta.com"
                     "outlook.office.com/mail/?"
                     "outlook.office.com/mail/archive/"
+                    "outlook.office.com/mail/deleteditems"
                     "outlook.office.com/mail/id"
                     "outlook.office.com/mail/inbox"
                     "outlook.office.com/mail/sentitems"
@@ -352,6 +355,7 @@ module Tests =
                     "www.linkedin.com/mynetwork/"
                     "www.linkedin.com/mypreferences/"
                     "www.linkedin.com/verify"
+                    "www.microsoft365.com/search/"
                     "www.nuget.org/packages?q="
                     "www.openstreetmap.org/search"
                     "www.quora.com/?"
@@ -378,9 +382,11 @@ module Tests =
                     "addons.mozilla.org", Place.hasQuery "utm_source"
                     "andrewlock.net", Place.withFragment
                     "apkdone.com", Place.hasQuery "s"
+                    "app.optimizely.com/signin", Place.hasQuery "continue_to"
                     "asp-blogs.azurewebsites.net", Place.hasQuery "page"
                     "bongban.org", Place.withFragment
                     "bongban.org", Place.hasQuery "page"
+                    "bongban.org", _.Url >> Regex.isMatch "/forums/.+?\\d+/page-\\d+"
                     "bongban.org", _.Url >> Regex.isMatch "/threads/.+?/page-\\d+"
                     "cheatsheetseries.owasp.org", Place.withFragment
                     "community.chocolatey.org", Place.withFragment
@@ -390,23 +396,29 @@ module Tests =
                     "confluence.sso.episerver.net", Place.hasQuery "src"
                     "confluence.sso.episerver.net", Place.hasQuery "preview"
                     "csdiy.wiki", Place.withFragment
+                    "dailongsport.vn", Place.hasQuery "page"
                     "datatracker.ietf.org", Place.withFragment
                     "devblogs.microsoft.com", Place.withFragment
+                    "diendan.footballvn.net", _.Url >> Regex.isMatch "/threads/\\d+-[^/]+/page\\d+\\.html"
                     "discuss.logseq.com", Place.isNotFirstThreadPost
                     "drive.google.com", Place.hasQuery "usp"
                     "duckduckgo.com", Place.withFragment
                     "duckduckgo.com", Place.hasQuery "q"
+                    "dungbongban.com", _.Url >> Regex.isMatch "-page\\d+\\.html"
+                    "dungcubongban.vn", Place.hasQuery "page"
                     "en.wikipedia.org", Place.hasQuery "search"
                     "episerver99.sharepoint.com", Place.withFragment
                     "episerver99.sharepoint.com", _.Url >> String.isSubString "download.aspx?"
                     "episerver99.sharepoint.com", _.Url >> String.isSubString "spfxsinglesignon.aspx"
                     "episerveridentity.b2clogin.com", _.Url >> String.isSubString "/authorize?client_id="
+                    "eur.delve.office.com", _.Url >> String.isSubString "/profileimage?"
                     "exercism.org", _.Url >> String.isSubString "/solutions"
                     "f247.com", Place.isNotFirstThreadPost
                     "forum.uipath.com", Place.isNotFirstThreadPost
                     "forum.rescript-lang.org", Place.isNotFirstThreadPost
                     "forums.fsharp.org", Place.isNotFirstThreadPost
                     "github.com", Place.withFragment
+                    "github.com", Place.hasQuery "check_run_id"
                     "github.com", Place.hasQuery "q"
                     "github.com", Place.hasQuery "query"
                     "github.com", Place.hasQuery "tab"
@@ -428,33 +440,51 @@ module Tests =
                     "hanoian.com", Place.hasQuery "start"
                     "hanoinew.vn", Place.hasQuery "filter"
                     "hoachau.vn", Place.withFragment
+                    "hoachau.vn", Place.hasQuery "brand"
+                    "hoachau.vn", Place.hasQuery "page"
+                    "hoangchopbongban.com", Place.hasQuery "q"
+                    "jira.sso.episerver.net", Place.withFragment
+                    "jira.sso.episerver.net", Place.hasQuery "atlOrigin"
+                    "jira.sso.episerver.net", Place.hasQuery "devStatusDetailDialog"
                     "jira.sso.episerver.net", Place.hasQuery "jql"
                     "jira.sso.episerver.net/browse/", Place.hasQuery "page"
                     "learn.microsoft.com", Place.withFragment
+                    "learn.microsoft.com", Place.hasQuery "search"
                     "learn.microsoft.com", Place.hasQuery "tabs"
+                    "learn.microsoft.com", Place.hasQuery "terms"
                     "learnyouahaskell.com", Place.withFragment
                     "localhost", Place.withFragment
                     "localhost", Place.hasQuery "code"
                     "login.optimizely.com", _.Url >> String.isSubString "/authorize?client_id="
+                    "login.taobao.com", Place.hasQuery "redirectURL"
                     "masothue.com", Place.hasQuery "q"
                     "modyolo.com", Place.hasQuery "s"
                     "mullvad.net", Place.withFragment
                     "mycroftproject.com/install.html", Place.hasQuery "id"
                     "mycroftproject.com/search-engines.html", Place.hasQuery "name"
+                    "mytabletennis.net", _.Url >> Regex.isMatch "_page\\d+\\.html"
                     "nojaf.com", Place.withFragment
                     "nuget.optimizely.com", Place.hasQuery "q"
                     "nuget.optimizely.com", forallF [ Place.hasQuery "id"; Place.hasQuery "v" ]
                     "optimizely.atlassian.net/servicedesk/", Place.hasQuery "token"
                     "optimizely.atlassian.net/servicedesk/", _.Url >> String.isSubString "/user/login?destination="
+                    "phobongban.vn", Place.hasQuery "filter_thuong-hieu"
+                    "pingsunday.com", Place.withFragment
                     "portal.azure.com", Place.withFragment
                     "privacyguides.org/en/", Place.withFragment
                     "readthedocs.io", Place.withFragment
+                    "s.taobao.com", Place.hasQuery "q"
+                    "shopee.vn", Place.withFragment
+                    "shopee.vn", Place.hasQuery "page"
                     "ss64.com", Place.withFragment
                     "support.optimizely.com", Place.hasQuery "return_to"
                     "thanglongkydao.com", _.Url >> Regex.isMatch "/threads/.+?/page\\d+"
                     "tiemanhnhabap.gump.gg", Place.hasQuery "sid"
                     "tienphong.vn", Place.withFragment
                     "tiki.vn", Place.hasQuery "q"
+                    "tridactyl.xyz", Place.withFragment
+                    "ttgearlab.com", Place.withFragment
+                    "ttsport.vn", Place.hasQuery "page"
                     "vietnamnet.vn", Place.hasFragment "vnn_source"
                     "vneconomy.vn", Place.hasQuery "trang"
                     "vnexpress.net", Place.hasFragment "vn_source"
@@ -463,13 +493,19 @@ module Tests =
                     "voz.vn", _.Url >> String.isSubString "/page-"
                     "voz.vn", _.Url >> String.isSubString "#post-"
                     "voz.vn", _.Url >> Regex.isMatch "\\.\\d+/reply"
+                    "voz.vn", _.Url >> Regex.isMatch "/unread$"
                     "wikipedia.org/wiki/", Place.withFragment
+                    "world.taobao.com", forallF [ Place.hasQuery "a"; Place.hasQuery "b" ]
                     "write.as", _.Url >> String.isSubString "/edit"
                     "www.adidas.com", Place.hasQuery "q"
                     "www.amazon.com", Place.hasQuery "keywords"
                     "www.amazon.com", Place.hasQuery "rh"
+                    "www.amazon.fr", Place.hasQuery "field-keywords"
+                    "www.donic.com", Place.hasQuery "order"
+                    "www.donic.com", Place.hasQuery "p"
                     "www.freelancer.com", Place.hasQuery "search_keyword"
                     "www.google.com", Place.hasQuery "q"
+                    "www.nhaccuatui.com", Place.hasQuery "st"
                     "www.npmjs.com", Place.hasQuery "activeTab"
                     "www.npmjs.com", Place.hasQuery "q"
                     "www.nuget.org", Place.withFragment
@@ -478,8 +514,11 @@ module Tests =
                     "www.reddit.com", _.Url >> String.isSubString "/comment/"
                     "www.tabletennis11.com", Place.withFragment
                     "www.tabletennis11.com", Place.hasQuery "q"
+                    "www.tabletennisdaily.com", _.Url >> Regex.isMatch "/forum/topics/.+?\\d+/page-\\d+"
                     "www.techempower.com", Place.withFragment
-                    "www.voidtools.com", Place.withFragment ]
+                    "www.voidtools.com", Place.withFragment
+                    "www.xxl.se", Place.hasQuery "query"
+                    "yasakatabletennis.com", Place.hasQuery "filter" ]
 
               testTheoryAsync
                   "Given domain with garbage place filter to delete"
