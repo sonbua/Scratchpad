@@ -261,6 +261,7 @@ module Tests =
                     "id.zalo.me/account"
                     "info.hdbank.com.vn/subcriber"
                     "ipfs.io"
+                    "jira.sso.episerver.net/issue/CloneIssueProgress.jspa"
                     "jira.sso.episerver.net/login.jsp"
                     "jira.sso.episerver.net/projects"
                     "jira.sso.episerver.net/secure"
@@ -279,6 +280,7 @@ module Tests =
                     "m.cafebiz.vn"
                     "m.cafef.vn"
                     "m.genk.vn"
+                    "m.ruten.com.tw"
                     "m.youtube.com"
                     "mail.google.com"
                     "mail.proton.me/login"
@@ -313,12 +315,15 @@ module Tests =
                     "searchfox.org/mozilla-central/rev/"
                     "searchfox.org/mozilla-central/search?q="
                     "shopee.vn/buyer/login"
+                    "shopee.vn/find_similar_products?"
                     "shopee.vn/search"
                     "shopee.vn/verify"
                     "support.upwork.com"
                     "tc01.ep.se"
                     "teams.microsoft.com"
+                    "translate.goog/"
                     "translate.google.com"
+                    "ttgearlab.com/page/"
                     "upwork-usw2-prod-agora-file-storage.s3.us-west-2.amazonaws.com"
                     "url.de.m.mimecastprotect.com"
                     "us3.datadoghq.com/account/login"
@@ -382,6 +387,8 @@ module Tests =
                     "addons.mozilla.org", Place.hasQuery "utm_source"
                     "andrewlock.net", Place.withFragment
                     "apkdone.com", Place.hasQuery "s"
+                    "apkpure.com", Place.hasQuery "q"
+                    "apkpure.com", _.Url >> Regex.isMatch "/[\\w-]+/"
                     "app.optimizely.com/signin", Place.hasQuery "continue_to"
                     "asp-blogs.azurewebsites.net", Place.hasQuery "page"
                     "bongban.org", Place.withFragment
@@ -419,6 +426,8 @@ module Tests =
                     "forums.fsharp.org", Place.isNotFirstThreadPost
                     "github.com", Place.withFragment
                     "github.com", Place.hasQuery "check_run_id"
+                    "github.com", Place.hasQuery "from"
+                    "github.com", Place.hasQuery "page"
                     "github.com", Place.hasQuery "q"
                     "github.com", Place.hasQuery "query"
                     "github.com", Place.hasQuery "tab"
@@ -439,6 +448,8 @@ module Tests =
                     "github.io", Place.withFragment
                     "hanoian.com", Place.hasQuery "start"
                     "hanoinew.vn", Place.hasQuery "filter"
+                    "hika.fyi", Place.hasQuery "question"
+                    "hika.fyi", Place.hasQuery "topic_id"
                     "hoachau.vn", Place.withFragment
                     "hoachau.vn", Place.hasQuery "brand"
                     "hoachau.vn", Place.hasQuery "page"
@@ -463,6 +474,7 @@ module Tests =
                     "mycroftproject.com/install.html", Place.hasQuery "id"
                     "mycroftproject.com/search-engines.html", Place.hasQuery "name"
                     "mytabletennis.net", _.Url >> Regex.isMatch "_page\\d+\\.html"
+                    "nhattao.com", Place.hasQuery "q"
                     "nojaf.com", Place.withFragment
                     "nuget.optimizely.com", Place.hasQuery "q"
                     "nuget.optimizely.com", forallF [ Place.hasQuery "id"; Place.hasQuery "v" ]
@@ -475,7 +487,11 @@ module Tests =
                     "readthedocs.io", Place.withFragment
                     "s.taobao.com", Place.hasQuery "q"
                     "shopee.vn", Place.withFragment
+                    "shopee.vn", Place.hasQuery "cmtid"
+                    "shopee.vn", Place.hasQuery "entryPoint"
                     "shopee.vn", Place.hasQuery "page"
+                    "shopee.vn", Place.hasQuery "searchKeyword"
+                    "shopee.vn", Place.hasQuery "sp_atk"
                     "ss64.com", Place.withFragment
                     "support.optimizely.com", Place.hasQuery "return_to"
                     "thanglongkydao.com", _.Url >> Regex.isMatch "/threads/.+?/page\\d+"
@@ -501,6 +517,8 @@ module Tests =
                     "www.amazon.com", Place.hasQuery "keywords"
                     "www.amazon.com", Place.hasQuery "rh"
                     "www.amazon.fr", Place.hasQuery "field-keywords"
+                    "www.apkmirror.com", _.Url >> Regex.isMatch "/apk/[\\w-]+/[\\w-]+/"
+                    "www.contra.de", Place.hasQuery "search"
                     "www.donic.com", Place.hasQuery "order"
                     "www.donic.com", Place.hasQuery "p"
                     "www.freelancer.com", Place.hasQuery "search_keyword"
@@ -511,13 +529,18 @@ module Tests =
                     "www.nuget.org", Place.withFragment
                     "www.nuget.org", _.Url >> Regex.isMatch "/packages/[\\w\\.]+/\\d+\\.\\d+\\.\\d+"
                     "www.otofun.net", _.Url >> Regex.isMatch "\\.\\d+/page-\\d+"
+                    "www.reddit.com", Place.hasQuery "chainedPosts"
                     "www.reddit.com", _.Url >> String.isSubString "/comment/"
+                    "www.ruten.com.tw", Place.hasQuery "q"
+                    "www.ruten.com.tw", Place.hasQuery "sort"
                     "www.tabletennis11.com", Place.withFragment
                     "www.tabletennis11.com", Place.hasQuery "q"
                     "www.tabletennisdaily.com", _.Url >> Regex.isMatch "/forum/topics/.+?\\d+/page-\\d+"
                     "www.techempower.com", Place.withFragment
                     "www.voidtools.com", Place.withFragment
                     "www.xxl.se", Place.hasQuery "query"
+                    "www.youtube.com", Place.hasQuery "index"
+                    "www.youtube.com", Place.hasQuery "t"
                     "yasakatabletennis.com", Place.hasQuery "filter" ]
 
               testTheoryAsync
