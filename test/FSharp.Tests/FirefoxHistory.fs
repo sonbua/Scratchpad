@@ -25,14 +25,14 @@ module Uri =
     open System
     open FSharpPlus
 
-    let hasQuery q (uri: Uri) =
+    let hasQueryParam q (uri: Uri) =
         uri.Query
         |> String.trimStart [ '?' ]
         |> _.Split('&', StringSplitOptions.RemoveEmptyEntries)
         |> map (String.split [ "=" ] >> head)
         |> Array.contains q
 
-    let hasFragment f (uri: Uri) =
+    let hasFragmentParam f (uri: Uri) =
         uri.Fragment
         |> String.trimStart [ '#' ]
         |> _.Split('&', StringSplitOptions.RemoveEmptyEntries)
@@ -83,9 +83,9 @@ module Place =
     open System
     open FSharpPlus
 
-    let hasQuery q place = place.Url |> Uri |> Uri.hasQuery q
+    let hasQueryParam q place = place.Url |> Uri |> Uri.hasQueryParam q
 
-    let hasFragment f place = place.Url |> Uri |> Uri.hasFragment f
+    let hasFragmentParam f place = place.Url |> Uri |> Uri.hasFragmentParam f
 
     let withFragment = _.Url >> String.isSubString "#"
 
@@ -382,44 +382,44 @@ module Tests =
 
               // theory data
               let domainWithGarbagePlaceFilterTheoryData: (string * (Place -> bool)) list =
-                  [ "addons.mozilla.org", Place.hasQuery "q"
-                    "addons.mozilla.org", Place.hasQuery "utm_source"
+                  [ "addons.mozilla.org", Place.hasQueryParam "q"
+                    "addons.mozilla.org", Place.hasQueryParam "utm_source"
                     "analysiscenter.veracode.com", Place.withFragment
                     "andrewlock.net", Place.withFragment
-                    "apkdone.com", Place.hasQuery "s"
-                    "apkpure.com", Place.hasQuery "q"
+                    "apkdone.com", Place.hasQueryParam "s"
+                    "apkpure.com", Place.hasQueryParam "q"
                     "apkpure.com", _.Url >> Regex.isMatch "/[\\w-]+/"
-                    "app.optimizely.com/signin", Place.hasQuery "continue_to"
-                    "asp-blogs.azurewebsites.net", Place.hasQuery "page"
-                    "batdongsan.com.vn", Place.hasQuery "disIds"
-                    "batdongsan.com.vn", Place.hasQuery "dtln"
-                    "batdongsan.com.vn", Place.hasQuery "dtnn"
-                    "batdongsan.com.vn", Place.hasQuery "gcn"
-                    "batdongsan.com.vn", Place.hasQuery "gtn"
+                    "app.optimizely.com/signin", Place.hasQueryParam "continue_to"
+                    "asp-blogs.azurewebsites.net", Place.hasQueryParam "page"
+                    "batdongsan.com.vn", Place.hasQueryParam "disIds"
+                    "batdongsan.com.vn", Place.hasQueryParam "dtln"
+                    "batdongsan.com.vn", Place.hasQueryParam "dtnn"
+                    "batdongsan.com.vn", Place.hasQueryParam "gcn"
+                    "batdongsan.com.vn", Place.hasQueryParam "gtn"
                     "bongban.org", Place.withFragment
-                    "bongban.org", Place.hasQuery "page"
+                    "bongban.org", Place.hasQueryParam "page"
                     "bongban.org", _.Url >> Regex.isMatch "/forums/.+?\\d+/page-\\d+"
                     "bongban.org", _.Url >> Regex.isMatch "/threads/.+?/page-\\d+"
                     "cheatsheetseries.owasp.org", Place.withFragment
                     "community.chocolatey.org", Place.withFragment
-                    "community.chocolatey.org", Place.hasQuery "q"
+                    "community.chocolatey.org", Place.hasQueryParam "q"
                     "community.e.foundation", Place.isNotFirstThreadPost
                     "community.windy.com", _.Url >> Regex.isMatch "/\\d+/.+?/\\d+"
-                    "confluence.sso.episerver.net", Place.hasQuery "src"
-                    "confluence.sso.episerver.net", Place.hasQuery "preview"
+                    "confluence.sso.episerver.net", Place.hasQueryParam "src"
+                    "confluence.sso.episerver.net", Place.hasQueryParam "preview"
                     "csdiy.wiki", Place.withFragment
-                    "dailongsport.vn", Place.hasQuery "page"
+                    "dailongsport.vn", Place.hasQueryParam "page"
                     "datatracker.ietf.org", Place.withFragment
                     "devblogs.microsoft.com", Place.withFragment
                     "diendan.footballvn.net", _.Url >> Regex.isMatch "/threads/\\d+-[^/]+/page\\d+\\.html"
                     "discuss.logseq.com", Place.isNotFirstThreadPost
                     "discuss.privacyguides.net", Place.isNotFirstThreadPost
-                    "drive.google.com", Place.hasQuery "usp"
+                    "drive.google.com", Place.hasQueryParam "usp"
                     "duckduckgo.com", Place.withFragment
-                    "duckduckgo.com", Place.hasQuery "q"
+                    "duckduckgo.com", Place.hasQueryParam "q"
                     "dungbongban.com", _.Url >> Regex.isMatch "-page\\d+\\.html"
-                    "dungcubongban.vn", Place.hasQuery "page"
-                    "en.wikipedia.org", Place.hasQuery "search"
+                    "dungcubongban.vn", Place.hasQueryParam "page"
+                    "en.wikipedia.org", Place.hasQueryParam "search"
                     "episerver99.sharepoint.com", Place.withFragment
                     "episerver99.sharepoint.com", _.Url >> String.isSubString "download.aspx?"
                     "episerver99.sharepoint.com", _.Url >> String.isSubString "spfxsinglesignon.aspx"
@@ -431,12 +431,12 @@ module Tests =
                     "forum.rescript-lang.org", Place.isNotFirstThreadPost
                     "forums.fsharp.org", Place.isNotFirstThreadPost
                     "github.com", Place.withFragment
-                    "github.com", Place.hasQuery "check_run_id"
-                    "github.com", Place.hasQuery "from"
-                    "github.com", Place.hasQuery "page"
-                    "github.com", Place.hasQuery "q"
-                    "github.com", Place.hasQuery "query"
-                    "github.com", Place.hasQuery "tab"
+                    "github.com", Place.hasQueryParam "check_run_id"
+                    "github.com", Place.hasQueryParam "from"
+                    "github.com", Place.hasQueryParam "page"
+                    "github.com", Place.hasQueryParam "q"
+                    "github.com", Place.hasQueryParam "query"
+                    "github.com", Place.hasQueryParam "tab"
                     "github.com", _.Url >> String.isSubString "/blob/"
                     "github.com", _.Url >> String.isSubString "/commits/"
                     "github.com", _.Url >> String.isSubString "/compare/"
@@ -449,121 +449,121 @@ module Tests =
                     "github.com", _.Url >> Regex.isMatch "/pull/\\d+#"
                     "github.com", _.Url >> Regex.isMatch "/pull/\\d+/commits"
                     "github.com", _.Url >> Regex.isMatch "/pull/\\d+/files"
-                    "github.com", forallF [ _.Url >> String.isSubString "/tags"; Place.hasQuery "after" ]
+                    "github.com", forallF [ _.Url >> String.isSubString "/tags"; Place.hasQueryParam "after" ]
                     "github.com/advisories/", _.Url >> String.isSubString "dependabot?query="
                     "github.io", Place.withFragment
-                    "hanoian.com", Place.hasQuery "start"
-                    "hanoinew.vn", Place.hasQuery "filter"
-                    "hika.fyi", Place.hasQuery "question"
-                    "hika.fyi", Place.hasQuery "topic_id"
+                    "hanoian.com", Place.hasQueryParam "start"
+                    "hanoinew.vn", Place.hasQueryParam "filter"
+                    "hika.fyi", Place.hasQueryParam "question"
+                    "hika.fyi", Place.hasQueryParam "topic_id"
                     "hoachau.vn", Place.withFragment
-                    "hoachau.vn", Place.hasQuery "brand"
-                    "hoachau.vn", Place.hasQuery "page"
-                    "hoangchopbongban.com", Place.hasQuery "q"
+                    "hoachau.vn", Place.hasQueryParam "brand"
+                    "hoachau.vn", Place.hasQueryParam "page"
+                    "hoangchopbongban.com", Place.hasQueryParam "q"
                     "jira.sso.episerver.net", Place.withFragment
-                    "jira.sso.episerver.net", Place.hasQuery "atlOrigin"
-                    "jira.sso.episerver.net", Place.hasQuery "devStatusDetailDialog"
-                    "jira.sso.episerver.net", Place.hasQuery "jql"
-                    "jira.sso.episerver.net/browse/", Place.hasQuery "page"
+                    "jira.sso.episerver.net", Place.hasQueryParam "atlOrigin"
+                    "jira.sso.episerver.net", Place.hasQueryParam "devStatusDetailDialog"
+                    "jira.sso.episerver.net", Place.hasQueryParam "jql"
+                    "jira.sso.episerver.net/browse/", Place.hasQueryParam "page"
                     "learn.microsoft.com", Place.withFragment
-                    "learn.microsoft.com", Place.hasQuery "search"
-                    "learn.microsoft.com", Place.hasQuery "tabs"
-                    "learn.microsoft.com", Place.hasQuery "terms"
+                    "learn.microsoft.com", Place.hasQueryParam "search"
+                    "learn.microsoft.com", Place.hasQueryParam "tabs"
+                    "learn.microsoft.com", Place.hasQueryParam "terms"
                     "learnyouahaskell.com", Place.withFragment
                     "localhost", Place.withFragment
-                    "localhost", Place.hasQuery "code"
+                    "localhost", Place.hasQueryParam "code"
                     "login.optimizely.com", _.Url >> String.isSubString "/authorize?client_id="
-                    "login.taobao.com", Place.hasQuery "redirectURL"
+                    "login.taobao.com", Place.hasQueryParam "redirectURL"
                     "logseq-db-demo.pages.dev", _.Url >> String.isSubString "/#/"
                     "lucid.app", Place.withFragment
-                    "lucid.app", Place.hasQuery "invitationId"
-                    "lucid.app", Place.hasQuery "product"
-                    "lucid.app", Place.hasQuery "redirect_url"
-                    "masothue.com", Place.hasQuery "q"
-                    "media4.giphy.com", Place.hasQuery "ep"
-                    "modyolo.com", Place.hasQuery "s"
+                    "lucid.app", Place.hasQueryParam "invitationId"
+                    "lucid.app", Place.hasQueryParam "product"
+                    "lucid.app", Place.hasQueryParam "redirect_url"
+                    "masothue.com", Place.hasQueryParam "q"
+                    "media4.giphy.com", Place.hasQueryParam "ep"
+                    "modyolo.com", Place.hasQueryParam "s"
                     "mullvad.net", Place.withFragment
-                    "mycroftproject.com/install.html", Place.hasQuery "id"
-                    "mycroftproject.com/search-engines.html", Place.hasQuery "name"
+                    "mycroftproject.com/install.html", Place.hasQueryParam "id"
+                    "mycroftproject.com/search-engines.html", Place.hasQueryParam "name"
                     "mytabletennis.net", _.Url >> Regex.isMatch "_page\\d+\\.html"
-                    "nhattao.com", Place.hasQuery "q"
+                    "nhattao.com", Place.hasQueryParam "q"
                     "nojaf.com", Place.withFragment
-                    "nuget.optimizely.com", Place.hasQuery "q"
-                    "nuget.optimizely.com", forallF [ Place.hasQuery "id"; Place.hasQuery "v" ]
-                    "optimizely.atlassian.net/servicedesk/", Place.hasQuery "token"
+                    "nuget.optimizely.com", Place.hasQueryParam "q"
+                    "nuget.optimizely.com", forallF [ Place.hasQueryParam "id"; Place.hasQueryParam "v" ]
+                    "optimizely.atlassian.net/servicedesk/", Place.hasQueryParam "token"
                     "optimizely.atlassian.net/servicedesk/", _.Url >> String.isSubString "/user/login?destination="
-                    "phobongban.vn", Place.hasQuery "filter_thuong-hieu"
+                    "phobongban.vn", Place.hasQueryParam "filter_thuong-hieu"
                     "pingsunday.com", Place.withFragment
-                    "piped.video", Place.hasQuery "search_query"
+                    "piped.video", Place.hasQueryParam "search_query"
                     "portal.azure.com", Place.withFragment
                     "privacyguides.org/en/", Place.withFragment
                     "readthedocs.io", Place.withFragment
-                    "s.taobao.com", Place.hasQuery "q"
+                    "s.taobao.com", Place.hasQueryParam "q"
                     "shopee.vn", Place.withFragment
-                    "shopee.vn", Place.hasQuery "cmtid"
-                    "shopee.vn", Place.hasQuery "entryPoint"
-                    "shopee.vn", Place.hasQuery "page"
-                    "shopee.vn", Place.hasQuery "searchKeyword"
-                    "shopee.vn", Place.hasQuery "sp_atk"
+                    "shopee.vn", Place.hasQueryParam "cmtid"
+                    "shopee.vn", Place.hasQueryParam "entryPoint"
+                    "shopee.vn", Place.hasQueryParam "page"
+                    "shopee.vn", Place.hasQueryParam "searchKeyword"
+                    "shopee.vn", Place.hasQueryParam "sp_atk"
                     "ss64.com", Place.withFragment
                     "support.optimizely.com", Place.withFragment
-                    "support.optimizely.com", Place.hasQuery "return_to"
+                    "support.optimizely.com", Place.hasQueryParam "return_to"
                     "thanglongkydao.com", _.Url >> Regex.isMatch "/threads/.+?/page\\d+"
                     "thinkpro.vn", Place.withFragment
-                    "thinkpro.vn", Place.hasQuery "skuId"
-                    "thinkpro.vn", Place.hasQuery "tinh-trang"
-                    "tiemanhnhabap.gump.gg", Place.hasQuery "sid"
+                    "thinkpro.vn", Place.hasQueryParam "skuId"
+                    "thinkpro.vn", Place.hasQueryParam "tinh-trang"
+                    "tiemanhnhabap.gump.gg", Place.hasQueryParam "sid"
                     "tienphong.vn", Place.withFragment
-                    "tiki.vn", Place.hasQuery "q"
+                    "tiki.vn", Place.hasQueryParam "q"
                     "tridactyl.xyz", Place.withFragment
                     "ttgearlab.com", Place.withFragment
-                    "ttsport.vn", Place.hasQuery "page"
-                    "vietnamnet.vn", Place.hasFragment "vnn_source"
-                    "vneconomy.vn", Place.hasQuery "trang"
-                    "vnexpress.net", Place.hasFragment "vn_source"
+                    "ttsport.vn", Place.hasQueryParam "page"
+                    "vietnamnet.vn", Place.hasFragmentParam "vnn_source"
+                    "vneconomy.vn", Place.hasQueryParam "trang"
+                    "vnexpress.net", Place.hasFragmentParam "vn_source"
                     "voz.vn", Place.withFragment
-                    "voz.vn", Place.hasQuery "page"
-                    "voz.vn", Place.hasQuery "prefix_id"
-                    "voz.vn", Place.hasQuery "show_only"
+                    "voz.vn", Place.hasQueryParam "page"
+                    "voz.vn", Place.hasQueryParam "prefix_id"
+                    "voz.vn", Place.hasQueryParam "show_only"
                     "voz.vn", _.Url >> String.isSubString "/page-"
                     "voz.vn", _.Url >> String.isSubString "#post-"
                     "voz.vn", _.Url >> Regex.isMatch "\\.\\d+/reply"
                     "voz.vn", _.Url >> Regex.isMatch "/unread$"
                     "wikipedia.org/wiki/", Place.withFragment
-                    "world.taobao.com", forallF [ Place.hasQuery "a"; Place.hasQuery "b" ]
+                    "world.taobao.com", forallF [ Place.hasQueryParam "a"; Place.hasQueryParam "b" ]
                     "write.as", _.Url >> String.isSubString "/edit"
-                    "www.adidas.com", Place.hasQuery "q"
-                    "www.amazon.com", Place.hasQuery "keywords"
-                    "www.amazon.com", Place.hasQuery "rh"
-                    "www.amazon.fr", Place.hasQuery "field-keywords"
+                    "www.adidas.com", Place.hasQueryParam "q"
+                    "www.amazon.com", Place.hasQueryParam "keywords"
+                    "www.amazon.com", Place.hasQueryParam "rh"
+                    "www.amazon.fr", Place.hasQueryParam "field-keywords"
                     "www.apkmirror.com", _.Url >> Regex.isMatch "/apk/[\\w-]+/[\\w-]+/"
-                    "www.contra.de", Place.hasQuery "search"
-                    "www.cpubenchmark.net", Place.hasQuery "id"
-                    "www.donic.com", Place.hasQuery "order"
-                    "www.donic.com", Place.hasQuery "p"
-                    "www.facebook.com", Place.hasQuery "rdid"
-                    "www.freelancer.com", Place.hasQuery "search_keyword"
+                    "www.contra.de", Place.hasQueryParam "search"
+                    "www.cpubenchmark.net", Place.hasQueryParam "id"
+                    "www.donic.com", Place.hasQueryParam "order"
+                    "www.donic.com", Place.hasQueryParam "p"
+                    "www.facebook.com", Place.hasQueryParam "rdid"
+                    "www.freelancer.com", Place.hasQueryParam "search_keyword"
                     "www.google.com", Place.withFragment
-                    "www.google.com", Place.hasQuery "q"
-                    "www.nhaccuatui.com", Place.hasQuery "st"
-                    "www.npmjs.com", Place.hasQuery "activeTab"
-                    "www.npmjs.com", Place.hasQuery "q"
+                    "www.google.com", Place.hasQueryParam "q"
+                    "www.nhaccuatui.com", Place.hasQueryParam "st"
+                    "www.npmjs.com", Place.hasQueryParam "activeTab"
+                    "www.npmjs.com", Place.hasQueryParam "q"
                     "www.nuget.org", Place.withFragment
                     "www.nuget.org", _.Url >> Regex.isMatch "/packages/[\\w\\.]+/\\d+\\.\\d+\\.\\d+"
                     "www.otofun.net", _.Url >> Regex.isMatch "\\.\\d+/page-\\d+"
-                    "www.reddit.com", Place.hasQuery "chainedPosts"
+                    "www.reddit.com", Place.hasQueryParam "chainedPosts"
                     "www.reddit.com", _.Url >> String.isSubString "/comment/"
-                    "www.ruten.com.tw", Place.hasQuery "q"
-                    "www.ruten.com.tw", Place.hasQuery "sort"
+                    "www.ruten.com.tw", Place.hasQueryParam "q"
+                    "www.ruten.com.tw", Place.hasQueryParam "sort"
                     "www.tabletennis11.com", Place.withFragment
-                    "www.tabletennis11.com", Place.hasQuery "q"
+                    "www.tabletennis11.com", Place.hasQueryParam "q"
                     "www.tabletennisdaily.com", _.Url >> Regex.isMatch "/forum/topics/.+?\\d+/page-\\d+"
                     "www.techempower.com", Place.withFragment
                     "www.voidtools.com", Place.withFragment
-                    "www.xxl.se", Place.hasQuery "query"
-                    "www.youtube.com", Place.hasQuery "index"
-                    "www.youtube.com", Place.hasQuery "t"
-                    "yasakatabletennis.com", Place.hasQuery "filter" ]
+                    "www.xxl.se", Place.hasQueryParam "query"
+                    "www.youtube.com", Place.hasQueryParam "index"
+                    "www.youtube.com", Place.hasQueryParam "t"
+                    "yasakatabletennis.com", Place.hasQueryParam "filter" ]
 
               testTheoryAsync
                   "Given domain with garbage place filter to delete"
