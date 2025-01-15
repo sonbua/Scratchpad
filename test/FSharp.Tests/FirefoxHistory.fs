@@ -117,12 +117,11 @@ module Db =
 
     /// <summary>
     /// Deletes place records, given domain or part of the URL and a place filter to match.
-    /// The place filter will be applied in-memory, and not on the database.
     /// This does not delete place records, which are bookmarks.
     /// </summary>
     /// <param name="querySeqAsync">QuerySeqAsyncBuilder.</param>
     /// <param name="deletePlaceIds">Query to delete places IDs.</param>
-    /// <param name="urlPart">Part of the URL to match.</param>
+    /// <param name="urlPart">Part of the URL to match, which will be applied on the database.</param>
     /// <param name="placeFilter">The place filter, which will be applied in-memory, and not on the database.</param>
     let deletePlacesWith (querySeqAsync: QuerySeqAsyncBuilder<Place>) deletePlaceIds urlPart placeFilter =
         async {
@@ -385,12 +384,18 @@ module Tests =
               let domainWithGarbagePlaceFilterTheoryData: (string * (Place -> bool)) list =
                   [ "addons.mozilla.org", Place.hasQuery "q"
                     "addons.mozilla.org", Place.hasQuery "utm_source"
+                    "analysiscenter.veracode.com", Place.withFragment
                     "andrewlock.net", Place.withFragment
                     "apkdone.com", Place.hasQuery "s"
                     "apkpure.com", Place.hasQuery "q"
                     "apkpure.com", _.Url >> Regex.isMatch "/[\\w-]+/"
                     "app.optimizely.com/signin", Place.hasQuery "continue_to"
                     "asp-blogs.azurewebsites.net", Place.hasQuery "page"
+                    "batdongsan.com.vn", Place.hasQuery "disIds"
+                    "batdongsan.com.vn", Place.hasQuery "dtln"
+                    "batdongsan.com.vn", Place.hasQuery "dtnn"
+                    "batdongsan.com.vn", Place.hasQuery "gcn"
+                    "batdongsan.com.vn", Place.hasQuery "gtn"
                     "bongban.org", Place.withFragment
                     "bongban.org", Place.hasQuery "page"
                     "bongban.org", _.Url >> Regex.isMatch "/forums/.+?\\d+/page-\\d+"
@@ -408,6 +413,7 @@ module Tests =
                     "devblogs.microsoft.com", Place.withFragment
                     "diendan.footballvn.net", _.Url >> Regex.isMatch "/threads/\\d+-[^/]+/page\\d+\\.html"
                     "discuss.logseq.com", Place.isNotFirstThreadPost
+                    "discuss.privacyguides.net", Place.isNotFirstThreadPost
                     "drive.google.com", Place.hasQuery "usp"
                     "duckduckgo.com", Place.withFragment
                     "duckduckgo.com", Place.hasQuery "q"
@@ -468,7 +474,13 @@ module Tests =
                     "localhost", Place.hasQuery "code"
                     "login.optimizely.com", _.Url >> String.isSubString "/authorize?client_id="
                     "login.taobao.com", Place.hasQuery "redirectURL"
+                    "logseq-db-demo.pages.dev", _.Url >> String.isSubString "/#/"
+                    "lucid.app", Place.withFragment
+                    "lucid.app", Place.hasQuery "invitationId"
+                    "lucid.app", Place.hasQuery "product"
+                    "lucid.app", Place.hasQuery "redirect_url"
                     "masothue.com", Place.hasQuery "q"
+                    "media4.giphy.com", Place.hasQuery "ep"
                     "modyolo.com", Place.hasQuery "s"
                     "mullvad.net", Place.withFragment
                     "mycroftproject.com/install.html", Place.hasQuery "id"
@@ -482,6 +494,7 @@ module Tests =
                     "optimizely.atlassian.net/servicedesk/", _.Url >> String.isSubString "/user/login?destination="
                     "phobongban.vn", Place.hasQuery "filter_thuong-hieu"
                     "pingsunday.com", Place.withFragment
+                    "piped.video", Place.hasQuery "search_query"
                     "portal.azure.com", Place.withFragment
                     "privacyguides.org/en/", Place.withFragment
                     "readthedocs.io", Place.withFragment
@@ -493,8 +506,12 @@ module Tests =
                     "shopee.vn", Place.hasQuery "searchKeyword"
                     "shopee.vn", Place.hasQuery "sp_atk"
                     "ss64.com", Place.withFragment
+                    "support.optimizely.com", Place.withFragment
                     "support.optimizely.com", Place.hasQuery "return_to"
                     "thanglongkydao.com", _.Url >> Regex.isMatch "/threads/.+?/page\\d+"
+                    "thinkpro.vn", Place.withFragment
+                    "thinkpro.vn", Place.hasQuery "skuId"
+                    "thinkpro.vn", Place.hasQuery "tinh-trang"
                     "tiemanhnhabap.gump.gg", Place.hasQuery "sid"
                     "tienphong.vn", Place.withFragment
                     "tiki.vn", Place.hasQuery "q"
@@ -506,6 +523,8 @@ module Tests =
                     "vnexpress.net", Place.hasFragment "vn_source"
                     "voz.vn", Place.withFragment
                     "voz.vn", Place.hasQuery "page"
+                    "voz.vn", Place.hasQuery "prefix_id"
+                    "voz.vn", Place.hasQuery "show_only"
                     "voz.vn", _.Url >> String.isSubString "/page-"
                     "voz.vn", _.Url >> String.isSubString "#post-"
                     "voz.vn", _.Url >> Regex.isMatch "\\.\\d+/reply"
@@ -519,9 +538,12 @@ module Tests =
                     "www.amazon.fr", Place.hasQuery "field-keywords"
                     "www.apkmirror.com", _.Url >> Regex.isMatch "/apk/[\\w-]+/[\\w-]+/"
                     "www.contra.de", Place.hasQuery "search"
+                    "www.cpubenchmark.net", Place.hasQuery "id"
                     "www.donic.com", Place.hasQuery "order"
                     "www.donic.com", Place.hasQuery "p"
+                    "www.facebook.com", Place.hasQuery "rdid"
                     "www.freelancer.com", Place.hasQuery "search_keyword"
+                    "www.google.com", Place.withFragment
                     "www.google.com", Place.hasQuery "q"
                     "www.nhaccuatui.com", Place.hasQuery "st"
                     "www.npmjs.com", Place.hasQuery "activeTab"
