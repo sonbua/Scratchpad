@@ -270,6 +270,7 @@ module Tests =
                     "euc-powerpoint.officeapps.live.com"
                     "eur.delve.office.com/?"
                     "fbtag.net"
+                    "feedly.com/i/login?"
                     "forms.office.com"
                     "github.com/login"
                     "github.com/orgs"
@@ -305,6 +306,7 @@ module Tests =
                     "mail.google.com"
                     "mail.proton.me/login"
                     "mail.proton.me/u"
+                    "mimecast.com"
                     "modyolo.com/download/"
                     "mysignins.microsoft.com/#"
                     "nodeflair.com/salaries?page="
@@ -389,6 +391,7 @@ module Tests =
                     "www.rockmods.net/search?"
                     "www.virustotal.com"
                     "www.windy.com"
+                    "www.xing.com/jobs/search?"
                     "www.youtube.com/results"
                     "xacthuc.dichvucong.gov.vn"
                     "you.com/search"
@@ -416,6 +419,7 @@ module Tests =
                     "bongban.org", Place.hasQueryParam "page"
                     "bongban.org", _.Url >> Regex.isMatch "/forums/.+?\\d+/page-\\d+"
                     "bongban.org", _.Url >> Regex.isMatch "/threads/.+?/page-\\d+"
+                    "butterflyaustralia.com", Place.hasQueryParam "variant"
                     "cheatsheetseries.owasp.org", Place.withFragment
                     "community.chocolatey.org", Place.withFragment
                     "community.chocolatey.org", Place.hasQueryParam "q"
@@ -442,6 +446,9 @@ module Tests =
                     "eur.delve.office.com", _.Url >> String.isSubString "/profileimage?"
                     "exercism.org", _.Url >> String.isSubString "/solutions"
                     "f247.com", Place.isNotFirstThreadPost
+                    "feedly.com", _.Url >> String.isSubString "/auth/"
+                    "feedly.com", Place.hasQueryParam "gate"
+                    "forum.f-droid.org", Place.isNotFirstThreadPost
                     "forum.uipath.com", Place.isNotFirstThreadPost
                     "forum.rescript-lang.org", Place.isNotFirstThreadPost
                     "forums.fsharp.org", Place.isNotFirstThreadPost
@@ -474,11 +481,13 @@ module Tests =
                     "learn.microsoft.com", Place.withFragment
                     "learn.microsoft.com", Place.hasAnyQueryParam [ "search"; "tabs"; "terms" ]
                     "learnyouahaskell.com", Place.withFragment
+                    "lemon.io", Place.withFragment
                     "localhost", Place.withFragment
                     "localhost", Place.hasQueryParam "code"
                     "login.optimizely.com", _.Url >> String.isSubString "/authorize?client_id="
                     "login.taobao.com", Place.hasQueryParam "redirectURL"
                     "logseq-db-demo.pages.dev", _.Url >> String.isSubString "/#/"
+                    "luatvietnam.vn", Place.hasQueryParam "page"
                     "lucid.app", Place.withFragment
                     "lucid.app", Place.hasAnyQueryParam [ "invitationId"; "product"; "redirect_url" ]
                     "masothue.com", Place.hasQueryParam "q"
@@ -495,6 +504,7 @@ module Tests =
                     "optimizely.atlassian.net/servicedesk/", Place.hasQueryParam "token"
                     "optimizely.atlassian.net/servicedesk/", _.Url >> String.isSubString "/user/login?destination="
                     "phobongban.vn", Place.hasQueryParam "filter_thuong-hieu"
+                    "pico.vn", Place.hasQueryParam "property"
                     "pingsunday.com", Place.withFragment
                     "piped.video", Place.hasQueryParam "search_query"
                     "portal.azure.com", Place.withFragment
@@ -538,6 +548,7 @@ module Tests =
                     "www.freelancer.com", Place.hasQueryParam "search_keyword"
                     "www.google.com", Place.withFragment
                     "www.google.com", Place.hasQueryParam "q"
+                    "www.informatik.uni-leipzig.de", Place.hasQueryParam "word"
                     "www.nhaccuatui.com", Place.hasQueryParam "st"
                     "www.npmjs.com", Place.hasAnyQueryParam [ "activeTab"; "q" ]
                     "www.nuget.org", Place.withFragment
@@ -552,6 +563,8 @@ module Tests =
                     "www.tabletennisdaily.com", _.Url >> Regex.isMatch "/forum/topics/.+?\\d+/page-\\d+"
                     "www.techempower.com", Place.withFragment
                     "www.voidtools.com", Place.withFragment
+                    "www.xing.com", Place.hasQueryParam "sc_o"
+                    "www.xing.com", Place.hasQueryParam "keywords"
                     "www.xxl.se", Place.hasQueryParam "query"
                     "www.youtube.com", Place.hasAnyQueryParam [ "index"; "t" ]
                     "yasakatabletennis.com", Place.hasQueryParam "filter" ]
