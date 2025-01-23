@@ -219,20 +219,23 @@ module Tests =
         testList "FirefoxHistory"
             [ let logger = Log.createHiera [| "Firefox"; "History" |]
               let writeln = Message.eventX >> logger.info
+              let printPlace = _.Url >> sprintf "%A" >> writeln
 
               let deletePlaceIds = Db.deletePlaceIds querySeqAsync
 
               testAsync "Delete untitled places" {
                   let! removed = Db.deleteUntitled querySeqAsync deletePlaceIds
-                  removed |> map (_.Url >> sprintf "%A" >> writeln) |> ignore
+                  removed |> map printPlace |> ignore
               }
 
               // theory data
-              let garbageDomainTheoryData =
+              let garbageDomainTheoryData: string list =
                   [ "file:///"
                     "?__cf_chl_tk="
                     "?__cf_chl_rt_tk="
                     ".cmstest.optimizely.com"
+                    ".logseq-db-demo.pages.dev"
+                    ".logseq-db-test.pages.dev"
                     "127.0.0.1"
                     "1tudien.com"
                     "5.vndic.net"
@@ -259,7 +262,6 @@ module Tests =
                     "contacts.google.com/label"
                     "contacts.google.com/person"
                     "contacts.google.com/search"
-                    "developer.mozilla.org/en-US/search?q="
                     "dichvucong.dancuquocgia.gov.vn/portal"
                     "dictionary.cambridge.org"
                     "docs.google.com/accounts"
@@ -284,7 +286,6 @@ module Tests =
                     "ipfs.io"
                     "jira.sso.episerver.net/issue/CloneIssueProgress.jspa"
                     "jira.sso.episerver.net/login.jsp"
-                    "jira.sso.episerver.net/projects"
                     "jira.sso.episerver.net/secure"
                     "jr.chat.zalo.me"
                     "jr.nhatkyzalo.vn"
@@ -309,7 +310,6 @@ module Tests =
                     "mimecast.com"
                     "modyolo.com/download/"
                     "mysignins.microsoft.com/#"
-                    "nodeflair.com/salaries?page="
                     "opti-dxp.datadoghq.com/account/login"
                     "opti-dxp.datadoghq.com/apm"
                     "opti-dxp.datadoghq.com/logs?"
@@ -330,12 +330,10 @@ module Tests =
                     "profiler.firefox.com"
                     "ramdajs.com/docs/#"
                     "redirect.zalo.me"
-                    "rethinkdns.com/search?q="
                     "revanced.app/patches?"
                     "sanctuary.js.org/#"
                     "search.brave.com"
                     "searchfox.org/mozilla-central/rev/"
-                    "searchfox.org/mozilla-central/search?q="
                     "shopee.vn/buyer/login"
                     "shopee.vn/find_similar_products?"
                     "shopee.vn/search"
@@ -364,16 +362,15 @@ module Tests =
                     "web-frameworks-benchmark.netlify.app/compare?"
                     "web-frameworks-benchmark.netlify.app/result?"
                     "world.optimizely.com/csclasslibraries"
-                    "www.apkmirror.com/?post_type="
                     "www.amazon.com/s/"
                     "www.amazon.com/s?"
                     "www.bahn.de/buchung/fahrplan/suche#"
                     "www.bing.com/search"
                     "www.booking.com"
-                    "www.dict.cc/?s="
                     "www.facebook.com/photo"
                     "www.facebook.com/reel"
                     "www.google.com/maps"
+                    "www.guru.com/login.aspx?"
                     "www.ldoceonline.com/dictionary/"
                     "www.ldoceonline.com/spellcheck/"
                     "www.linkedin.com/404/"
@@ -383,7 +380,6 @@ module Tests =
                     "www.linkedin.com/mypreferences/"
                     "www.linkedin.com/verify"
                     "www.microsoft365.com/search/"
-                    "www.nuget.org/packages?q="
                     "www.openstreetmap.org/search"
                     "www.quora.com/?"
                     "www.rockmods.net/?"
@@ -401,177 +397,267 @@ module Tests =
               testTheoryAsync "Given garbage domain" garbageDomainTheoryData (fun domain ->
                   async {
                       let! removed = domain |> Db.deletePlaces querySeqAsync deletePlaceIds
-                      removed |> map (_.Url >> sprintf "%A" >> writeln) |> ignore
+                      removed |> map printPlace |> ignore
                   })
 
               // theory data
-              let domainWithGarbagePlaceFilterTheoryData: (string * (Place -> bool)) list =
-                  [ "addons.mozilla.org", Place.hasAnyQueryParam [ "q"; "utm_source" ]
-                    "analysiscenter.veracode.com", Place.withFragment
-                    "andrewlock.net", Place.withFragment
-                    "apkdone.com", Place.hasQueryParam "s"
-                    "apkpure.com", Place.hasQueryParam "q"
-                    "apkpure.com", _.Url >> Regex.isMatch "/[\\w-]+/"
-                    "app.optimizely.com/signin", Place.hasQueryParam "continue_to"
-                    "asp-blogs.azurewebsites.net", Place.hasQueryParam "page"
-                    "batdongsan.com.vn", Place.hasAnyQueryParam [ "disIds"; "dtln"; "dtnn"; "gcn"; "gtn" ]
-                    "bongban.org", Place.withFragment
-                    "bongban.org", Place.hasQueryParam "page"
-                    "bongban.org", _.Url >> Regex.isMatch "/forums/.+?\\d+/page-\\d+"
-                    "bongban.org", _.Url >> Regex.isMatch "/threads/.+?/page-\\d+"
-                    "butterflyaustralia.com", Place.hasQueryParam "variant"
-                    "cheatsheetseries.owasp.org", Place.withFragment
-                    "community.chocolatey.org", Place.withFragment
-                    "community.chocolatey.org", Place.hasQueryParam "q"
-                    "community.e.foundation", Place.isNotFirstThreadPost
-                    "community.windy.com", _.Url >> Regex.isMatch "/\\d+/.+?/\\d+"
-                    "confluence.sso.episerver.net", Place.hasAnyQueryParam [ "preview"; "src" ]
-                    "csdiy.wiki", Place.withFragment
-                    "dailongsport.vn", Place.hasQueryParam "page"
-                    "datatracker.ietf.org", Place.withFragment
-                    "devblogs.microsoft.com", Place.withFragment
-                    "diendan.footballvn.net", _.Url >> Regex.isMatch "/threads/\\d+-[^/]+/page\\d+\\.html"
-                    "discuss.logseq.com", Place.isNotFirstThreadPost
-                    "discuss.privacyguides.net", Place.isNotFirstThreadPost
-                    "drive.google.com", Place.hasQueryParam "usp"
-                    "duckduckgo.com", Place.withFragment
-                    "duckduckgo.com", Place.hasQueryParam "q"
-                    "dungbongban.com", _.Url >> Regex.isMatch "-page\\d+\\.html"
-                    "dungcubongban.vn", Place.hasQueryParam "page"
-                    "en.wikipedia.org", Place.hasQueryParam "search"
-                    "episerver99.sharepoint.com", Place.withFragment
-                    "episerver99.sharepoint.com", _.Url >> String.isSubString "download.aspx?"
-                    "episerver99.sharepoint.com", _.Url >> String.isSubString "spfxsinglesignon.aspx"
-                    "episerveridentity.b2clogin.com", _.Url >> String.isSubString "/authorize?client_id="
-                    "eur.delve.office.com", _.Url >> String.isSubString "/profileimage?"
-                    "exercism.org", _.Url >> String.isSubString "/solutions"
-                    "f247.com", Place.isNotFirstThreadPost
-                    "feedly.com", _.Url >> String.isSubString "/auth/"
-                    "feedly.com", Place.hasQueryParam "gate"
-                    "forum.f-droid.org", Place.isNotFirstThreadPost
-                    "forum.uipath.com", Place.isNotFirstThreadPost
-                    "forum.rescript-lang.org", Place.isNotFirstThreadPost
-                    "forums.fsharp.org", Place.isNotFirstThreadPost
-                    "github.com", Place.withFragment
-                    "github.com", Place.hasAnyQueryParam [ "check_run_id"; "from"; "page"; "q"; "query"; "tab" ]
-                    "github.com", _.Url >> String.isSubString "/blob/"
-                    "github.com", _.Url >> String.isSubString "/commits/"
-                    "github.com", _.Url >> String.isSubString "/compare/"
-                    "github.com", _.Url >> String.isSubString "/releases/"
-                    "github.com", _.Url >> String.isSubString "/runs/"
-                    "github.com", _.Url >> String.isSubString "/tree/"
-                    "github.com", _.Url >> String.isSubString "#issue"
-                    "github.com", _.Url >> Regex.isMatch "/commit/\\w{40}"
-                    "github.com", _.Url >> Regex.isMatch "/issues/\\d+#"
-                    "github.com", _.Url >> Regex.isMatch "/pull/\\d+#"
-                    "github.com", _.Url >> Regex.isMatch "/pull/\\d+/commits"
-                    "github.com", _.Url >> Regex.isMatch "/pull/\\d+/files"
-                    "github.com", forallF [ _.Url >> String.isSubString "/tags"; Place.hasQueryParam "after" ]
-                    "github.com/advisories/", _.Url >> String.isSubString "dependabot?query="
-                    "github.io", Place.withFragment
-                    "hanoian.com", Place.hasQueryParam "start"
-                    "hanoinew.vn", Place.hasQueryParam "filter"
-                    "hika.fyi", Place.hasAnyQueryParam [ "question"; "topic_id" ]
-                    "hoachau.vn", Place.withFragment
-                    "hoachau.vn", Place.hasAnyQueryParam [ "brand"; "page" ]
-                    "hoangchopbongban.com", Place.hasQueryParam "q"
-                    "jira.sso.episerver.net", Place.withFragment
-                    "jira.sso.episerver.net", Place.hasAnyQueryParam [ "atlOrigin"; "devStatusDetailDialog"; "jql" ]
-                    "jira.sso.episerver.net/browse/", Place.hasQueryParam "page"
-                    "learn.microsoft.com", Place.withFragment
-                    "learn.microsoft.com", Place.hasAnyQueryParam [ "search"; "tabs"; "terms" ]
-                    "learnyouahaskell.com", Place.withFragment
-                    "lemon.io", Place.withFragment
-                    "localhost", Place.withFragment
-                    "localhost", Place.hasQueryParam "code"
-                    "login.optimizely.com", _.Url >> String.isSubString "/authorize?client_id="
-                    "login.taobao.com", Place.hasQueryParam "redirectURL"
-                    "logseq-db-demo.pages.dev", _.Url >> String.isSubString "/#/"
-                    "luatvietnam.vn", Place.hasQueryParam "page"
-                    "lucid.app", Place.withFragment
-                    "lucid.app", Place.hasAnyQueryParam [ "invitationId"; "product"; "redirect_url" ]
-                    "masothue.com", Place.hasQueryParam "q"
-                    "media4.giphy.com", Place.hasQueryParam "ep"
-                    "modyolo.com", Place.hasQueryParam "s"
-                    "mullvad.net", Place.withFragment
-                    "mycroftproject.com/install.html", Place.hasQueryParam "id"
-                    "mycroftproject.com/search-engines.html", Place.hasQueryParam "name"
-                    "mytabletennis.net", _.Url >> Regex.isMatch "_page\\d+\\.html"
-                    "nhattao.com", Place.hasQueryParam "q"
-                    "nojaf.com", Place.withFragment
-                    "nuget.optimizely.com", Place.hasQueryParam "q"
-                    "nuget.optimizely.com", forallF [ Place.hasQueryParam "id"; Place.hasQueryParam "v" ]
-                    "optimizely.atlassian.net/servicedesk/", Place.hasQueryParam "token"
-                    "optimizely.atlassian.net/servicedesk/", _.Url >> String.isSubString "/user/login?destination="
-                    "phobongban.vn", Place.hasQueryParam "filter_thuong-hieu"
-                    "pico.vn", Place.hasQueryParam "property"
-                    "pingsunday.com", Place.withFragment
-                    "piped.video", Place.hasQueryParam "search_query"
-                    "portal.azure.com", Place.withFragment
-                    "privacyguides.org/en/", Place.withFragment
-                    "readthedocs.io", Place.withFragment
-                    "s.taobao.com", Place.hasQueryParam "q"
-                    "shopee.vn", Place.withFragment
-                    "shopee.vn", Place.hasAnyQueryParam [ "cmtid"; "entryPoint"; "page"; "searchKeyword"; "sp_atk" ]
-                    "ss64.com", Place.withFragment
-                    "support.optimizely.com", Place.withFragment
-                    "support.optimizely.com", Place.hasQueryParam "return_to"
-                    "thanglongkydao.com", _.Url >> Regex.isMatch "/threads/.+?/page\\d+"
-                    "thinkpro.vn", Place.withFragment
-                    "thinkpro.vn", Place.hasAnyQueryParam [ "skuId"; "tinh-trang" ]
-                    "tiemanhnhabap.gump.gg", Place.hasQueryParam "sid"
-                    "tienphong.vn", Place.withFragment
-                    "tiki.vn", Place.hasQueryParam "q"
-                    "tridactyl.xyz", Place.withFragment
-                    "ttgearlab.com", Place.withFragment
-                    "ttsport.vn", Place.hasQueryParam "page"
-                    "vietnamnet.vn", Place.hasFragmentParam "vnn_source"
-                    "vneconomy.vn", Place.hasQueryParam "trang"
-                    "vnexpress.net", Place.hasFragmentParam "vn_source"
-                    "voz.vn", Place.withFragment
-                    "voz.vn", Place.hasAnyQueryParam [ "page"; "prefix_id"; "show_only" ]
-                    "voz.vn", _.Url >> String.isSubString "/page-"
-                    "voz.vn", _.Url >> String.isSubString "#post-"
-                    "voz.vn", _.Url >> Regex.isMatch "\\.\\d+/reply"
-                    "voz.vn", _.Url >> Regex.isMatch "/unread$"
-                    "wikipedia.org/wiki/", Place.withFragment
-                    "world.taobao.com", forallF [ Place.hasQueryParam "a"; Place.hasQueryParam "b" ]
-                    "write.as", _.Url >> String.isSubString "/edit"
-                    "www.adidas.com", Place.hasQueryParam "q"
-                    "www.amazon.com", Place.hasAnyQueryParam [ "keywords"; "rh" ]
-                    "www.amazon.fr", Place.hasQueryParam "field-keywords"
-                    "www.apkmirror.com", _.Url >> Regex.isMatch "/apk/[\\w-]+/[\\w-]+/"
-                    "www.contra.de", Place.hasQueryParam "search"
-                    "www.cpubenchmark.net", Place.hasQueryParam "id"
-                    "www.donic.com", Place.hasAnyQueryParam [ "order"; "p" ]
-                    "www.facebook.com", Place.hasQueryParam "rdid"
-                    "www.freelancer.com", Place.hasQueryParam "search_keyword"
-                    "www.google.com", Place.withFragment
-                    "www.google.com", Place.hasQueryParam "q"
-                    "www.informatik.uni-leipzig.de", Place.hasQueryParam "word"
-                    "www.nhaccuatui.com", Place.hasQueryParam "st"
-                    "www.npmjs.com", Place.hasAnyQueryParam [ "activeTab"; "q" ]
-                    "www.nuget.org", Place.withFragment
-                    "www.nuget.org", _.Url >> Regex.isMatch "/packages/[\\w\\.]+/\\d+\\.\\d+\\.\\d+"
-                    "www.otofun.net", _.Url >> Regex.isMatch "\\.\\d+/page-\\d+"
-                    "www.reddit.com", Place.hasQueryParam "chainedPosts"
-                    "www.reddit.com", _.Url >> String.isSubString "/comment/"
-                    "www.ruten.com.tw", Place.hasQueryParam "q"
-                    "www.ruten.com.tw", Place.hasQueryParam "sort"
-                    "www.tabletennis11.com", Place.withFragment
-                    "www.tabletennis11.com", Place.hasQueryParam "q"
-                    "www.tabletennisdaily.com", _.Url >> Regex.isMatch "/forum/topics/.+?\\d+/page-\\d+"
-                    "www.techempower.com", Place.withFragment
-                    "www.voidtools.com", Place.withFragment
-                    "www.xing.com", Place.hasQueryParam "sc_o"
-                    "www.xing.com", Place.hasQueryParam "keywords"
-                    "www.xxl.se", Place.hasQueryParam "query"
-                    "www.youtube.com", Place.hasAnyQueryParam [ "index"; "t" ]
-                    "yasakatabletennis.com", Place.hasQueryParam "filter" ]
+              let domainWithGarbageFragmentTheoryData: string list =
+                  [ "analysiscenter.veracode.com"
+                    "andrewlock.net"
+                    "bongban.org"
+                    "cheatsheetseries.owasp.org"
+                    "community.chocolatey.org"
+                    "csdiy.wiki"
+                    "datatracker.ietf.org"
+                    "devblogs.microsoft.com"
+                    "duckduckgo.com"
+                    "episerver99.sharepoint.com"
+                    "github.com"
+                    "github.io"
+                    "hoachau.vn"
+                    "jira.sso.episerver.net"
+                    "learn.microsoft.com"
+                    "learnyouahaskell.com"
+                    "lemon.io"
+                    "localhost"
+                    "logseq-db-demo.pages.dev"
+                    "logseq-db-test.pages.dev"
+                    "lucid.app"
+                    "mullvad.net"
+                    "nojaf.com"
+                    "optimizely.brightfunds.org"
+                    "pingsunday.com"
+                    "portal.azure.com"
+                    "privacyguides.org/en/"
+                    "readthedocs.io"
+                    "shopee.vn"
+                    "ss64.com"
+                    "support.optimizely.com"
+                    "thinkpro.vn"
+                    "tienphong.vn"
+                    "tridactyl.xyz"
+                    "ttgearlab.com"
+                    "vorapis.pages.dev"
+                    "voz.vn"
+                    "wikipedia.org/wiki/"
+                    "www.google.com"
+                    "www.nuget.org"
+                    "www.tabletennis11.com"
+                    "www.techempower.com"
+                    "www.voidtools.com"
+                    "xunit.net"
+                    "zoom.earth" ]
+
+              testTheoryAsync "Given domain with garbage fragment" domainWithGarbageFragmentTheoryData (fun domain ->
+                  async {
+                      let placeFilter = Place.withFragment
+                      let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                      removed |> map printPlace |> ignore
+                  })
+
+              // theory data
+              let domainWithGarbageSubstringTheoryData: (string * string) list =
+                  [ "episerver99.sharepoint.com", "download.aspx?"
+                    "episerver99.sharepoint.com", "spfxsinglesignon.aspx"
+                    "episerveridentity.b2clogin.com", "/authorize?client_id="
+                    "eur.delve.office.com", "/profileimage?"
+                    "exercism.org", "/solutions"
+                    "feedly.com", "/auth/"
+                    "github.com", "/blob/"
+                    "github.com", "/commits/"
+                    "github.com", "/compare/"
+                    "github.com", "/releases/"
+                    "github.com", "/runs/"
+                    "github.com", "/tree/"
+                    "github.com/advisories/", "dependabot?query="
+                    "login.optimizely.com", "/authorize?client_id="
+                    "optimizely.atlassian.net/servicedesk/", "/user/login?destination="
+                    "voz.vn", "/page-"
+                    "write.as", "/edit"
+                    "www.reddit.com", "/comment/" ]
 
               testTheoryAsync
-                  "Given domain with garbage place filter to delete"
-                  domainWithGarbagePlaceFilterTheoryData
+                  "Given domain with garbage substring"
+                  domainWithGarbageSubstringTheoryData
+                  (fun (domain, substring) ->
+                      async {
+                          let placeFilter = _.Url >> String.isSubString substring
+                          let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                          removed |> map printPlace |> ignore
+                      })
+
+              // theory data
+              let domainWithAnyGarbageQueryParamTheoryData: (string * string list) list =
+                  [ "addons.mozilla.org", [ "q"; "utm_source" ]
+                    "apkdone.com", [ "s" ]
+                    "apkpure.com", [ "q" ]
+                    "app.optimizely.com/signin", [ "continue_to" ]
+                    "asp-blogs.azurewebsites.net", [ "page" ]
+                    "batdongsan.com.vn", [ "disIds"; "dtln"; "dtnn"; "gcn"; "gtn" ]
+                    "bongban.org", [ "page" ]
+                    "bongbanduyhung.com", [ "s" ]
+                    "butterflyaustralia.com", [ "variant" ]
+                    "chatgpt.com", [ "q" ]
+                    "community.chocolatey.org", [ "q" ]
+                    "confluence.sso.episerver.net", [ "preview"; "src" ]
+                    "dailongsport.vn", [ "page" ]
+                    "developer.mozilla.org", [ "q" ]
+                    "drive.google.com", [ "usp" ]
+                    "duckduckgo.com", [ "q" ]
+                    "dungcubongban.vn", [ "page" ]
+                    "en.wikipedia.org", [ "search" ]
+                    "fastly.picsum.photos", [ "hmac" ]
+                    "feedly.com", [ "gate" ]
+                    "github.com", [ "check_run_id"; "from"; "page"; "q"; "query"; "tab" ]
+                    "hanoian.com", [ "start" ]
+                    "hanoinew.vn", [ "filter" ]
+                    "hika.fyi", [ "question"; "topic_id" ]
+                    "hoachau.vn", [ "brand"; "page" ]
+                    "hoangchopbongban.com", [ "q" ]
+                    "itviec.com", [ "click_source"; "job_selected"; "lab_feature"; "query" ]
+                    "jira.sso.episerver.net", [ "atlOrigin"; "devStatusDetailDialog"; "jql"; "selectedItem" ]
+                    "jira.sso.episerver.net/browse/", [ "page" ]
+                    "learn.microsoft.com", [ "search"; "tabs"; "terms" ]
+                    "localhost", [ "code" ]
+                    "login.taobao.com", [ "redirectURL" ]
+                    "luatvietnam.vn", [ "page" ]
+                    "lucid.app", [ "invitationId"; "product"; "redirect_url" ]
+                    "masothue.com", [ "q" ]
+                    "media4.giphy.com", [ "ep" ]
+                    "modyolo.com", [ "s" ]
+                    "mycroftproject.com/install.html", [ "id" ]
+                    "mycroftproject.com/search-engines.html", [ "name" ]
+                    "nguoiquansat.vn", [ "gidzl" ]
+                    "nhattao.com", [ "q" ]
+                    "nodeflair.com", [ "page" ]
+                    "nuget.optimizely.com", [ "q" ]
+                    "optimizely.atlassian.net/servicedesk/", [ "token" ]
+                    "phobongban.vn", [ "filter_thuong-hieu" ]
+                    "pico.vn", [ "property" ]
+                    "piped.video", [ "search_query" ]
+                    "rethinkdns.com", [ "q" ]
+                    "s.taobao.com", [ "q" ]
+                    "searchfox.org", [ "q" ]
+                    "shopee.vn", [ "cmtid"; "entryPoint"; "page"; "searchKeyword"; "sp_atk" ]
+                    "support.optimizely.com", [ "return_to" ]
+                    "thinkpro.vn", [ "skuId"; "tinh-trang" ]
+                    "tiemanhnhabap.gump.gg", [ "sid" ]
+                    "tiki.vn", [ "q"; "spid" ]
+                    "topdev.vn", [ "src" ]
+                    "ttsport.vn", [ "page" ]
+                    "visa.vfsglobal.com", [ "q" ]
+                    "vneconomy.vn", [ "trang" ]
+                    "voz.party", [ "page" ]
+                    "voz.vn", [ "page"; "prefix_id"; "show_only" ]
+                    "www.adidas.com", [ "q" ]
+                    "www.amazon.com", [ "keywords"; "rh" ]
+                    "www.amazon.fr", [ "field-keywords" ]
+                    "www.apkmirror.com", [ "post_type" ]
+                    "www.contra.de", [ "search" ]
+                    "www.cpubenchmark.net", [ "id" ]
+                    "www.dict.cc", [ "s" ]
+                    "www.donic.com", [ "order"; "p" ]
+                    "www.facebook.com", [ "rdid" ]
+                    "www.freelancer.com", [ "search_keyword" ]
+                    "www.google.com", [ "q" ]
+                    "www.guru.com", [ "SearchUrl" ]
+                    "www.informatik.uni-leipzig.de", [ "word" ]
+                    "www.nhaccuatui.com", [ "st" ]
+                    "www.npmjs.com", [ "activeTab"; "q" ]
+                    "www.nuget.org", [ "q" ]
+                    "www.reddit.com", [ "chainedPosts" ]
+                    "www.ruten.com.tw", [ "q"; "sort" ]
+                    "www.tabletennis11.com", [ "q" ]
+                    "www.xing.com", [ "ijt"; "keywords"; "sc_o" ]
+                    "www.xxl.se", [ "query" ]
+                    "www.youtube.com", [ "index"; "search_query"; "t" ]
+                    "yasakatabletennis.com", [ "filter" ] ]
+
+              testTheoryAsync
+                  "Given domain with any garbage query param"
+                  domainWithAnyGarbageQueryParamTheoryData
+                  (fun (domain, queryParams) ->
+                      async {
+                          let placeFilter = Place.hasAnyQueryParam queryParams
+                          let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                          removed |> map printPlace |> ignore
+                      })
+
+              // theory data
+              let domainWithGarbageFragmentParamTheoryData: (string * string) list =
+                  [ "vietnamnet.vn", "vnn_source"; "vnexpress.net", "vn_source" ]
+
+              testTheoryAsync
+                  "Given domain with garbage fragment param"
+                  domainWithGarbageFragmentParamTheoryData
+                  (fun (domain, fragmentParam) ->
+                      async {
+                          let placeFilter = Place.hasFragmentParam fragmentParam
+                          let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                          removed |> map printPlace |> ignore
+                      })
+
+              // theory data
+              let domainWithGarbageRegexTheoryData: (string * string) list =
+                  [ "apkpure.com", "/[\\w-]+/"
+                    "bongban.org", "/forums/.+?\\d+/page-\\d+"
+                    "bongban.org", "/threads/.+?/page-\\d+"
+                    "community.windy.com", "/\\d+/.+?/\\d+"
+                    "diendan.footballvn.net", "/threads/\\d+-[^/]+/page\\d+\\.html"
+                    "dungbongban.com", "-page\\d+\\.html"
+                    "github.com", "/commit/\\w{40}"
+                    "github.com", "/pull/\\d+/commits"
+                    "github.com", "/pull/\\d+/files"
+                    "mytabletennis.net", "_page\\d+\\.html"
+                    "thanglongkydao.com", "/threads/.+?/page\\d+"
+                    "voz.party", "/d/\\d+-.+?/\\d+$"
+                    "voz.vn", "\\.\\d+/reply"
+                    "voz.vn", "/unread$"
+                    "www.apkmirror.com", "/apk/[\\w-]+/[\\w-]+/"
+                    "www.nuget.org", "/packages/[\\w\\.]+/\\d+\\.\\d+\\.\\d+"
+                    "www.otofun.net", "\\.\\d+/page-\\d+"
+                    "www.tabletennisdaily.com", "/forum/topics/.+?\\d+/page-\\d+" ]
+
+              testTheoryAsync
+                  "Given domain with garbage regex"
+                  domainWithGarbageRegexTheoryData
+                  (fun (domain, pattern) ->
+                      async {
+                          let placeFilter = _.Url >> Regex.isMatch pattern
+                          let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                          removed |> map printPlace |> ignore
+                      })
+
+              // theory data
+              let domainWithGarbageNotFirstThreadPostTheoryData: string list =
+                  [ "community.e.foundation"
+                    "discuss.logseq.com"
+                    "discuss.privacyguides.net"
+                    "f247.com"
+                    "forum.f-droid.org"
+                    "forum.uipath.com"
+                    "forum.rescript-lang.org"
+                    "forums.fsharp.org" ]
+
+              testTheoryAsync
+                  "Given domain with garbage not first thread post"
+                  domainWithGarbageNotFirstThreadPostTheoryData
+                  (fun domain ->
+                      async {
+                          let placeFilter = Place.isNotFirstThreadPost
+                          let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                          removed |> map printPlace |> ignore
+                      })
+
+              // theory data
+              let domainWithComplexGarbagePlaceFilterTheoryData: (string * (Place -> bool)) list =
+                  [ "github.com", forallF [ _.Url >> String.isSubString "/tags"; Place.hasQueryParam "after" ]
+                    "nuget.optimizely.com", forallF [ Place.hasQueryParam "id"; Place.hasQueryParam "v" ]
+                    "world.taobao.com", forallF [ Place.hasQueryParam "a"; Place.hasQueryParam "b" ] ]
+
+              testTheoryAsync
+                  "Given domain with complex garbage place filter to delete"
+                  domainWithComplexGarbagePlaceFilterTheoryData
                   (fun (domain, placeFilter) ->
                       async {
                           let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
