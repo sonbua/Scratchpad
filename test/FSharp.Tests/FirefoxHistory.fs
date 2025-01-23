@@ -433,6 +433,7 @@ module Tests =
                     "shopee.vn"
                     "ss64.com"
                     "support.optimizely.com"
+                    "tabletennis-reference.com"
                     "thinkpro.vn"
                     "tienphong.vn"
                     "tridactyl.xyz"
@@ -517,7 +518,7 @@ module Tests =
                     "itviec.com", [ "click_source"; "job_selected"; "lab_feature"; "query" ]
                     "jira.sso.episerver.net", [ "atlOrigin"; "devStatusDetailDialog"; "jql"; "selectedItem" ]
                     "jira.sso.episerver.net/browse/", [ "page" ]
-                    "learn.microsoft.com", [ "search"; "tabs"; "terms" ]
+                    "learn.microsoft.com", [ "search"; "tabs"; "terms"; "viewFallbackFrom" ]
                     "localhost", [ "code" ]
                     "login.taobao.com", [ "redirectURL" ]
                     "luatvietnam.vn", [ "page" ]
@@ -609,6 +610,7 @@ module Tests =
                     "github.com", "/pull/\\d+/commits"
                     "github.com", "/pull/\\d+/files"
                     "mytabletennis.net", "_page\\d+\\.html"
+                    "tabletennis-reference.com", "detail/\\d+/"
                     "thanglongkydao.com", "/threads/.+?/page\\d+"
                     "voz.party", "/d/\\d+-.+?/\\d+$"
                     "voz.vn", "\\.\\d+/reply"
