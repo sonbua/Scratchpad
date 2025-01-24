@@ -8,9 +8,9 @@ module Firefox.History
 module Foldable =
     open FSharpPlus
 
-    let forallF fs arg : bool = fs |> forall (fun f -> f arg)
+    let andF fs arg : bool = fs |> forall (fun f -> f arg)
 
-    let forAnyF fs arg : bool = fs |> List.exists (fun f -> f arg)
+    let orF fs arg : bool = fs |> List.exists (fun f -> f arg)
 
 module Regex =
     open System.Text.RegularExpressions
@@ -668,17 +668,17 @@ module Tests =
 
               // theory data
               let domainWithComplexGarbagePlaceFilterTheoryData: (string * (Place -> bool)) list =
-                  [ "github.com", forallF [ _.Url >> String.isSubString "/tags"; Place.hasQueryParam "after" ]
+                  [ "github.com", andF [ _.Url >> String.isSubString "/tags"; Place.hasQueryParam "after" ]
                     "local",
-                    forallF
+                    andF
                         [ _.Url >> Regex.isMatch ":\\d+/"
-                          forAnyF [ Place.withQueryParam; Place.withFragment ] ]
+                          orF [ Place.withQueryParam; Place.withFragment ] ]
                     "localhost",
-                    forallF
+                    andF
                         [ _.Url >> Regex.isMatch "localhost/"
-                          forAnyF [ Place.withQueryParam; Place.withFragment ] ]
-                    "nuget.optimizely.com", forallF [ Place.hasQueryParam "id"; Place.hasQueryParam "v" ]
-                    "world.taobao.com", forallF [ Place.hasQueryParam "a"; Place.hasQueryParam "b" ] ]
+                          orF [ Place.withQueryParam; Place.withFragment ] ]
+                    "nuget.optimizely.com", andF [ Place.hasQueryParam "id"; Place.hasQueryParam "v" ]
+                    "world.taobao.com", andF [ Place.hasQueryParam "a"; Place.hasQueryParam "b" ] ]
 
               testTheoryAsync
                   "Given domain with complex garbage place filter to delete"
