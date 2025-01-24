@@ -8,7 +8,9 @@ module Firefox.History
 module Foldable =
     open FSharpPlus
 
-    let forallF fs arg = fs |> forall (fun f -> f arg)
+    let forallF fs arg : bool = fs |> forall (fun f -> f arg)
+
+    let forAnyF fs arg : bool = fs |> List.exists (fun f -> f arg)
 
 module Regex =
     open System.Text.RegularExpressions
@@ -47,6 +49,13 @@ module Uri =
         |> map (String.split [ "=" ] >> head)
         |> List.intersect qs
         |> List.isEmpty
+        |> not
+
+    let withQueryParam (uri: Uri) : bool =
+        uri.Query
+        |> String.trimStart [ '?' ]
+        |> _.Split('&', StringSplitOptions.RemoveEmptyEntries)
+        |> Array.isEmpty
         |> not
 
     let hasFragmentParam f (uri: Uri) =
@@ -102,6 +111,8 @@ module Place =
 
     let hasAnyQueryParam qs place : bool =
         place.Url |> Uri |> Uri.hasAnyQueryParam qs
+
+    let withQueryParam: Place -> bool = _.Url >> Uri >> Uri.withQueryParam
 
     let hasFragmentParam f place : bool =
         place.Url |> Uri |> Uri.hasFragmentParam f
@@ -205,7 +216,7 @@ module Tests =
     open FSharpPlus
 
     let db =
-        @"C:\Users\song\AppData\Roaming\Mozilla\Firefox\Profiles\4kcatvle.default-release\places.sqlite"
+        @"C:\Users\song\AppData\Roaming\Mozilla\Firefox\Profiles\2ld066b7.default-release\places.sqlite"
 
     let connectionString = $"Data Source={db};"
     let connectionF = ConnectionFactory.create connectionString
@@ -295,6 +306,7 @@ module Tests =
                     "khachhang.prudential.com.vn"
                     "libgen.is"
                     "www.linkedin.com/authwall"
+                    "www.linkedin.com/signup"
                     "localhost:50592"
                     "login.microsoftonline.com"
                     "lucid.app/users/registerOrLogin/"
@@ -354,6 +366,9 @@ module Tests =
                     "us3.datadoghq.com/services?"
                     "vi.m.wikipedia.org"
                     "vietstock.vn/tag"
+                    "voz.vn/account/alerts"
+                    "voz.vn/account/alert/"
+                    "voz.vn/direct-messages/"
                     "voz.vn/goto/post?"
                     "voz.vn/p/"
                     "voz.vn/search/"
@@ -654,6 +669,14 @@ module Tests =
               // theory data
               let domainWithComplexGarbagePlaceFilterTheoryData: (string * (Place -> bool)) list =
                   [ "github.com", forallF [ _.Url >> String.isSubString "/tags"; Place.hasQueryParam "after" ]
+                    "local",
+                    forallF
+                        [ _.Url >> Regex.isMatch ":\\d+/"
+                          forAnyF [ Place.withQueryParam; Place.withFragment ] ]
+                    "localhost",
+                    forallF
+                        [ _.Url >> Regex.isMatch "localhost/"
+                          forAnyF [ Place.withQueryParam; Place.withFragment ] ]
                     "nuget.optimizely.com", forallF [ Place.hasQueryParam "id"; Place.hasQueryParam "v" ]
                     "world.taobao.com", forallF [ Place.hasQueryParam "a"; Place.hasQueryParam "b" ] ]
 
@@ -666,14 +689,21 @@ module Tests =
                           removed |> map (_.Url >> sprintf "%A" >> writeln) |> ignore
                       })
 
-              let urlParts =
-                  querySeqAsync<string> { script """select url from moz_places""" }
+              // history entries, excluding bookmarks
+              let urlParts () =
+                  querySeqAsync<string> {
+                      script
+                          """select P.url
+                             from moz_places P
+                                      left join main.moz_bookmarks B on P.id = B.fk
+                             where B.id is null"""
+                  }
                   |> Async.RunSynchronously
                   |> toList
                   |> map (Uri >> UrlPart.create)
 
               test "Count by authority, count >= 5" {
-                  urlParts
+                  urlParts ()
                   |> List.countBy _.Authority
                   |> filter (fun (_, count) -> count >= 5)
                   |> sortByDescending snd
@@ -682,7 +712,7 @@ module Tests =
               }
 
               test "Count by authority and first path's segment, count >= 5" {
-                  urlParts
+                  urlParts ()
                   |> List.countBy UrlPart.toString
                   |> filter (fun (_, count) -> count >= 5)
                   |> sortByDescending snd
