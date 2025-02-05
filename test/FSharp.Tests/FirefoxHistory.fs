@@ -277,6 +277,7 @@ module Tests =
                     "dictionary.cambridge.org"
                     "docs.google.com/accounts"
                     "download.library.lol"
+                    "en.m.wikipedia.org"
                     "engage.cloud.microsoft/main"
                     "episerver99.sharepoint.com/sites/"
                     "eu.docusign.net"
@@ -422,9 +423,11 @@ module Tests =
                     "bongban.org"
                     "cheatsheetseries.owasp.org"
                     "community.chocolatey.org"
+                    "connect.mozilla.org"
                     "csdiy.wiki"
                     "datatracker.ietf.org"
                     "devblogs.microsoft.com"
+                    "docs.developers.optimizely.com"
                     "duckduckgo.com"
                     "episerver99.sharepoint.com"
                     "github.com"
@@ -447,6 +450,7 @@ module Tests =
                     "readthedocs.io"
                     "shopee.vn"
                     "ss64.com"
+                    "support.mozilla.org"
                     "support.optimizely.com"
                     "tabletennis-reference.com"
                     "thinkpro.vn"
@@ -457,8 +461,10 @@ module Tests =
                     "voz.vn"
                     "wikipedia.org/wiki/"
                     "www.google.com"
+                    "www.jetbrains.com"
                     "www.nuget.org"
                     "www.tabletennis11.com"
+                    "www.tabletennisdaily.com"
                     "www.techempower.com"
                     "www.voidtools.com"
                     "xunit.net"
@@ -473,7 +479,9 @@ module Tests =
 
               // theory data
               let domainWithGarbageSubstringTheoryData: (string * string) list =
-                  [ "episerver99.sharepoint.com", "download.aspx?"
+                  [ "bongbanduyhung.com", "/page/"
+                    "connect.mozilla.org", "/page/"
+                    "episerver99.sharepoint.com", "download.aspx?"
                     "episerver99.sharepoint.com", "spfxsinglesignon.aspx"
                     "episerveridentity.b2clogin.com", "/authorize?client_id="
                     "eur.delve.office.com", "/profileimage?"
@@ -487,7 +495,9 @@ module Tests =
                     "github.com", "/tree/"
                     "github.com/advisories/", "dependabot?query="
                     "login.optimizely.com", "/authorize?client_id="
+                    "maybanbongban.vn", "/page/"
                     "optimizely.atlassian.net/servicedesk/", "/user/login?destination="
+                    "ttgearlab.com", "/page/"
                     "voz.vn", "/page-"
                     "write.as", "/edit"
                     "www.reddit.com", "/comment/" ]
@@ -518,10 +528,12 @@ module Tests =
                     "confluence.sso.episerver.net", [ "preview"; "src" ]
                     "dailongsport.vn", [ "page" ]
                     "developer.mozilla.org", [ "q" ]
+                    "docs.google.com", [ "usp" ]
                     "drive.google.com", [ "usp" ]
                     "duckduckgo.com", [ "q" ]
                     "dungcubongban.vn", [ "page" ]
                     "en.wikipedia.org", [ "search" ]
+                    "exercism.org", [ "status" ]
                     "fastly.picsum.photos", [ "hmac" ]
                     "feedly.com", [ "gate" ]
                     "github.com", [ "check_run_id"; "from"; "page"; "q"; "query"; "tab" ]
@@ -547,7 +559,8 @@ module Tests =
                     "nhattao.com", [ "q" ]
                     "nodeflair.com", [ "page" ]
                     "nuget.optimizely.com", [ "q" ]
-                    "optimizely.atlassian.net/servicedesk/", [ "token" ]
+                    "ooakforum.com", [ "sid"; "start" ]
+                    "optimizely.atlassian.net/servicedesk/", [ "page"; "reporter"; "src"; "statuses"; "token" ]
                     "phobongban.vn", [ "filter_thuong-hieu" ]
                     "pico.vn", [ "property" ]
                     "piped.video", [ "search_query" ]
@@ -555,6 +568,7 @@ module Tests =
                     "s.taobao.com", [ "q" ]
                     "searchfox.org", [ "q" ]
                     "shopee.vn", [ "cmtid"; "entryPoint"; "page"; "searchKeyword"; "sp_atk" ]
+                    "support.mozilla.org", [ "as" ]
                     "support.optimizely.com", [ "return_to" ]
                     "thinkpro.vn", [ "skuId"; "tinh-trang" ]
                     "tiemanhnhabap.gump.gg", [ "sid" ]
@@ -565,6 +579,7 @@ module Tests =
                     "vneconomy.vn", [ "trang" ]
                     "voz.party", [ "page" ]
                     "voz.vn", [ "page"; "prefix_id"; "show_only" ]
+                    "world.optimizely.com", [ "releaseNoteId" ]
                     "www.adidas.com", [ "q" ]
                     "www.amazon.com", [ "keywords"; "rh" ]
                     "www.amazon.fr", [ "field-keywords" ]
@@ -584,6 +599,8 @@ module Tests =
                     "www.reddit.com", [ "chainedPosts" ]
                     "www.ruten.com.tw", [ "q"; "sort" ]
                     "www.tabletennis11.com", [ "q" ]
+                    "www.tabletennisdaily.com", [ "page"; "q" ]
+                    "www.vinmec.com", [ "link_type" ]
                     "www.xing.com", [ "ijt"; "keywords"; "sc_o" ]
                     "www.xxl.se", [ "query" ]
                     "www.youtube.com", [ "index"; "search_query"; "t" ]
