@@ -34,12 +34,14 @@ module Uri =
     open System
     open FSharpPlus
 
-    let hasQueryParam q (uri: Uri) : bool =
+    let hasQueryParams (qs: string list) (uri: Uri) : bool =
         uri.Query
         |> String.trimStart [ '?' ]
         |> _.Split('&', StringSplitOptions.RemoveEmptyEntries)
         |> map (String.split [ "=" ] >> head)
-        |> Array.contains q
+        |> toList
+        |> List.intersect qs
+        |> (=) qs
 
     let hasAnyQueryParam qs (uri: Uri) : bool =
         uri.Query
@@ -107,7 +109,8 @@ module Place =
     open System
     open FSharpPlus
 
-    let hasQueryParam q place : bool = place.Url |> Uri |> Uri.hasQueryParam q
+    let hasQueryParams qs place : bool =
+        place.Url |> Uri |> Uri.hasQueryParams qs
 
     let hasAnyQueryParam qs place : bool =
         place.Url |> Uri |> Uri.hasAnyQueryParam qs
@@ -696,8 +699,8 @@ module Tests =
                         [ _.Url >> Regex.isMatch ":\\d+/"
                           orF [ Place.withQueryParam; Place.withFragment ] ]
                     "localhost/", Place.withQueryParam
-                    "nuget.optimizely.com", andF [ Place.hasQueryParam "id"; Place.hasQueryParam "v" ]
-                    "world.taobao.com", andF [ Place.hasQueryParam "a"; Place.hasQueryParam "b" ] ]
+                    "nuget.optimizely.com", Place.hasQueryParams [ "id"; "v" ]
+                    "world.taobao.com", Place.hasQueryParams [ "a"; "b" ] ]
 
               testTheoryAsync
                   "Given domain with complex garbage place filter to delete"
