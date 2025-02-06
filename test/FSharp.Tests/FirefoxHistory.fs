@@ -227,7 +227,8 @@ module Tests =
 
     [<Tests>]
     let specs =
-        testList "FirefoxHistory"
+        testList
+            "FirefoxHistory"
             [ let logger = Log.createHiera [| "Firefox"; "History" |]
               let writeln = Message.eventX >> logger.info
               let printPlace = _.Url >> sprintf "%A" >> writeln
@@ -397,6 +398,7 @@ module Tests =
                     "www.linkedin.com/verify"
                     "www.microsoft365.com/search/"
                     "www.openstreetmap.org/search"
+                    "www.perplexity.ai/search/"
                     "www.quora.com/?"
                     "www.rockmods.net/?"
                     "www.rockmods.net/search/"
@@ -460,6 +462,7 @@ module Tests =
                     "vorapis.pages.dev"
                     "voz.vn"
                     "wikipedia.org/wiki/"
+                    "www.24h.com.vn"
                     "www.google.com"
                     "www.jetbrains.com"
                     "www.nuget.org"
@@ -536,7 +539,7 @@ module Tests =
                     "exercism.org", [ "status" ]
                     "fastly.picsum.photos", [ "hmac" ]
                     "feedly.com", [ "gate" ]
-                    "github.com", [ "check_run_id"; "from"; "page"; "q"; "query"; "tab" ]
+                    "github.com", [ "after"; "check_run_id"; "from"; "page"; "q"; "query"; "return_to"; "tab" ]
                     "hanoian.com", [ "start" ]
                     "hanoinew.vn", [ "filter" ]
                     "hika.fyi", [ "question"; "topic_id" ]
@@ -560,6 +563,7 @@ module Tests =
                     "nodeflair.com", [ "page" ]
                     "nuget.optimizely.com", [ "q" ]
                     "ooakforum.com", [ "sid"; "start" ]
+                    "opti-dxp.datadoghq.com", [ "query" ]
                     "optimizely.atlassian.net/servicedesk/", [ "page"; "reporter"; "src"; "statuses"; "token" ]
                     "phobongban.vn", [ "filter_thuong-hieu" ]
                     "pico.vn", [ "property" ]
@@ -579,6 +583,7 @@ module Tests =
                     "vneconomy.vn", [ "trang" ]
                     "voz.party", [ "page" ]
                     "voz.vn", [ "page"; "prefix_id"; "show_only" ]
+                    "web.analysiscenter.veracode.com", [ "code" ]
                     "world.optimizely.com", [ "releaseNoteId" ]
                     "www.adidas.com", [ "q" ]
                     "www.amazon.com", [ "keywords"; "rh" ]
@@ -600,6 +605,7 @@ module Tests =
                     "www.ruten.com.tw", [ "q"; "sort" ]
                     "www.tabletennis11.com", [ "q" ]
                     "www.tabletennisdaily.com", [ "page"; "q" ]
+                    "www.upwork.com", [ "q" ]
                     "www.vinmec.com", [ "link_type" ]
                     "www.xing.com", [ "ijt"; "keywords"; "sc_o" ]
                     "www.xxl.se", [ "query" ]
@@ -685,15 +691,11 @@ module Tests =
 
               // theory data
               let domainWithComplexGarbagePlaceFilterTheoryData: (string * (Place -> bool)) list =
-                  [ "github.com", andF [ _.Url >> String.isSubString "/tags"; Place.hasQueryParam "after" ]
-                    "local",
+                  [ "local",
                     andF
                         [ _.Url >> Regex.isMatch ":\\d+/"
                           orF [ Place.withQueryParam; Place.withFragment ] ]
-                    "localhost",
-                    andF
-                        [ _.Url >> Regex.isMatch "localhost/"
-                          orF [ Place.withQueryParam; Place.withFragment ] ]
+                    "localhost/", Place.withQueryParam
                     "nuget.optimizely.com", andF [ Place.hasQueryParam "id"; Place.hasQueryParam "v" ]
                     "world.taobao.com", andF [ Place.hasQueryParam "a"; Place.hasQueryParam "b" ] ]
 
