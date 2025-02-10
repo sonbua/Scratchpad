@@ -124,19 +124,23 @@ module Place =
 
     let isNotFirstThreadPost: Place -> bool = _.Url >> Regex.isMatch "/t/.+?/\\d+/\\d+"
 
-module Db =
-    open FSharp.Data.Dapper
-    open FSharpPlus
+open FSharp.Data.Dapper
+open FSharpPlus
+
+type Db(connectionString) =
+    let connectionF: unit -> Connection = ConnectionFactory.create connectionString
+    let alwaysTrue _ = true
+
+    member this.querySeqAsync<'R>() = querySeqAsync<'R> connectionF
 
     /// <summary>
     /// Deletes place records by their IDs and related records in other tables,
     /// including `moz_annos`, `moz_bookmarks`, `moz_historyvisits`, `moz_inputhistory`, `moz_keywords`,
     /// `moz_places_metadata`, `moz_places`.
     /// </summary>
-    /// <param name="querySeqAsync">QuerySeqAsyncBuilder.</param>
     /// <param name="ids">The place IDs to be deleted.</param>
-    let deletePlaceIds (querySeqAsync: QuerySeqAsyncBuilder<int>) ids =
-        querySeqAsync {
+    member private this.deletePlaceIds ids =
+        this.querySeqAsync<int> () {
             script
                 """delete from moz_annos where id in @Ids;
                    delete from moz_bookmarks where fk in @Ids;
@@ -153,14 +157,12 @@ module Db =
     /// Deletes place records, given domain or part of the URL and a place filter to match.
     /// This does not delete place records, which are bookmarks.
     /// </summary>
-    /// <param name="querySeqAsync">QuerySeqAsyncBuilder.</param>
-    /// <param name="deletePlaceIds">Query to delete places IDs.</param>
     /// <param name="urlPart">Part of the URL to match, which will be applied on the database.</param>
     /// <param name="placeFilter">The place filter, which will be applied in-memory, and not on the database.</param>
-    let deletePlacesWith (querySeqAsync: QuerySeqAsyncBuilder<Place>) deletePlaceIds urlPart placeFilter =
+    member this.deletePlacesWith urlPart placeFilter =
         async {
             let! places =
-                querySeqAsync {
+                this.querySeqAsync () {
                     script
                         """select distinct P.id, P.url
                            from moz_places P
@@ -172,32 +174,26 @@ module Db =
                 }
 
             let places = places |> toList |> filter placeFilter
-            let! _ = places |> map _.Id |> deletePlaceIds
+            let! _ = places |> map _.Id |> this.deletePlaceIds
             return places
         }
-
-    let private alwaysTrue _ = true
 
     /// <summary>
     /// Deletes place records, given domain or part of the URL to match.
     /// This does not delete place records, which are bookmarks.
     /// </summary>
-    /// <param name="querySeqAsync">QuerySeqAsyncBuilder.</param>
-    /// <param name="deletePlaceIds">Query to delete places IDs.</param>
     /// <param name="urlPart">Part of the URL to match.</param>
-    let deletePlaces (querySeqAsync: QuerySeqAsyncBuilder<Place>) deletePlaceIds urlPart : Async<Place list> =
-        deletePlacesWith querySeqAsync deletePlaceIds urlPart alwaysTrue
+    member this.deletePlaces urlPart =
+        this.deletePlacesWith urlPart alwaysTrue
 
     /// <summary>
     /// Deletes untitled places.
     /// This does not delete place records, which are bookmarks.
     /// </summary>
-    /// <param name="querySeqAsync">QuerySeqAsyncBuilder.</param>
-    /// <param name="deletePlaceIds">Query to delete place IDs.</param>
-    let deleteUntitled (querySeqAsync: QuerySeqAsyncBuilder<Place>) deletePlaceIds : Async<Place list> =
+    member this.deleteUntitled =
         async {
             let! places =
-                querySeqAsync {
+                this.querySeqAsync () {
                     script
                         """select distinct P.id, P.url
                            from moz_places P
@@ -207,7 +203,7 @@ module Db =
                 }
 
             let places = places |> toList
-            let! _ = places |> map _.Id |> deletePlaceIds
+            let! _ = places |> map _.Id |> this.deletePlaceIds
             return places
         }
 
@@ -215,18 +211,11 @@ module Tests =
     open System
     open Expecto
     open Expecto.Logging
-    open FSharp.Data.Dapper
-    open FSharpPlus
 
     let db =
-        @"C:\Users\song\AppData\Roaming\Mozilla\Firefox\Profiles\2ld066b7.default-release\places.sqlite"
-
-    let connectionString = $"Data Source={db};"
-    let connectionF = ConnectionFactory.create connectionString
-
-    let querySeqAsync<'R> = querySeqAsync<'R> connectionF
-    let querySingleAsync<'R> = querySingleAsync<'R> connectionF
-    let querySingleOptionAsync<'R> = querySingleOptionAsync<'R> connectionF
+        @"C:\Users\song\AppData\Roaming\Mozilla\Firefox\Profiles\4kcatvle.default-release\places.sqlite"
+        |> sprintf "Data Source=%s;"
+        |> Db
 
     [<Tests>]
     let specs =
@@ -236,10 +225,8 @@ module Tests =
               let writeln = Message.eventX >> logger.info
               let printPlace = _.Url >> sprintf "%A" >> writeln
 
-              let deletePlaceIds = Db.deletePlaceIds querySeqAsync
-
               testAsync "Delete untitled places" {
-                  let! removed = Db.deleteUntitled querySeqAsync deletePlaceIds
+                  let! removed = db.deleteUntitled
                   removed |> map printPlace |> ignore
               }
 
@@ -416,7 +403,7 @@ module Tests =
 
               testTheoryAsync "Given garbage domain" garbageDomainTheoryData (fun domain ->
                   async {
-                      let! removed = domain |> Db.deletePlaces querySeqAsync deletePlaceIds
+                      let! removed = domain |> db.deletePlaces
                       removed |> map printPlace |> ignore
                   })
 
@@ -479,7 +466,7 @@ module Tests =
               testTheoryAsync "Given domain with garbage fragment" domainWithGarbageFragmentTheoryData (fun domain ->
                   async {
                       let placeFilter = Place.withFragment
-                      let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                      let! removed = (domain, placeFilter) ||> db.deletePlacesWith
                       removed |> map printPlace |> ignore
                   })
 
@@ -515,7 +502,7 @@ module Tests =
                   (fun (domain, substring) ->
                       async {
                           let placeFilter = _.Url >> String.isSubString substring
-                          let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                          let! removed = (domain, placeFilter) ||> db.deletePlacesWith
                           removed |> map printPlace |> ignore
                       })
 
@@ -621,7 +608,7 @@ module Tests =
                   (fun (domain, queryParams) ->
                       async {
                           let placeFilter = Place.hasAnyQueryParam queryParams
-                          let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                          let! removed = (domain, placeFilter) ||> db.deletePlacesWith
                           removed |> map printPlace |> ignore
                       })
 
@@ -635,7 +622,7 @@ module Tests =
                   (fun (domain, fragmentParam) ->
                       async {
                           let placeFilter = Place.hasFragmentParam fragmentParam
-                          let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                          let! removed = (domain, placeFilter) ||> db.deletePlacesWith
                           removed |> map printPlace |> ignore
                       })
 
@@ -667,7 +654,7 @@ module Tests =
                   (fun (domain, pattern) ->
                       async {
                           let placeFilter = _.Url >> Regex.isMatch pattern
-                          let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                          let! removed = (domain, placeFilter) ||> db.deletePlacesWith
                           removed |> map printPlace |> ignore
                       })
 
@@ -688,7 +675,7 @@ module Tests =
                   (fun domain ->
                       async {
                           let placeFilter = Place.isNotFirstThreadPost
-                          let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                          let! removed = (domain, placeFilter) ||> db.deletePlacesWith
                           removed |> map printPlace |> ignore
                       })
 
@@ -709,13 +696,13 @@ module Tests =
                   domainWithComplexGarbagePlaceFilterTheoryData
                   (fun (domain, placeFilter) ->
                       async {
-                          let! removed = (domain, placeFilter) ||> Db.deletePlacesWith querySeqAsync deletePlaceIds
+                          let! removed = (domain, placeFilter) ||> db.deletePlacesWith
                           removed |> map (_.Url >> sprintf "%A" >> writeln) |> ignore
                       })
 
               // history entries, excluding bookmarks
               let urlParts () =
-                  querySeqAsync<string> {
+                  db.querySeqAsync<string> () {
                       script
                           """select P.url
                              from moz_places P
