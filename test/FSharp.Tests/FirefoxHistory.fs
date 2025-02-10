@@ -199,7 +199,7 @@ type Db(connectionString) =
                            from moz_places P
                              left join main.moz_bookmarks B on P.id = B.fk
                            where P.title is null
-                             and B.parent is null"""
+                             and B.id is null"""
                 }
 
             let places = places |> toList
@@ -537,7 +537,13 @@ module Tests =
                     "hoachau.vn", [ "brand"; "page" ]
                     "hoangchopbongban.com", [ "q" ]
                     "itviec.com", [ "click_source"; "job_selected"; "lab_feature"; "query" ]
-                    "jira.sso.episerver.net", [ "atlOrigin"; "devStatusDetailDialog"; "filter"; "jql"; "page"; "selectedItem" ]
+                    "jira.sso.episerver.net",
+                    [ "atlOrigin"
+                      "devStatusDetailDialog"
+                      "filter"
+                      "jql"
+                      "page"
+                      "selectedItem" ]
                     "learn.microsoft.com", [ "search"; "tabs"; "terms"; "viewFallbackFrom" ]
                     "localhost", [ "code" ]
                     "login.taobao.com", [ "redirectURL" ]
