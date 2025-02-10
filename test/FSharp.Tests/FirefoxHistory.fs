@@ -329,7 +329,6 @@ module Tests =
                     "mysignins.microsoft.com/#"
                     "opti-dxp.datadoghq.com/account/login"
                     "opti-dxp.datadoghq.com/apm"
-                    "opti-dxp.datadoghq.com/logs?"
                     "optimizely.litmos.com"
                     "optimizely.okta.com"
                     "outlook.office.com/mail/?"
@@ -469,6 +468,7 @@ module Tests =
                     "www.google.com"
                     "www.jetbrains.com"
                     "www.nuget.org"
+                    "www.quad9.net"
                     "www.tabletennis11.com"
                     "www.tabletennisdaily.com"
                     "www.techempower.com"
@@ -487,6 +487,7 @@ module Tests =
               let domainWithGarbageSubstringTheoryData: (string * string) list =
                   [ "bongbanduyhung.com", "/page/"
                     "connect.mozilla.org", "/page/"
+                    "episerver99-my.sharepoint.com", "AccessDenied.aspx?"
                     "episerver99.sharepoint.com", "download.aspx?"
                     "episerver99.sharepoint.com", "spfxsinglesignon.aspx"
                     "episerveridentity.b2clogin.com", "/authorize?client_id="
@@ -549,8 +550,7 @@ module Tests =
                     "hoachau.vn", [ "brand"; "page" ]
                     "hoangchopbongban.com", [ "q" ]
                     "itviec.com", [ "click_source"; "job_selected"; "lab_feature"; "query" ]
-                    "jira.sso.episerver.net", [ "atlOrigin"; "devStatusDetailDialog"; "jql"; "selectedItem" ]
-                    "jira.sso.episerver.net/browse/", [ "page" ]
+                    "jira.sso.episerver.net", [ "atlOrigin"; "devStatusDetailDialog"; "filter"; "jql"; "page"; "selectedItem" ]
                     "learn.microsoft.com", [ "search"; "tabs"; "terms"; "viewFallbackFrom" ]
                     "localhost", [ "code" ]
                     "login.taobao.com", [ "redirectURL" ]
@@ -700,6 +700,8 @@ module Tests =
                           orF [ Place.withQueryParam; Place.withFragment ] ]
                     "localhost/", Place.withQueryParam
                     "nuget.optimizely.com", Place.hasQueryParams [ "id"; "v" ]
+                    "opti-dxp.datadoghq.com/logs", Place.withQueryParam
+                    "opti-dxp.datadoghq.com/monitors/", Place.withQueryParam
                     "world.taobao.com", Place.hasQueryParams [ "a"; "b" ] ]
 
               testTheoryAsync
