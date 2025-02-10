@@ -128,10 +128,10 @@ open FSharp.Data.Dapper
 open FSharpPlus
 
 type Db(connectionString) =
-    let connectionF: unit -> Connection = ConnectionFactory.create connectionString
     let alwaysTrue _ = true
 
-    member this.querySeqAsync<'R>() = querySeqAsync<'R> connectionF
+    member this.querySeqAsync<'R>() =
+        connectionString |> ConnectionFactory.create |> querySeqAsync<'R>
 
     /// <summary>
     /// Deletes place records by their IDs and related records in other tables,
@@ -707,7 +707,7 @@ module Tests =
                       })
 
               // history entries, excluding bookmarks
-              let urlParts () =
+              let urlParts =
                   db.querySeqAsync<string> () {
                       script
                           """select P.url
@@ -720,7 +720,7 @@ module Tests =
                   |> map (Uri >> UrlPart.create)
 
               test "Count by authority, count >= 5" {
-                  urlParts ()
+                  urlParts
                   |> List.countBy _.Authority
                   |> filter (fun (_, count) -> count >= 5)
                   |> sortByDescending snd
@@ -729,7 +729,7 @@ module Tests =
               }
 
               test "Count by authority and first path's segment, count >= 5" {
-                  urlParts ()
+                  urlParts
                   |> List.countBy UrlPart.toString
                   |> filter (fun (_, count) -> count >= 5)
                   |> sortByDescending snd
