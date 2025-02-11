@@ -70,8 +70,8 @@ let specs =
 
         // theory data
         let pronunciationAudioFiles =
-            [ "can", [ (British, "https://www.ldoceonline.com/media/english/breProns/ld44can.mp3?version=1.2.76")
-                       (American, "https://www.ldoceonline.com/media/english/ameProns/l3can.mp3?version=1.2.76") ] ]
+            [ "can", [ (British, "https://www.ldoceonline.com/media/english/breProns/ld44can.mp3?version=1.2.77")
+                       (American, "https://www.ldoceonline.com/media/english/ameProns/l3can.mp3?version=1.2.77") ] ]
         testTheory "Entry: Pronunciation: Audio files" pronunciationAudioFiles
             (fun (query, audios: (Label * string) list) ->
                  let entry = query |> lookup |> _.Entries |> head
@@ -95,8 +95,8 @@ let specs =
 
         // theory data
         let simpleExampleWithAudioTheoryData =
-            [ "get about", "get-about__1", Simple { Text = "She’s 80 now, and doesn’t get about much anymore."; Audio = "https://www.ldoceonline.com/media/english/exaProns/ldoce6exa_00386.mp3?version=1.2.76" }
-              "get about", "get-about__2", Simple { Text = "I don’t really want this to get about."; Audio = "https://www.ldoceonline.com/media/english/exaProns/p008-001290263.mp3?version=1.2.76" } ]
+            [ "get about", "get-about__1", Simple { Text = "She’s 80 now, and doesn’t get about much anymore."; Audio = "https://www.ldoceonline.com/media/english/exaProns/ldoce6exa_00386.mp3?version=1.2.77" }
+              "get about", "get-about__2", Simple { Text = "I don’t really want this to get about."; Audio = "https://www.ldoceonline.com/media/english/exaProns/p008-001290263.mp3?version=1.2.77" } ]
         testTheory "Entry: Senses: Sense: Examples: Simple example with audio" simpleExampleWithAudioTheoryData
             (fun (query, senseId, simpleExample) ->
                  let entry = query |> lookup |> _.Entries |> head
