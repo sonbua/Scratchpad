@@ -14,17 +14,14 @@ module HtmlNode =
 
 module Audio =
     /// Root node contains "data-src-mp3" attribute
-    let extract =
-        HtmlNode.attribute "data-src-mp3"
-        >> HtmlAttribute.value
+    let extract = HtmlNode.attribute "data-src-mp3" >> HtmlAttribute.value
 
 type WordFamily = string list
 
 module WordFamily =
     /// Root node: class="wordfams"
     let extract: HtmlNode -> WordFamily =
-        HtmlNode.cssSelectR ".w"
-        >> List.map HtmlNode.innerText
+        HtmlNode.cssSelectR ".w" >> List.map HtmlNode.innerText
 
 type Word =
     | Word of string
@@ -63,16 +60,16 @@ module Label =
         | American l -> Some l
         | _ -> failwith $"Unexpected label: '{node |> string}'"
 
-    let extract =
-        HtmlNode.cssSelectR ".Head .speaker"
-        >> List.choose tryParse
+    let extract = HtmlNode.cssSelectR ".Head .speaker" >> List.choose tryParse
 
 type Pronunciation =
-    { /// Phonemic transcription
-      /// See https://www.oxfordlearnersdictionaries.com/about/english/pronunciation_english
-      Transcriptions: string list
-      AmericanVariant: string option
-      Audio: (Label * string) list }
+    {
+        /// Phonemic transcription
+        /// See https://www.oxfordlearnersdictionaries.com/about/english/pronunciation_english
+        Transcriptions: string list
+        AmericanVariant: string option
+        Audio: (Label * string) list
+    }
 
 module Pronunciation =
     let private extractTranscriptions =
@@ -96,26 +93,22 @@ module SimpleExample =
     /// Root node: class="EXAMPLE"
     let extract node : SimpleExample =
         { Text = node |> HtmlNode.innerText
-          Audio =
-            node
-            |> HtmlNode.cssSelectR ".exafile"
-            |> List.exactlyOne
-            |> Audio.extract }
+          Audio = node |> HtmlNode.cssSelectR ".exafile" |> List.exactlyOne |> Audio.extract }
 
     /// Root node contains child nodes with class="EXAMPLE"
-    let extractMany =
-        HtmlNode.cssSelectR ".EXAMPLE"
-        >> List.map extract
+    let extractMany = HtmlNode.cssSelectR ".EXAMPLE" >> List.map extract
 
 type GrammaticalType =
     | Preposition
     | PropositionalForm
 
 type GrammaticalExamples =
-    { Pattern: string
-      Type: GrammaticalType
-      /// Example of more than two examples: case__2
-      Examples: SimpleExample list }
+    {
+        Pattern: string
+        Type: GrammaticalType
+        /// Example of more than two examples: case__2
+        Examples: SimpleExample list
+    }
 
 module GrammaticalExamples =
     let private maybeGrammaticalType grammaticalType cssSelector node =
@@ -185,27 +178,33 @@ module Example =
     let extract: HtmlNode -> Example list = HtmlNode.elements >> List.choose tryParse
 
 type SenseData =
-    { Id: string option
-      /// Example: word__1
-      /// No definition: word__2
-      Definition: string option
-      Examples: Example list
-      /// Example: get__13
-      CrossRefs: string list
-      /// Example: go__7, revise__2
-      Thesauruses: string list }
+    {
+        Id: string option
+        /// Example: word__1
+        /// No definition: word__2
+        Definition: string option
+        Examples: Example list
+        /// Example: get__13
+        CrossRefs: string list
+        /// Example: go__7, revise__2
+        Thesauruses: string list
+    }
 
 type SubsenseData =
-    { Definition: string option
-      Examples: Example list
-      /// Example: case__8
-      CrossRefs: string list }
+    {
+        Definition: string option
+        Examples: Example list
+        /// Example: case__8
+        CrossRefs: string list
+    }
 
 type SubsenseGroupData =
-    { Id: string option
-      Subsenses: SubsenseData list
-      /// Example: get__4, get__5
-      Thesauruses: string list }
+    {
+        Id: string option
+        Subsenses: SubsenseData list
+        /// Example: get__4, get__5
+        Thesauruses: string list
+    }
 
 type Sense =
     | Sense of SenseData
@@ -214,8 +213,7 @@ type Sense =
 module Sense =
     /// Root node: class="Sense"
     let private extractId: HtmlNode -> string option =
-        HtmlNode.tryGetAttribute "id"
-        >> Option.map HtmlAttribute.value
+        HtmlNode.tryGetAttribute "id" >> Option.map HtmlAttribute.value
 
     /// Root node: class="Sense" or class="Subsense"
     let private extractDefinition =
@@ -231,8 +229,7 @@ module Sense =
 
     /// Root node: class="Sense"
     let private extractThesauruses =
-        HtmlNode.cssSelectR ".Thesref .REFHWD"
-        >> List.map HtmlNode.innerText
+        HtmlNode.cssSelectR ".Thesref .REFHWD" >> List.map HtmlNode.innerText
 
     module SenseData =
         /// Root node: class="Sense"
@@ -265,12 +262,9 @@ module Sense =
 
     let private (|Sense|_|) senseNode =
         try
-            senseNode
-            |> SenseData.extract
-            |> Sense.Sense
-            |> Some
-        with
-        | _ -> None
+            senseNode |> SenseData.extract |> Sense.Sense |> Some
+        with _ ->
+            None
 
     /// Root node: class="Sense"
     let extract (senseNode: HtmlNode) : Sense =
@@ -289,8 +283,7 @@ type Entry =
 
 module Entry =
     let private extractId =
-        HtmlNode.tryGetAttribute "id"
-        >> Option.map HtmlAttribute.value
+        HtmlNode.tryGetAttribute "id" >> Option.map HtmlAttribute.value
 
     let private extractNo =
         HtmlNode.cssSelectR ".HOMNUM"
@@ -302,9 +295,7 @@ module Entry =
         >> List.collect (HtmlNode.cssSelectR ".crossRef")
         >> List.map HtmlNode.innerText
 
-    let private extractSenses =
-        HtmlNode.cssSelectR ".Sense"
-        >> List.map Sense.extract
+    let private extractSenses = HtmlNode.cssSelectR ".Sense" >> List.map Sense.extract
 
     /// Root node: class="ldoceEntry"
     let extract (entryNode: HtmlNode) : Entry =
@@ -326,8 +317,7 @@ module Dictionary =
         >> Option.map WordFamily.extract
 
     let private extractEntries =
-        HtmlNode.cssSelectR ".dictentry .ldoceEntry"
-        >> List.map Entry.extract
+        HtmlNode.cssSelectR ".dictentry .ldoceEntry" >> List.map Entry.extract
 
     /// Root node: class="dictionary"
     let extract dictionaryNode : Dictionary =
