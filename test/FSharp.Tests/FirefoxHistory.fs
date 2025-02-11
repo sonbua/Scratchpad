@@ -34,24 +34,18 @@ module Uri =
     open System
     open FSharpPlus
 
-    let hasQueryParams (qs: string list) (uri: Uri) : bool =
+    let private extractKeys (uri: Uri) =
         uri.Query
         |> String.trimStart [ '?' ]
         |> _.Split('&', StringSplitOptions.RemoveEmptyEntries)
-        |> map (String.split [ "=" ] >> head)
         |> toList
-        |> List.intersect qs
-        |> (=) qs
+        |> map (String.split [ "=" ] >> head)
+
+    let hasQueryParams (qs: string list) (uri: Uri) : bool =
+        uri |> extractKeys |> List.intersect qs |> (=) qs
 
     let hasAnyQueryParam qs (uri: Uri) : bool =
-        uri.Query
-        |> String.trimStart [ '?' ]
-        |> _.Split('&', StringSplitOptions.RemoveEmptyEntries)
-        |> toList
-        |> map (String.split [ "=" ] >> head)
-        |> List.intersect qs
-        |> List.isEmpty
-        |> not
+        uri |> extractKeys |> List.intersect qs |> List.isEmpty |> not
 
     let withQueryParam (uri: Uri) : bool =
         uri.Query
