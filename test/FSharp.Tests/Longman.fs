@@ -5,6 +5,13 @@ open FSharp.Data
 open FSharpPlus
 open Microsoft.FSharp.Core
 
+module Option =
+    let ifWith predicate onTrue inp =
+        if inp |> predicate then Some(inp |> onTrue) else None
+
+module HtmlNode =
+    let cssSelectR selector node = HtmlNode.cssSelect node selector
+
 module Audio =
     /// Root node contains "data-src-mp3" attribute
     let extract =
@@ -16,7 +23,7 @@ type WordFamily = string list
 module WordFamily =
     /// Root node: class="wordfams"
     let extract: HtmlNode -> WordFamily =
-        flip HtmlNode.cssSelect ".w"
+        HtmlNode.cssSelectR ".w"
         >> List.map HtmlNode.innerText
 
 type Word =
@@ -26,7 +33,7 @@ type Word =
 module Word =
     let private maybe wordCtor cssSelector node =
         node
-        |> flip HtmlNode.cssSelect cssSelector
+        |> HtmlNode.cssSelectR cssSelector
         |> List.tryExactlyOne
         |> Option.map (HtmlNode.innerText >> wordCtor)
 
@@ -57,7 +64,7 @@ module Label =
         | _ -> failwith $"Unexpected label: '{node |> string}'"
 
     let extract =
-        flip HtmlNode.cssSelect ".Head .speaker"
+        HtmlNode.cssSelectR ".Head .speaker"
         >> List.choose tryParse
 
 type Pronunciation =
@@ -69,11 +76,11 @@ type Pronunciation =
 
 module Pronunciation =
     let private extractTranscriptions =
-        flip HtmlNode.cssSelect ".PRON"
+        HtmlNode.cssSelectR ".PRON"
         >> List.map (HtmlNode.innerText >> String.trimWhiteSpaces)
 
     let private extractAmericanVariant =
-        flip HtmlNode.cssSelect ".AMEVARPRON"
+        HtmlNode.cssSelectR ".AMEVARPRON"
         >> List.tryExactlyOne
         >> Option.map HtmlNode.directInnerText
 
@@ -91,13 +98,13 @@ module SimpleExample =
         { Text = node |> HtmlNode.innerText
           Audio =
             node
-            |> flip HtmlNode.cssSelect ".exafile"
+            |> HtmlNode.cssSelectR ".exafile"
             |> List.exactlyOne
             |> Audio.extract }
 
     /// Root node contains child nodes with class="EXAMPLE"
     let extractMany =
-        flip HtmlNode.cssSelect ".EXAMPLE"
+        HtmlNode.cssSelectR ".EXAMPLE"
         >> List.map extract
 
 type GrammaticalType =
@@ -113,7 +120,7 @@ type GrammaticalExamples =
 module GrammaticalExamples =
     let private maybeGrammaticalType grammaticalType cssSelector node =
         node
-        |> flip HtmlNode.cssSelect cssSelector
+        |> HtmlNode.cssSelectR cssSelector
         |> List.tryExactlyOne
         |> Option.map HtmlNode.innerText
         |> Option.map (fun x ->
@@ -142,7 +149,7 @@ module CollocationalExamples =
     /// Root node: class="ColloExa"
     let extract (collocationNode: HtmlNode) : CollocationalExamples =
         collocationNode
-        |> flip HtmlNode.cssSelect ".COLLO"
+        |> HtmlNode.cssSelectR ".COLLO"
         |> List.tryExactlyOne
         |> Option.map HtmlNode.innerText
         |> Option.map (fun x ->
@@ -212,19 +219,19 @@ module Sense =
 
     /// Root node: class="Sense" or class="Subsense"
     let private extractDefinition =
-        flip HtmlNode.cssSelect ".DEF"
+        HtmlNode.cssSelectR ".DEF"
         >> List.tryExactlyOne
         >> Option.map (HtmlNode.innerText >> String.trimWhiteSpaces)
 
     /// Root node: class="Sense" or class="Subsense"
     let private extractCrossRefs =
-        flip HtmlNode.cssSelect ".Crossref"
-        >> List.collect (flip HtmlNode.cssSelect ".REFHWD")
+        HtmlNode.cssSelectR ".Crossref"
+        >> List.collect (HtmlNode.cssSelectR ".REFHWD")
         >> List.map HtmlNode.innerText
 
     /// Root node: class="Sense"
     let private extractThesauruses =
-        flip HtmlNode.cssSelect ".Thesref .REFHWD"
+        HtmlNode.cssSelectR ".Thesref .REFHWD"
         >> List.map HtmlNode.innerText
 
     module SenseData =
@@ -245,7 +252,7 @@ module Sense =
 
     let private (|SubsenseGroup|_|) subsenseGroupNode =
         subsenseGroupNode
-        |> flip HtmlNode.cssSelect ".Subsense"
+        |> HtmlNode.cssSelectR ".Subsense"
         |> List.map SubsenseData.extract
         |> function
             | [] -> None
@@ -286,17 +293,17 @@ module Entry =
         >> Option.map HtmlAttribute.value
 
     let private extractNo =
-        flip HtmlNode.cssSelect ".HOMNUM"
+        HtmlNode.cssSelectR ".HOMNUM"
         >> List.tryExactlyOne
         >> Option.map (HtmlNode.innerText >> int)
 
     let private extractCrossRefs =
-        flip HtmlNode.cssSelect ".Tail .Crossref"
-        >> List.collect (flip HtmlNode.cssSelect ".crossRef")
+        HtmlNode.cssSelectR ".Tail .Crossref"
+        >> List.collect (HtmlNode.cssSelectR ".crossRef")
         >> List.map HtmlNode.innerText
 
     let private extractSenses =
-        flip HtmlNode.cssSelect ".Sense"
+        HtmlNode.cssSelectR ".Sense"
         >> List.map Sense.extract
 
     /// Root node: class="ldoceEntry"
@@ -314,12 +321,12 @@ type Dictionary =
 
 module Dictionary =
     let private extractWordFamily =
-        flip HtmlNode.cssSelect ".wordfams"
+        HtmlNode.cssSelectR ".wordfams"
         >> List.tryExactlyOne
         >> Option.map WordFamily.extract
 
     let private extractEntries =
-        flip HtmlNode.cssSelect ".dictentry .ldoceEntry"
+        HtmlNode.cssSelectR ".dictentry .ldoceEntry"
         >> List.map Entry.extract
 
     /// Root node: class="dictionary"
@@ -331,6 +338,6 @@ let lookup (word: string) : Dictionary =
     $"https://www.ldoceonline.com/search/english/direct/?q={word}"
     |> HtmlDocument.Load
     |> HtmlDocument.body
-    |> flip HtmlNode.cssSelect ".dictionary"
+    |> HtmlNode.cssSelectR ".dictionary"
     |> List.exactlyOne
     |> Dictionary.extract
