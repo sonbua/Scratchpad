@@ -455,6 +455,7 @@ module Tests =
                     "www.techempower.com"
                     "www.voidtools.com"
                     "xunit.net"
+                    "zen-browser.app"
                     "zoom.earth" ]
 
               testTheoryAsync "Given domain with garbage fragment" domainWithGarbageFragmentTheoryData (fun domain ->
@@ -530,6 +531,7 @@ module Tests =
                     "hika.fyi", [ "question"; "topic_id" ]
                     "hoachau.vn", [ "brand"; "page" ]
                     "hoangchopbongban.com", [ "q" ]
+                    "identity.getpostman.com", [ "auth_challenge"; "redirect_uri" ]
                     "itviec.com", [ "click_source"; "job_selected"; "lab_feature"; "query" ]
                     "jira.sso.episerver.net",
                     [ "atlOrigin"
@@ -562,6 +564,7 @@ module Tests =
                     "s.taobao.com", [ "q" ]
                     "searchfox.org", [ "q" ]
                     "shopee.vn", [ "cmtid"; "entryPoint"; "page"; "searchKeyword"; "sp_atk" ]
+                    "sso.tuoitre.vn", [ "redirectUrl" ]
                     "support.mozilla.org", [ "as" ]
                     "support.optimizely.com", [ "return_to" ]
                     "thinkpro.vn", [ "skuId"; "tinh-trang" ]
@@ -600,7 +603,8 @@ module Tests =
                     "www.xing.com", [ "ijt"; "keywords"; "sc_o" ]
                     "www.xxl.se", [ "query" ]
                     "www.youtube.com", [ "index"; "search_query"; "t" ]
-                    "yasakatabletennis.com", [ "filter" ] ]
+                    "yasakatabletennis.com", [ "filter" ]
+                    "zen-browser.app", [ "v" ] ]
 
               testTheoryAsync
                   "Given domain with any garbage query param"
