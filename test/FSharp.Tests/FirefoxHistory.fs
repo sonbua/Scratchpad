@@ -23,12 +23,17 @@ module Regex =
     let isMatch pattern (text: string) = Regex.IsMatch(text, pattern)
 
 module List =
-    let rec intersect list1 list2 : 'a list =
-        match list1 with
-        | head1 :: tail1 ->
-            let rest = intersect tail1 list2
-            if List.contains head1 list2 then head1 :: rest else rest
-        | [] -> []
+    let intersect list1 list2 =
+        let rec aux list1 list2 acc =
+            match list1 with
+            | head1 :: tail1 ->
+                if List.contains head1 list2 then
+                    aux tail1 list2 (head1 :: acc)
+                else
+                    aux tail1 list2 acc
+            | [] -> List.rev acc
+
+        aux list1 list2 []
 
 module Uri =
     open System
