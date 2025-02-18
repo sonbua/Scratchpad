@@ -29,7 +29,7 @@ public class CancelableControllerTest
         stopwatch.Stop();
         var elapsedTime = stopwatch.Elapsed;
 
-        elapsedTime.Should().BeGreaterOrEqualTo(TimeSpan.FromSeconds(3));
+        elapsedTime.Should().BeGreaterThanOrEqualTo(TimeSpan.FromSeconds(3));
     }
 
     [Fact]

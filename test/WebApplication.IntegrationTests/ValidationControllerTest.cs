@@ -37,7 +37,7 @@ public class ValidationControllerTest
     {
         var response = await _fixture.Client.PostAsJsonAsync(ValidationController.Route, new { value = "5" });
 
-        response.Should().BeSuccessful();
+        response.EnsureSuccessStatusCode();
 
         var responseModel = await response.Content.ReadFromJsonAsync<ValidationResponseModel>();
         responseModel.Should().NotBeNull()

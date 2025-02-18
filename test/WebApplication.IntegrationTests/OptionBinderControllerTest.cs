@@ -36,7 +36,7 @@ public class OptionBinderControllerTest
 
         response = await _fixture.Client.PostAsync($"{RoutePrefix}?json={optionsString}", null);
 
-        response.Should().HaveStatusCode(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         options = await response.Content.ReadFromJsonAsync<OptionsModelResponseOptions>();
         options.Should().BeEquivalentTo(optionsToBeBound);
