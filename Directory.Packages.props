@@ -5,27 +5,27 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup Label="Public dependencies">
-    <PackageVersion Include="FSharp.Data" Version="6.4.0" />
+    <PackageVersion Include="FSharp.Data" Version="6.4.1" />
     <PackageVersion Include="FSharp.Data.Dapper" Version="2.0.0" />
-    <PackageVersion Include="FSharpPlus" Version="1.6.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
-    <PackageVersion Include="Microsoft.Data.SQLite" Version="8.0.8" />
+    <PackageVersion Include="FSharpPlus" Version="1.7.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.2" />
+    <PackageVersion Include="Microsoft.Data.SQLite" Version="9.0.2" />
     <PackageVersion Include="TextCopy" Version="6.2.1" />
   </ItemGroup>
   <ItemGroup Label="Private dependencies">
     <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
     <PackageVersion Include="Expecto" Version="10.2.1" />
-    <PackageVersion Include="Fake.Core.Target" Version="6.1.0" />
+    <PackageVersion Include="Fake.Core.Target" Version="6.1.3" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.33.0" />
     <PackageVersion Include="Machine.Specifications" Version="1.1.2" />
     <PackageVersion Include="Machine.Specifications.Runner.VisualStudio" Version="2.10.2" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.8" />
-    <PackageVersion Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
-    <PackageVersion Include="xunit" Version="2.9.0" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
-    <PackageVersion Include="YoloDev.Expecto.TestSdk" Version="0.14.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Primitives" Version="9.0.2" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
+    <PackageVersion Include="YoloDev.Expecto.TestSdk" Version="0.15.1" />
   </ItemGroup>
   <ItemGroup Label="Transitive dependencies with security issues">
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.0" />
