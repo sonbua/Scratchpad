@@ -235,6 +235,7 @@ module Tests =
                     "?__cf_chl_tk="
                     "?__cf_chl_rt_tk="
                     ".cmstest.optimizely.com"
+                    ".giphy.com/media/"
                     ".logseq-db-demo.pages.dev"
                     ".logseq-db-test.pages.dev"
                     "127.0.0.1"
@@ -271,6 +272,7 @@ module Tests =
                     "engage.cloud.microsoft/main"
                     "episerver99.sharepoint.com/sites/"
                     "eu.docusign.net"
+                    "eu.onetimesecret.com/secret/"
                     "euc-powerpoint.officeapps.live.com"
                     "eur.delve.office.com/?"
                     "fbtag.net"
@@ -282,6 +284,7 @@ module Tests =
                     "hcm55.sapsf.eu"
                     "hoachau.vn/search"
                     "hvdic.thivien.net"
+                    "i.sstatic.net"
                     "id.atlassian.com"
                     "id.zalo.me/account"
                     "info.hdbank.com.vn/subcriber"
@@ -312,7 +315,7 @@ module Tests =
                     "mail.proton.me/u"
                     "mimecast.com"
                     "modyolo.com/download/"
-                    "mysignins.microsoft.com/#"
+                    "my.vnexpress.net/users/feed/"
                     "opti-dxp.datadoghq.com/account/login"
                     "opti-dxp.datadoghq.com/apm"
                     "optimizely.litmos.com"
@@ -330,10 +333,9 @@ module Tests =
                     "prep.turnstile.episerver.net"
                     "prod.outgoing.prod.webservices.mozgcp.net"
                     "profiler.firefox.com"
-                    "ramdajs.com/docs/#"
+                    "rambda.vercel.app/?"
                     "redirect.zalo.me"
                     "revanced.app/patches?"
-                    "sanctuary.js.org/#"
                     "search.brave.com"
                     "searchfox.org/mozilla-central/rev/"
                     "shopee.vn/buyer/login"
@@ -412,18 +414,22 @@ module Tests =
                     "andrewlock.net"
                     "bongban.org"
                     "cheatsheetseries.owasp.org"
+                    "chimviet.free.fr"
                     "community.chocolatey.org"
                     "connect.mozilla.org"
                     "csdiy.wiki"
                     "datatracker.ietf.org"
                     "devblogs.microsoft.com"
+                    "developer.mozilla.org"
                     "docs.developers.optimizely.com"
                     "duckduckgo.com"
                     "episerver99.sharepoint.com"
+                    "fsharpforfunandprofit.com"
                     "github.com"
                     "github.io"
                     "hoachau.vn"
                     "jira.sso.episerver.net"
+                    "jmeter.apache.org"
                     "learn.microsoft.com"
                     "learnyouahaskell.com"
                     "lemon.io"
@@ -432,12 +438,16 @@ module Tests =
                     "logseq-db-test.pages.dev"
                     "lucid.app"
                     "mullvad.net"
+                    "mysignins.microsoft.com"
                     "nojaf.com"
                     "optimizely.brightfunds.org"
                     "pingsunday.com"
                     "portal.azure.com"
                     "privacyguides.org/en/"
+                    "ramdajs.com/docs/"
                     "readthedocs.io"
+                    "sanctuary.js.org"
+                    "selfrefactor.github.io"
                     "shopee.vn"
                     "ss64.com"
                     "support.mozilla.org"
@@ -453,6 +463,7 @@ module Tests =
                     "www.24h.com.vn"
                     "www.google.com"
                     "www.jetbrains.com"
+                    "www.ncb-bank.vn"
                     "www.nuget.org"
                     "www.quad9.net"
                     "www.tabletennis11.com"
@@ -508,7 +519,8 @@ module Tests =
 
               // theory data
               let domainWithAnyGarbageQueryParamTheoryData: (string * string list) list =
-                  [ "addons.mozilla.org", [ "q"; "utm_source" ]
+                  [ ".giphy.com", [ "ep" ]
+                    "addons.mozilla.org", [ "q"; "utm_source" ]
                     "apkdone.com", [ "s" ]
                     "apkpure.com", [ "q" ]
                     "app.optimizely.com/signin", [ "continue_to" ]
@@ -517,7 +529,7 @@ module Tests =
                     "bongban.org", [ "page" ]
                     "bongbanduyhung.com", [ "s" ]
                     "butterflyaustralia.com", [ "variant" ]
-                    "chatgpt.com", [ "q" ]
+                    "chatgpt.com", [ "callbackUrl"; "error"; "q" ]
                     "community.chocolatey.org", [ "q" ]
                     "confluence.sso.episerver.net", [ "preview"; "src" ]
                     "dailongsport.vn", [ "page" ]
@@ -544,6 +556,7 @@ module Tests =
                       "filter"
                       "jql"
                       "page"
+                      "returnTo"
                       "selectedItem" ]
                     "learn.microsoft.com", [ "search"; "tabs"; "terms"; "viewFallbackFrom" ]
                     "localhost", [ "code" ]
@@ -551,7 +564,6 @@ module Tests =
                     "luatvietnam.vn", [ "page" ]
                     "lucid.app", [ "invitationId"; "product"; "redirect_url" ]
                     "masothue.com", [ "q" ]
-                    "media4.giphy.com", [ "ep" ]
                     "modyolo.com", [ "s" ]
                     "mycroftproject.com/install.html", [ "id" ]
                     "mycroftproject.com/search-engines.html", [ "name" ]
@@ -576,7 +588,9 @@ module Tests =
                     "tiemanhnhabap.gump.gg", [ "sid" ]
                     "tiki.vn", [ "q"; "spid" ]
                     "topdev.vn", [ "src" ]
+                    "travel.b-europe.com", [ "traveltype" ]
                     "ttsport.vn", [ "page" ]
+                    "usazu1sv-01pw.ep.se", [ "Error" ]
                     "visa.vfsglobal.com", [ "q" ]
                     "vneconomy.vn", [ "trang" ]
                     "voz.party", [ "page" ]
@@ -587,6 +601,7 @@ module Tests =
                     "www.amazon.com", [ "keywords"; "rh" ]
                     "www.amazon.fr", [ "field-keywords" ]
                     "www.apkmirror.com", [ "post_type" ]
+                    "www.cfl.lu", [ "SearchDepartureExtId" ]
                     "www.contra.de", [ "search" ]
                     "www.cpubenchmark.net", [ "id" ]
                     "www.dict.cc", [ "s" ]
@@ -596,6 +611,7 @@ module Tests =
                     "www.google.com", [ "q" ]
                     "www.guru.com", [ "SearchUrl" ]
                     "www.informatik.uni-leipzig.de", [ "word" ]
+                    "www.kaufland.de", [ "search_value" ]
                     "www.nhaccuatui.com", [ "st" ]
                     "www.npmjs.com", [ "activeTab"; "q" ]
                     "www.nuget.org", [ "q" ]
