@@ -299,8 +299,6 @@ module Tests =
                     "jr.zingmp3.vn"
                     "khachhang.prudential.com.vn"
                     "libgen.is"
-                    "www.linkedin.com/authwall"
-                    "www.linkedin.com/signup"
                     "localhost:50592"
                     "login.microsoftonline.com"
                     "lucid.app/users/registerOrLogin/"
@@ -313,6 +311,7 @@ module Tests =
                     "mail.google.com"
                     "mail.proton.me/login"
                     "mail.proton.me/u"
+                    "maps.app.goo.gl"
                     "mimecast.com"
                     "modyolo.com/download/"
                     "my.vnexpress.net/users/feed/"
@@ -320,12 +319,8 @@ module Tests =
                     "opti-dxp.datadoghq.com/apm"
                     "optimizely.litmos.com"
                     "optimizely.okta.com"
-                    "outlook.office.com/mail/?"
-                    "outlook.office.com/mail/archive/"
-                    "outlook.office.com/mail/deleteditems"
-                    "outlook.office.com/mail/id"
-                    "outlook.office.com/mail/inbox"
-                    "outlook.office.com/mail/sentitems"
+                    "outlook.office.com/groups/"
+                    "outlook.office.com/mail/"
                     "outlook.office.com/owa"
                     "play.google.com"
                     "prep.home.optimizely.com/callback"
@@ -374,6 +369,7 @@ module Tests =
                     "www.bahn.de/buchung/fahrplan/suche#"
                     "www.bing.com/search"
                     "www.booking.com"
+                    "www.dailymotion.com/search/"
                     "www.facebook.com/photo"
                     "www.facebook.com/reel"
                     "www.google.com/maps"
@@ -381,10 +377,12 @@ module Tests =
                     "www.ldoceonline.com/dictionary/"
                     "www.ldoceonline.com/spellcheck/"
                     "www.linkedin.com/404/"
+                    "www.linkedin.com/authwall"
                     "www.linkedin.com/feed/"
                     "www.linkedin.com/login"
                     "www.linkedin.com/mynetwork/"
                     "www.linkedin.com/mypreferences/"
+                    "www.linkedin.com/signup"
                     "www.linkedin.com/verify"
                     "www.microsoft365.com/search/"
                     "www.openstreetmap.org/search"
@@ -416,6 +414,7 @@ module Tests =
                     "cheatsheetseries.owasp.org"
                     "chimviet.free.fr"
                     "community.chocolatey.org"
+                    "confluence.sso.episerver.net"
                     "connect.mozilla.org"
                     "csdiy.wiki"
                     "datatracker.ietf.org"
@@ -531,7 +530,7 @@ module Tests =
                     "butterflyaustralia.com", [ "variant" ]
                     "chatgpt.com", [ "callbackUrl"; "error"; "q" ]
                     "community.chocolatey.org", [ "q" ]
-                    "confluence.sso.episerver.net", [ "preview"; "src" ]
+                    "confluence.sso.episerver.net", [ "preview"; "src"; "title" ]
                     "dailongsport.vn", [ "page" ]
                     "developer.mozilla.org", [ "q" ]
                     "docs.google.com", [ "usp" ]
@@ -580,6 +579,7 @@ module Tests =
                     "rethinkdns.com", [ "q" ]
                     "s.taobao.com", [ "q" ]
                     "searchfox.org", [ "q" ]
+                    "securitylabs.veracode.com", [ "module" ]
                     "shopee.vn", [ "cmtid"; "entryPoint"; "page"; "searchKeyword"; "sp_atk" ]
                     "sso.tuoitre.vn", [ "redirectUrl" ]
                     "support.mozilla.org", [ "as" ]
@@ -611,10 +611,12 @@ module Tests =
                     "www.google.com", [ "q" ]
                     "www.guru.com", [ "SearchUrl" ]
                     "www.informatik.uni-leipzig.de", [ "word" ]
+                    "www.logixpathchef.com", [ "fdcid" ]
                     "www.kaufland.de", [ "search_value" ]
                     "www.nhaccuatui.com", [ "st" ]
                     "www.npmjs.com", [ "activeTab"; "q" ]
                     "www.nuget.org", [ "q" ]
+                    "www.nutritionvalue.org", [ "food_query"; "size" ]
                     "www.reddit.com", [ "chainedPosts" ]
                     "www.ruten.com.tw", [ "q"; "sort" ]
                     "www.tabletennis11.com", [ "q" ]
