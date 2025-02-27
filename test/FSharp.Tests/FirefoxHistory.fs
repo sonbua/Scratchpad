@@ -10,7 +10,7 @@ module Foldable =
 
     let andF fs arg : bool = fs |> forall (fun f -> f arg)
 
-    let orF fs arg : bool = fs |> List.exists (fun f -> f arg)
+    let orF fs arg : bool = fs |> exists (fun f -> f arg)
 
 module Regex =
     open System.Text.RegularExpressions
@@ -156,7 +156,7 @@ type Db(connectionString) =
     /// Deletes place records, given domain or part of the URL and a place filter to match.
     /// This does not delete place records, which are bookmarks.
     /// </summary>
-    /// <param name="urlPart">Part of the URL to match, which will be applied on the database.</param>
+    /// <param name="urlPart">Part of the URL to match, which will be queried against the database.</param>
     /// <param name="placeFilter">The place filter, which will be applied in-memory, and not on the database.</param>
     member this.deletePlacesWith urlPart placeFilter =
         async {
@@ -481,37 +481,31 @@ module Tests =
                   })
 
               // theory data
-              let domainWithGarbageSubstringTheoryData: (string * string) list =
-                  [ "bongbanduyhung.com", "/page/"
-                    "connect.mozilla.org", "/page/"
-                    "episerver99-my.sharepoint.com", "AccessDenied.aspx?"
-                    "episerver99.sharepoint.com", "download.aspx?"
-                    "episerver99.sharepoint.com", "spfxsinglesignon.aspx"
-                    "episerveridentity.b2clogin.com", "/authorize?client_id="
-                    "eur.delve.office.com", "/profileimage?"
-                    "exercism.org", "/solutions"
-                    "feedly.com", "/auth/"
-                    "github.com", "/blob/"
-                    "github.com", "/commits/"
-                    "github.com", "/compare/"
-                    "github.com", "/releases/"
-                    "github.com", "/runs/"
-                    "github.com", "/tree/"
-                    "github.com/advisories/", "dependabot?query="
-                    "login.optimizely.com", "/authorize?client_id="
-                    "maybanbongban.vn", "/page/"
-                    "optimizely.atlassian.net/servicedesk/", "/user/login?destination="
-                    "ttgearlab.com", "/page/"
-                    "voz.vn", "/page-"
-                    "write.as", "/edit"
-                    "www.reddit.com", "/comment/" ]
+              let domainWithGarbageSubstringTheoryData: (string * string list) list =
+                  [ "bongbanduyhung.com", [ "/page/" ]
+                    "connect.mozilla.org", [ "/page/" ]
+                    "episerver99-my.sharepoint.com", [ "AccessDenied.aspx?" ]
+                    "episerver99.sharepoint.com", [ "download.aspx?"; "spfxsinglesignon.aspx" ]
+                    "episerveridentity.b2clogin.com", [ "/authorize?client_id=" ]
+                    "eur.delve.office.com", [ "/profileimage?" ]
+                    "exercism.org", [ "/solutions" ]
+                    "feedly.com", [ "/auth/" ]
+                    "github.com", [ "/blob/"; "/commits/"; "/compare/"; "/releases/"; "/runs/"; "/tree/" ]
+                    "github.com/advisories/", [ "dependabot?query=" ]
+                    "login.optimizely.com", [ "/authorize?client_id=" ]
+                    "maybanbongban.vn", [ "/page/" ]
+                    "optimizely.atlassian.net/servicedesk/", [ "/user/login?destination=" ]
+                    "ttgearlab.com", [ "/page/" ]
+                    "voz.vn", [ "/page-" ]
+                    "write.as", [ "/edit" ]
+                    "www.reddit.com", [ "/comment/" ] ]
 
               testTheoryAsync
                   "Given domain with garbage substring"
                   domainWithGarbageSubstringTheoryData
-                  (fun (domain, substring) ->
+                  (fun (domain, substrings) ->
                       async {
-                          let placeFilter = _.Url >> String.isSubString substring
+                          let placeFilter = substrings |> map String.isSubString |> map ((>>) _.Url) |> orF
                           let! removed = (domain, placeFilter) ||> db.deletePlacesWith
                           removed |> map printPlace |> ignore
                       })
