@@ -299,7 +299,6 @@ module Tests =
                     "jr.zingmp3.vn"
                     "khachhang.prudential.com.vn"
                     "libgen.is"
-                    "localhost:50592"
                     "login.microsoftonline.com"
                     "lucid.app/users/registerOrLogin/"
                     "ludwig.guru/s/"
@@ -432,7 +431,6 @@ module Tests =
                     "learn.microsoft.com"
                     "learnyouahaskell.com"
                     "lemon.io"
-                    "localhost"
                     "logseq-db-demo.pages.dev"
                     "logseq-db-test.pages.dev"
                     "lucid.app"
@@ -552,7 +550,6 @@ module Tests =
                       "returnTo"
                       "selectedItem" ]
                     "learn.microsoft.com", [ "search"; "tabs"; "terms"; "viewFallbackFrom" ]
-                    "localhost", [ "code" ]
                     "login.taobao.com", [ "redirectURL" ]
                     "luatvietnam.vn", [ "page" ]
                     "lucid.app", [ "invitationId"; "product"; "redirect_url" ]
