@@ -43,6 +43,7 @@
     <Compile Include="TableConverter.fs" />
     <Compile Include="UMatrix.fs" />
     <Compile Include="UMatrix.Tests.fs" />
+    <Compile Include="NuGetCache.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
