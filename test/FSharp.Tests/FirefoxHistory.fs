@@ -715,7 +715,7 @@ module Tests =
                   (fun (domain, placeFilter) ->
                       async {
                           let! removed = (domain, placeFilter) ||> db.deletePlacesWith
-                          removed |> map (_.Url >> sprintf "%A" >> writeln) |> ignore
+                          removed |> map printPlace |> ignore
                       })
 
               // history entries, excluding bookmarks
