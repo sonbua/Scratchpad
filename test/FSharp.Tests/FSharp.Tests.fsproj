@@ -12,6 +12,7 @@
     <PackageReference Include="FSharp.Data" />
     <PackageReference Include="FSharp.Data.Dapper" />
     <PackageReference Include="FSharpPlus" />
+    <PackageReference Include="FsToolkit.ErrorHandling" />
     <PackageReference Include="Microsoft.Data.SQLite" />
     <PackageReference Include="TextCopy" />
     <PackageReference Include="YoloDev.Expecto.TestSdk" />
@@ -40,6 +41,8 @@
     <Compile Include="Chocolatey.fs" />
     <Compile Include="RiderLog.fs" />
     <Compile Include="TableConverter.fs" />
+    <Compile Include="UMatrix.fs" />
+    <Compile Include="UMatrix.Tests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
