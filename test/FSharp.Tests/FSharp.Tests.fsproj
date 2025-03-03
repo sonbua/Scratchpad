@@ -39,6 +39,7 @@
     <Compile Include="VozUserPosts.fs" />
     <Compile Include="Chocolatey.fs" />
     <Compile Include="RiderLog.fs" />
+    <Compile Include="TableConverter.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
