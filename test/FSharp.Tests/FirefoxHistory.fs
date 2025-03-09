@@ -161,7 +161,7 @@ type Db(connectionString) =
     member this.deletePlacesWith urlPart placeFilter =
         async {
             let! places =
-                this.querySeqAsync () {
+                this.querySeqAsync<Place> () {
                     script
                         """select distinct P.id, P.url
                            from moz_places P
@@ -192,7 +192,7 @@ type Db(connectionString) =
     member this.deleteUntitled =
         async {
             let! places =
-                this.querySeqAsync () {
+                this.querySeqAsync<Place> () {
                     script
                         """select distinct P.id, P.url
                            from moz_places P
@@ -368,6 +368,7 @@ module Tests =
                     "www.bahn.de/buchung/fahrplan/suche#"
                     "www.bing.com/search"
                     "www.booking.com"
+                    "www.compositional-it.com/news-blog/page/"
                     "www.dailymotion.com/search/"
                     "www.facebook.com/photo"
                     "www.facebook.com/reel"
@@ -385,7 +386,6 @@ module Tests =
                     "www.linkedin.com/verify"
                     "www.microsoft365.com/search/"
                     "www.openstreetmap.org/search"
-                    "www.perplexity.ai/search/"
                     "www.quora.com/?"
                     "www.rockmods.net/?"
                     "www.rockmods.net/search/"
@@ -454,6 +454,7 @@ module Tests =
                     "tienphong.vn"
                     "tridactyl.xyz"
                     "ttgearlab.com"
+                    "typesense.org"
                     "vorapis.pages.dev"
                     "voz.vn"
                     "wikipedia.org/wiki/"
@@ -463,6 +464,7 @@ module Tests =
                     "www.ncb-bank.vn"
                     "www.nuget.org"
                     "www.quad9.net"
+                    "www.sqlite.org"
                     "www.tabletennis11.com"
                     "www.tabletennisdaily.com"
                     "www.techempower.com"
@@ -484,13 +486,11 @@ module Tests =
                     "connect.mozilla.org", [ "/page/" ]
                     "episerver99-my.sharepoint.com", [ "AccessDenied.aspx?" ]
                     "episerver99.sharepoint.com", [ "download.aspx?"; "spfxsinglesignon.aspx" ]
-                    "episerveridentity.b2clogin.com", [ "/authorize?client_id=" ]
                     "eur.delve.office.com", [ "/profileimage?" ]
                     "exercism.org", [ "/solutions" ]
                     "feedly.com", [ "/auth/" ]
                     "github.com", [ "/blob/"; "/commits/"; "/compare/"; "/releases/"; "/runs/"; "/tree/" ]
                     "github.com/advisories/", [ "dependabot?query=" ]
-                    "login.optimizely.com", [ "/authorize?client_id=" ]
                     "maybanbongban.vn", [ "/page/" ]
                     "optimizely.atlassian.net/servicedesk/", [ "/user/login?destination=" ]
                     "ttgearlab.com", [ "/page/" ]
@@ -519,6 +519,7 @@ module Tests =
                     "batdongsan.com.vn", [ "disIds"; "dtln"; "dtnn"; "gcn"; "gtn" ]
                     "bongban.org", [ "page" ]
                     "bongbanduyhung.com", [ "s" ]
+                    "books-search.typesense.org", [ "b%5Bquery%5D" ]
                     "butterflyaustralia.com", [ "variant" ]
                     "chatgpt.com", [ "callbackUrl"; "error"; "q" ]
                     "community.chocolatey.org", [ "q" ]
@@ -530,6 +531,7 @@ module Tests =
                     "duckduckgo.com", [ "q" ]
                     "dungcubongban.vn", [ "page" ]
                     "en.wikipedia.org", [ "search" ]
+                    "episerveridentity.b2clogin.com", [ "client_id" ]
                     "exercism.org", [ "status" ]
                     "fastly.picsum.photos", [ "hmac" ]
                     "feedly.com", [ "gate" ]
@@ -550,6 +552,7 @@ module Tests =
                       "returnTo"
                       "selectedItem" ]
                     "learn.microsoft.com", [ "search"; "tabs"; "terms"; "viewFallbackFrom" ]
+                    "login.optimizely.com", [ "client_id" ]
                     "login.taobao.com", [ "redirectURL" ]
                     "luatvietnam.vn", [ "page" ]
                     "lucid.app", [ "invitationId"; "product"; "redirect_url" ]
@@ -607,7 +610,8 @@ module Tests =
                     "www.nhaccuatui.com", [ "st" ]
                     "www.npmjs.com", [ "activeTab"; "q" ]
                     "www.nuget.org", [ "q" ]
-                    "www.nutritionvalue.org", [ "food_query"; "size" ]
+                    "www.nutritionvalue.org", [ "action"; "food_query"; "register"; "size" ]
+                    "www.perplexity.ai/search/", [ "q" ]
                     "www.reddit.com", [ "chainedPosts" ]
                     "www.ruten.com.tw", [ "q"; "sort" ]
                     "www.tabletennis11.com", [ "q" ]
@@ -616,7 +620,7 @@ module Tests =
                     "www.vinmec.com", [ "link_type" ]
                     "www.xing.com", [ "ijt"; "keywords"; "sc_o" ]
                     "www.xxl.se", [ "query" ]
-                    "www.youtube.com", [ "index"; "search_query"; "t" ]
+                    "www.youtube.com", [ "index"; "search_query"; "t"; "time_continue" ]
                     "yasakatabletennis.com", [ "filter" ]
                     "zen-browser.app", [ "v" ] ]
 
