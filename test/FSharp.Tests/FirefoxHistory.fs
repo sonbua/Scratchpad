@@ -244,10 +244,12 @@ module Tests =
                     ".s3.amazonaws.com"
                     ".startpage.com/av/proxy?"
                     ".susercontent.com"
+                    ".zdusercontent.com/attachment/"
                     "127.0.0.1"
                     "1tudien.com"
                     "5.vndic.net"
                     "account.proton.me/authorize?"
+                    "accounts.fireant.vn"
                     "accounts.firefox.com"
                     "accounts.google.com"
                     "apkdone.com/search/"
@@ -277,10 +279,12 @@ module Tests =
                     "en.m.wikipedia.org"
                     "engage.cloud.microsoft/main"
                     "episerver99.sharepoint.com/sites/"
+                    "episerverex.qualtrics.com"
                     "eu.docusign.net"
                     "eu.onetimesecret.com/secret/"
                     "euc-powerpoint.officeapps.live.com"
                     "eur.delve.office.com/?"
+                    "external-content.duckduckgo.com"
                     "fbtag.net"
                     "feedly.com/i/login?"
                     "forms.office.com"
@@ -319,6 +323,7 @@ module Tests =
                     "my.vnexpress.net/users/feed/"
                     "optimizely.litmos.com"
                     "optimizely.okta.com"
+                    "paasportal.epimore.com/Error/"
                     "play.google.com"
                     "portal.azure.com/Error/"
                     "prep.home.optimizely.com/callback"
@@ -338,6 +343,7 @@ module Tests =
                     "support.upwork.com"
                     "tc01.ep.se"
                     "teams.microsoft.com"
+                    "tracking.email.azfin.vn"
                     "tracking.linkleads.com.vn"
                     "translate.goog/"
                     "translate.google.com"
@@ -528,13 +534,14 @@ module Tests =
                     "eur.delve.office.com", [ "/profileimage?" ]
                     "exercism.org", [ "/solutions" ]
                     "feedly.com", [ "/auth/"; "/i/discover/sources/search/" ]
-                    "fireant.vn", [ "/dashboard/content/notifications/" ]
+                    "fireant.vn", [ "/charts/content/notifications/"; "/dashboard/content/notifications/" ]
                     "github.com", [ "/blob/"; "/commits/"; "/compare/"; "/releases/"; "/runs/"; "/tree/" ]
                     "github.com/advisories/", [ "dependabot?query=" ]
                     "jira.sso.episerver.net",
                     [ "/issue/CloneIssueProgress.jspa"
                       "/login.jsp"
                       "/secure/attachment/"
+                      "/secure/ConvertIssue.jspa?"
                       "/secure/ConvertSubTask.jspa?" ]
                     "maybanbongban.vn", [ "/page/" ]
                     "opti-dxp.datadoghq.com", [ "/account/login"; "/apm" ]
@@ -628,6 +635,7 @@ module Tests =
                       "author"
                       "check_run_id"
                       "closed"
+                      "filename"
                       "from"
                       "notice"
                       "page"
@@ -656,8 +664,10 @@ module Tests =
                       "jql"
                       "name"
                       "page"
+                      "rapidView"
                       "returnTo"
                       "schema"
+                      "searchString"
                       "selectedItem"
                       "selectPageId" ]
                     "kinhmatviettin.vn", [ "wpf_filter_thuong-hieu" ]
@@ -678,7 +688,7 @@ module Tests =
                     "modyolo.com", [ "s" ]
                     "monica.im", [ "id" ]
                     "mrotherguy.github.io", [ "file" ]
-                    "music.youtube.com", [ "q" ]
+                    "music.youtube.com", [ "list"; "q" ]
                     "myaccount.google.com", [ "backUrl"; "continue"; "gar"; "rapt" ]
                     "myaccount.microsoft.com", [ "tenant" ]
                     "myapps.microsoft.com", [ "tenantId" ]
@@ -698,7 +708,8 @@ module Tests =
                     "one.google.com", [ "g1_landing_page" ]
                     "ooakforum.com", [ "sid"; "start" ]
                     "open.spotify.com", [ "flow_ctx" ]
-                    "opti-dxp.datadoghq.com", [ "compare_query_A"; "fromUser"; "p"; "query" ]
+                    "opti-dxp.datadoghq.com", [ "compare_query_A"; "fromUser"; "p"; "query"; "search" ]
+                    "opti-graph.datadoghq.com", [ "next"; "query" ]
                     "optimizely.atlassian.net/servicedesk/", [ "page"; "reporter"; "src"; "statuses"; "token" ]
                     "optimizely.brightfunds.org", [ "keywords"; "page"; "start_date" ]
                     "paasportal.epimore.com", [ "message"; "ReturnUrl" ]
@@ -731,7 +742,7 @@ module Tests =
                     "stackoverflow.com", [ "rq" ]
                     "subscene.com", [ "q" ]
                     "support.mozilla.org", [ "as" ]
-                    "support.office.com", [ "authtype" ]
+                    "support.office.com", [ "authtype"; "context" ]
                     "support.optimizely.com", [ "return_to" ]
                     "tabletennis.guide", [ "query" ]
                     "tdeecalculator.net", [ "age" ]
@@ -758,6 +769,7 @@ module Tests =
                     "world.optimizely.com", [ "releaseNoteId" ]
                     "www.accuweather.com", [ "city"; "year" ]
                     "www.adidas.com", [ "q" ]
+                    "www.airbnb.fr", [ "source_impression_id" ]
                     "www.amazon.com", [ "keywords"; "rh"; "th" ]
                     "www.amazon.fr", [ "field-keywords" ]
                     "www.apkmirror.com", [ "post_type" ]
@@ -777,21 +789,26 @@ module Tests =
                     "www.donic.com", [ "order"; "p" ]
                     "www.dragoncapital.com.vn", [ "contentId"; "moe_app_id" ]
                     "www.facebook.com",
-                    [ "attachment_id"
+                    [ "__eep__"
+                      "attachment_id"
                       "comment_id"
+                      "ldf_id"
                       "locale"
                       "lsrc"
                       "message_id"
+                      "notif_id"
+                      "profile_id"
+                      "q"
                       "rdid"
                       "sorting_setting"
                       "thread_id" ]
                     "www.freelancer.com", [ "search_keyword" ]
-                    "www.google.com", [ "gsessionid"; "q"; "vsrid" ]
+                    "www.google.com", [ "gsessionid"; "lsessionid"; "q"; "vsrid" ]
                     "www.google.de", [ "q" ]
                     "www.guru.com", [ "SearchUrl" ]
                     "www.idealo.de", [ "q" ]
                     "www.informatik.uni-leipzig.de", [ "word" ]
-                    "www.jetbrains.com", [ "billing" ]
+                    "www.jetbrains.com", [ "billing"; "keymap"; "top" ]
                     "www.logixpathchef.com", [ "fdcid" ]
                     "www.kaufland.de", [ "search_value" ]
                     "www.mermaidchart.com", [ "redirect" ]
@@ -808,6 +825,7 @@ module Tests =
                     "www.rossmann.de", [ "text"; "width" ]
                     "www.ruten.com.tw", [ "q"; "sort" ]
                     "www.sciencedirect.com", [ "via" ]
+                    "www.sqlite.org", [ "q" ]
                     "www.startpage.com", [ "query" ]
                     "www.tabletennis11.com", [ "q" ]
                     "www.tabletennisdaily.com", [ "page"; "q" ]
@@ -876,7 +894,7 @@ module Tests =
                     "tabletennis-reference.com", [ "detail/\\d+/" ]
                     "thanglongkydao.com", [ "/threads/.+?/page\\d+" ]
                     "ttgearlab.com", [ "/comment-page-\\d+" ]
-                    "vietnamnet.vn", [ "-page\\d+\\.html" ]
+                    "vietnamnet.vn", [ "-page\\d+\\.html$" ]
                     "vnexpress.net", [ "-\\d+-p\\d+$" ]
                     "voz.party", [ "/d/\\d+-.+?/\\d+$" ]
                     "voz.vn", [ "\\.\\d+/reply"; "/unread$" ]
@@ -907,6 +925,7 @@ module Tests =
                     "discuss.techlore.tech"
                     "f247.com"
                     "forum.f-droid.org"
+                    "forum.graphviz.org"
                     "forum.rescript-lang.org"
                     "forum.sublimetext.com"
                     "forum.uipath.com"
