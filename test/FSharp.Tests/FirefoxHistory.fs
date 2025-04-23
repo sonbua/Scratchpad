@@ -234,10 +234,16 @@ module Tests =
                   [ "file:///"
                     "?__cf_chl_tk="
                     "?__cf_chl_rt_tk="
+                    ".blob.core.windows.net"
                     ".cmstest.optimizely.com"
+                    ".fbcdn.net"
                     ".giphy.com/media/"
+                    ".googleusercontent.com"
                     ".logseq-db-demo.pages.dev"
                     ".logseq-db-test.pages.dev"
+                    ".s3.amazonaws.com"
+                    ".startpage.com/av/proxy?"
+                    ".susercontent.com"
                     "127.0.0.1"
                     "1tudien.com"
                     "5.vndic.net"
@@ -289,8 +295,6 @@ module Tests =
                     "id.zalo.me/account"
                     "info.hdbank.com.vn/subcriber"
                     "ipfs.io"
-                    "jira.sso.episerver.net/issue/CloneIssueProgress.jspa"
-                    "jira.sso.episerver.net/login.jsp"
                     "jr.chat.zalo.me"
                     "jr.nhatkyzalo.vn"
                     "jr.zalo.cloud"
@@ -316,6 +320,7 @@ module Tests =
                     "optimizely.litmos.com"
                     "optimizely.okta.com"
                     "play.google.com"
+                    "portal.azure.com/Error/"
                     "prep.home.optimizely.com/callback"
                     "prep.login.optimizely.com"
                     "prep.turnstile.episerver.net"
@@ -333,9 +338,11 @@ module Tests =
                     "support.upwork.com"
                     "tc01.ep.se"
                     "teams.microsoft.com"
+                    "tracking.linkleads.com.vn"
                     "translate.goog/"
                     "translate.google.com"
                     "ttgearlab.com/page/"
+                    "tudien.dolenglish.vn/"
                     "upwork-usw2-prod-agora-file-storage.s3.us-west-2.amazonaws.com"
                     "url.de.m.mimecastprotect.com"
                     "vi.m.wikipedia.org"
@@ -343,6 +350,7 @@ module Tests =
                     "web.yammer.com"
                     "web-frameworks-benchmark.netlify.app/compare?"
                     "web-frameworks-benchmark.netlify.app/result?"
+                    "winmart.vn/search/"
                     "world.optimizely.com/csclasslibraries"
                     "www.amazon.com/s/"
                     "www.amazon.com/s?"
@@ -351,6 +359,7 @@ module Tests =
                     "www.booking.com"
                     "www.compositional-it.com/news-blog/page/"
                     "www.dailymotion.com/search/"
+                    "www.dictionary.com/browse/"
                     "www.facebook.com/photo"
                     "www.facebook.com/reel"
                     "www.google.com/maps"
@@ -365,8 +374,10 @@ module Tests =
                     "www.linkedin.com/mypreferences/"
                     "www.linkedin.com/signup"
                     "www.linkedin.com/verify"
+                    "www.merriam-webster.com/dictionary/"
                     "www.microsoft365.com/search/"
                     "www.openstreetmap.org/search"
+                    "www.perplexity.ai/search/"
                     "www.quora.com/?"
                     "www.virustotal.com"
                     "www.windy.com"
@@ -385,7 +396,8 @@ module Tests =
 
               // theory data
               let domainWithGarbageFragmentTheoryData: string list =
-                  [ "analysiscenter.veracode.com"
+                  [ ".sh-daily.ep.se"
+                    "analysiscenter.veracode.com"
                     "andrewlock.net"
                     "bongban.org"
                     "cheatsheetseries.owasp.org"
@@ -393,23 +405,36 @@ module Tests =
                     "community.chocolatey.org"
                     "confluence.sso.episerver.net"
                     "connect.mozilla.org"
+                    "crontab.guru"
                     "csdiy.wiki"
                     "datatracker.ietf.org"
                     "devblogs.microsoft.com"
                     "developer.mozilla.org"
                     "docs.controld.com"
                     "docs.developers.optimizely.com"
+                    "docs.google.com"
                     "docs.logseq.com"
+                    "docs.onionshare.org"
+                    "docs.syncthing.net"
+                    "dontkillmyapp.com"
                     "duckduckgo.com"
+                    "efsa.onlinelibrary.wiley.com"
+                    "enlio.vn"
                     "episerver99.sharepoint.com"
                     "episerver99-my.sharepoint.com"
+                    "eur-lex.europa.eu"
+                    "examine.com"
+                    "fdc.nal.usda.gov"
                     "fsharpforfunandprofit.com"
                     "github.com"
                     "github.io"
                     "hoachau.vn"
+                    "hoanghamobile.com"
                     "jira.sso.episerver.net"
                     "jmeter.apache.org"
                     "kagi.com"
+                    "keepass.info"
+                    "kylinsaigon.com"
                     "learn.microsoft.com"
                     "learnyouahaskell.com"
                     "lemon.io"
@@ -417,10 +442,20 @@ module Tests =
                     "logseq-db-demo.pages.dev"
                     "logseq-db-test.pages.dev"
                     "lucid.app"
+                    "mermaid.live"
                     "mullvad.net"
+                    "my.nextdns.io"
+                    "myapps.microsoft.com"
                     "mysignins.microsoft.com"
+                    "nap.nationalacademies.org"
+                    "naturesway.com"
+                    "ncbi.nlm.nih.gov"
+                    "nhandan.vn"
+                    "nhathuocvietnhat.vn"
                     "nojaf.com"
+                    "ods.od.nih.gov"
                     "optimizely.brightfunds.org"
+                    "paasportal.episerver.net"
                     "pingsunday.com"
                     "portal.azure.com"
                     "privacyguides.org/en/"
@@ -431,6 +466,7 @@ module Tests =
                     "selfrefactor.github.io"
                     "shopee.vn"
                     "ss64.com"
+                    "suckhoe123.vn"
                     "support.google.com"
                     "support.mozilla.org"
                     "support.optimizely.com"
@@ -438,20 +474,33 @@ module Tests =
                     "thinkpro.vn"
                     "tienphong.vn"
                     "tridactyl.xyz"
+                    "tsf.telegram.org"
                     "ttgearlab.com"
                     "tuoitre.vn"
                     "typesense.org"
+                    "viendinhduong.vn"
+                    "viethealthy.com"
+                    "vietnamnet.vn"
                     "vnexpress.net"
                     "vorapis.pages.dev"
                     "voz.vn"
+                    "webhook.site/"
                     "wikipedia.org/wiki/"
                     "www.24h.com.vn"
                     "www.dragoncapital.com.vn"
                     "www.google.com"
+                    "www.health.com"
+                    "www.healthline.com"
                     "www.jetbrains.com"
+                    "www.medicalnewstoday.com"
+                    "www.mermaidchart.com"
+                    "www.msdmanuals.com"
+                    "www.mybib.com"
                     "www.ncb-bank.vn"
                     "www.nuget.org"
+                    "www.nutritionvalue.org"
                     "www.quad9.net"
+                    "www.rfc-editor.org"
                     "www.sqlite.org"
                     "www.tabletennis11.com"
                     "www.tabletennisdaily.com"
@@ -470,17 +519,23 @@ module Tests =
                   })
 
               // theory data
-              let domainWithGarbageSubstringTheoryData: (string * string list) list =
-                  [ "bongbanduyhung.com", [ "/page/" ]
+              let domainWithGarbagePathTheoryData: (string * string list) list =
+                  [ "aas.com.vn", [ "/Content/Archive/FileAttact/" ]
+                    "bongbanduyhung.com", [ "/page/" ]
                     "connect.mozilla.org", [ "/page/" ]
                     "episerver99-my.sharepoint.com", [ "AccessDenied.aspx?" ]
                     "episerver99.sharepoint.com", [ "download.aspx?"; "spfxsinglesignon.aspx" ]
                     "eur.delve.office.com", [ "/profileimage?" ]
                     "exercism.org", [ "/solutions" ]
-                    "feedly.com", [ "/auth/" ]
+                    "feedly.com", [ "/auth/"; "/i/discover/sources/search/" ]
                     "fireant.vn", [ "/dashboard/content/notifications/" ]
                     "github.com", [ "/blob/"; "/commits/"; "/compare/"; "/releases/"; "/runs/"; "/tree/" ]
                     "github.com/advisories/", [ "dependabot?query=" ]
+                    "jira.sso.episerver.net",
+                    [ "/issue/CloneIssueProgress.jspa"
+                      "/login.jsp"
+                      "/secure/attachment/"
+                      "/secure/ConvertSubTask.jspa?" ]
                     "maybanbongban.vn", [ "/page/" ]
                     "opti-dxp.datadoghq.com", [ "/account/login"; "/apm" ]
                     "optimizely.atlassian.net/servicedesk/", [ "/user/login?destination=" ]
@@ -488,13 +543,20 @@ module Tests =
                     "www.rockmods.net", [ "/?"; "/search/"; "/search?" ]
                     "ttgearlab.com", [ "/page/" ]
                     "us3.datadoghq.com", [ "/account/login"; "/apm"; "/dashboard"; "/logs?"; "/monitors"; "/services?" ]
-                    "voz.vn", [ "/account/alerts"; "/direct-messages/"; "/goto/post?"; "/p/"; "/page-"; "/search/"; "/u/" ]
+                    "voz.vn",
+                    [ "/account/alerts"
+                      "/direct-messages/"
+                      "/goto/post?"
+                      "/p/"
+                      "/page-"
+                      "/search/"
+                      "/u/" ]
                     "write.as", [ "/edit" ]
                     "www.reddit.com", [ "/comment/" ] ]
 
               testTheoryAsync
-                  "Given domain with garbage substring"
-                  domainWithGarbageSubstringTheoryData
+                  "Given domain with garbage path"
+                  domainWithGarbagePathTheoryData
                   (fun (domain, substrings) ->
                       async {
                           let placeFilter = substrings |> map String.isSubString |> orF |> (>>) _.Url
@@ -505,49 +567,86 @@ module Tests =
               // theory data
               let domainWithAnyGarbageQueryParamTheoryData: (string * string list) list =
                   [ ".giphy.com", [ "ep" ]
-                    "accounts.fireant.vn", [ "signin" ]
+                    "accounts.fireant.vn", [ "client_id"; "redirect_uri"; "signin" ]
+                    "accounts.spotify.com", [ "continue" ]
+                    "accounts.x.ai", [ "redirect" ]
                     "addons.mozilla.org", [ "q"; "utm_source" ]
                     "apkdone.com", [ "s" ]
                     "apkpure.com", [ "q" ]
                     "app.optimizely.com/signin", [ "continue_to" ]
                     "asp-blogs.azurewebsites.net", [ "page" ]
                     "batdongsan.com.vn", [ "disIds"; "dtln"; "dtnn"; "gcn"; "gtn"; "tpl" ]
+                    "benxehanoi.vn", [ "diem-den"; "diem-di" ]
                     "bongban.org", [ "page" ]
                     "bongbanduyhung.com", [ "s" ]
                     "books-search.typesense.org", [ "b%5Bquery%5D" ]
                     "butterflyaustralia.com", [ "variant" ]
-                    "chatgpt.com", [ "callbackUrl"; "error"; "q" ]
+                    "challenge.spotify.com", [ "flow_ctx" ]
+                    "chatgpt.com", [ "callbackUrl"; "error"; "prompt"; "q" ]
                     "community.chocolatey.org", [ "q" ]
-                    "confluence.sso.episerver.net", [ "preview"; "src"; "title" ]
+                    "confluence.sso.episerver.net", [ "draftId"; "preview"; "src"; "title" ]
                     "congtytui.info", [ "page" ]
                     "controld.com", [ "freeResolverType" ]
                     "cve.mitre.org", [ "keyword" ]
                     "dailongsport.vn", [ "page" ]
+                    "dash.readme.com", [ "redirect" ]
                     "dev.to/", [ "state" ]
                     "developer.mozilla.org", [ "q" ]
+                    "dichvucong.bocongan.gov.vn", [ "tukhoa" ]
+                    "dichvucong.gov.vn", [ "group"; "pkeyWord" ]
                     "dict.laban.vn", [ "query" ]
                     "dictionary.zim.vn", [ "/anh-viet/" ]
                     "dienquang.com", [ "q" ]
+                    "discord.com", [ "key"; "redirect_to" ]
                     "docs.controld.com", [ "ref" ]
-                    "docs.google.com", [ "ldf_id"; "usp" ]
-                    "dragonx.com.vn", [ "id" ]
-                    "drive.google.com", [ "ldf_id"; "url"; "usp" ]
+                    "docs.google.com", [ "fbzx"; "ldf_id"; "usp" ]
+                    "docs.syncthing.net", [ "version" ]
+                    "dragonx.com.vn", [ "id"; "moe_app_id" ]
+                    "drive.google.com", [ "ldf_id"; "q"; "resourcekey"; "url"; "usp" ]
+                    "drive.usercontent.google.com", [ "export" ]
                     "duckduckgo.com", [ "q" ]
                     "dungcubongban.vn", [ "page" ]
-                    "en.wikipedia.org", [ "search" ]
+                    "ecosystem.atlassian.net", [ "src" ]
+                    "efsa.onlinelibrary.wiley.com", [ "file" ]
+                    "en.wikipedia.org", [ "search"; "title" ]
+                    "episerver99-my.sharepoint.com", [ "id" ]
                     "episerveridentity.b2clogin.com", [ "client_id" ]
+                    "eur-lex.europa.eu", [ "uri" ]
+                    "examine.com", [ "show_conditions" ]
                     "exercism.org", [ "status" ]
+                    "fado.vn", [ "keywords" ]
                     "fastly.picsum.photos", [ "hmac" ]
-                    "feedly.com", [ "gate" ]
+                    "fdc.nal.usda.gov", [ "component"; "query"; "type" ]
+                    "feedly.com", [ "code"; "gate" ]
                     "finance.yahoo.com", [ "period1" ]
-                    "github.com", [ "after"; "check_run_id"; "from"; "page"; "q"; "query"; "return_to"; "tab" ]
+                    "fireant.vn", [ "jskey" ]
+                    "ftcshop.vn", [ "key" ]
+                    "galaxystore.samsung.com", [ "langCd" ]
+                    "gearshop.vn", [ "page" ]
+                    "github.com",
+                    [ "after"
+                      "author"
+                      "check_run_id"
+                      "closed"
+                      "from"
+                      "notice"
+                      "page"
+                      "q"
+                      "query"
+                      "return_to"
+                      "tab" ]
+                    "glycemic-index.net", [ "s" ]
+                    "glycemicindex.com", [ "food_name" ]
                     "google.com", [ "authuser" ]
+                    "grok.com", [ "tab" ]
                     "hanoian.com", [ "start" ]
                     "hanoinew.vn", [ "brand"; "filter" ]
                     "hanoiprofile.ep.se", [ "returnUrl" ]
                     "hika.fyi", [ "question"; "topic_id" ]
                     "hoachau.vn", [ "brand"; "page" ]
                     "hoangchopbongban.com", [ "q" ]
+                    "hoanghamobile.com", [ "product_id"; "sku" ]
+                    "hungmobile.vn", [ "search" ]
                     "identity.getpostman.com", [ "auth_challenge"; "redirect_uri" ]
                     "itviec.com", [ "click_source"; "job_selected"; "lab_feature"; "query" ]
                     "jira.sso.episerver.net",
@@ -555,53 +654,101 @@ module Tests =
                       "devStatusDetailDialog"
                       "filter"
                       "jql"
+                      "name"
                       "page"
                       "returnTo"
-                      "selectedItem" ]
+                      "schema"
+                      "selectedItem"
+                      "selectPageId" ]
                     "kinhmatviettin.vn", [ "wpf_filter_thuong-hieu" ]
-                    "learn.microsoft.com", [ "search"; "tabs"; "terms"; "viewFallbackFrom" ]
-                    "login.optimizely.com", [ "client_id" ]
+                    "learn.microsoft.com", [ "pivots"; "search"; "tabs"; "term"; "viewFallbackFrom" ]
+                    "login.optimizely.com", [ "client_id"; "stateToken"; "stateTokenExternalId" ]
                     "login.taobao.com", [ "redirectURL" ]
                     "login.yahoo.com", [ ".done"; "done" ]
                     "luatvietnam.vn", [ "page" ]
-                    "lucid.app", [ "invitationId"; "product"; "redirect_url"; "referredProduct"; "returnUrlOverride" ]
+                    "lucid.app",
+                    [ "invitationId"
+                      "product"
+                      "redirect_url"
+                      "referredProduct"
+                      "returnUrlOverride" ]
+                    "m.dict.laban.vn", [ "keyword" ]
                     "masothue.com", [ "q" ]
                     "mayanhcuhanoi.com", [ "query" ]
                     "modyolo.com", [ "s" ]
                     "monica.im", [ "id" ]
+                    "mrotherguy.github.io", [ "file" ]
+                    "music.youtube.com", [ "q" ]
                     "myaccount.google.com", [ "backUrl"; "continue"; "gar"; "rapt" ]
+                    "myaccount.microsoft.com", [ "tenant" ]
+                    "myapps.microsoft.com", [ "tenantId" ]
                     "mycroftproject.com/install.html", [ "id" ]
                     "mycroftproject.com/search-engines.html", [ "name" ]
-                    "na2.docusign.net", [ "ti" ]
+                    "mysignins.microsoft.com", [ "tenant" ]
+                    "na2.docusign.net", [ "a"; "ti" ]
+                    "naturesway.com", [ "_pos"; "page" ]
                     "nguoiquansat.vn", [ "gidzl" ]
+                    "nhathuoclongchau.com.vn", [ "s" ]
+                    "nhathuocphuongchinh.com", [ "keyword" ]
                     "nhattao.com", [ "q" ]
                     "nodeflair.com", [ "page" ]
+                    "nongsandungha.com", [ "attribute_pa_khu-vuc" ]
                     "nuget.optimizely.com", [ "q" ]
                     "old.reddit.com", [ "context" ]
+                    "one.google.com", [ "g1_landing_page" ]
                     "ooakforum.com", [ "sid"; "start" ]
-                    "opti-dxp.datadoghq.com", [ "fromUser"; "p"; "query" ]
+                    "open.spotify.com", [ "flow_ctx" ]
+                    "opti-dxp.datadoghq.com", [ "compare_query_A"; "fromUser"; "p"; "query" ]
                     "optimizely.atlassian.net/servicedesk/", [ "page"; "reporter"; "src"; "statuses"; "token" ]
+                    "optimizely.brightfunds.org", [ "keywords"; "page"; "start_date" ]
+                    "paasportal.epimore.com", [ "message"; "ReturnUrl" ]
                     "phobongban.vn", [ "filter_thuong-hieu" ]
                     "pico.vn", [ "property" ]
                     "piped.video", [ "search_query" ]
+                    "policies.account.samsung.com", [ "appKey" ]
+                    "portal.azure.com", [ "bundlingKind" ]
+                    "prep.admincenter.optimizely.com", [ "code"; "login_hint"; "orgId"; "state" ]
+                    "prep.home.optimizely.com", [ "idpId"; "login_hint"; "orgId" ]
                     "rethinkdns.com", [ "q" ]
                     "s.taobao.com", [ "q" ]
                     "searchfox.org", [ "q" ]
                     "securitylabs.veracode.com", [ "module" ]
-                    "shopee.vn", [ "cmtid"; "entryPoint"; "page"; "searchKeyword"; "sp_atk" ]
+                    "shopee.vn",
+                    [ "cmtid"
+                      "d_id"
+                      "entryPoint"
+                      "flow_source"
+                      "is_from_login"
+                      "keyword"
+                      "orderIndex"
+                      "page"
+                      "searchKeyword"
+                      "sp_atk"
+                      "type"
+                      "uls_trackid"
+                      "xptdk" ]
                     "sso.tuoitre.vn", [ "redirectUrl" ]
+                    "stackoverflow.com", [ "rq" ]
                     "subscene.com", [ "q" ]
                     "support.mozilla.org", [ "as" ]
+                    "support.office.com", [ "authtype" ]
                     "support.optimizely.com", [ "return_to" ]
                     "tabletennis.guide", [ "query" ]
+                    "tdeecalculator.net", [ "age" ]
                     "thinkpro.vn", [ "skuId"; "tinh-trang" ]
                     "tichsancophieu.azfin.vn", [ "ldf_id" ]
                     "tiemanhnhabap.gump.gg", [ "sid" ]
                     "tiki.vn", [ "q"; "spid" ]
                     "topdev.vn", [ "src" ]
                     "travel.b-europe.com", [ "traveltype" ]
+                    "trello.com", [ "returnUrl" ]
                     "ttsport.vn", [ "page" ]
+                    "tudien.dolenglish.vn", [ "q" ]
                     "usazu1sv-01pw.ep.se", [ "Error" ]
+                    "vi.wikipedia.org", [ "search" ]
+                    "viendinhduong.vn", [ "page"; "sort"; "txtSearch" ]
+                    "viethealthy.com", [ "masp" ]
+                    "vietmart.co", [ "t"; "trang" ]
                     "visa.vfsglobal.com", [ "q" ]
                     "vneconomy.vn", [ "trang" ]
                     "voz.party", [ "page" ]
@@ -611,41 +758,71 @@ module Tests =
                     "world.optimizely.com", [ "releaseNoteId" ]
                     "www.accuweather.com", [ "city"; "year" ]
                     "www.adidas.com", [ "q" ]
-                    "www.amazon.com", [ "keywords"; "rh" ]
+                    "www.amazon.com", [ "keywords"; "rh"; "th" ]
                     "www.amazon.fr", [ "field-keywords" ]
                     "www.apkmirror.com", [ "post_type" ]
+                    "www.asics.com", [ "pid" ]
+                    "www.bachhoaxanh.com", [ "key" ]
+                    "www.bandovn.vn", [ "AspxAutoDetectCookieSupport" ]
+                    "www.bing.com", [ "q" ]
+                    "www.calculator.net", [ "cage" ]
                     "www.cfl.lu", [ "SearchDepartureExtId" ]
                     "www.cisa.gov", [ "search_api_fulltext" ]
                     "www.contra.de", [ "search" ]
                     "www.cpubenchmark.net", [ "id" ]
+                    "www.csgt.vn", [ "LoaiXe" ]
                     "www.dict.cc", [ "s" ]
+                    "www.dm.de", [ "brandName0"; "query" ]
+                    "www.docosan.com", [ "keyword" ]
                     "www.donic.com", [ "order"; "p" ]
-                    "www.dragoncapital.com.vn", [ "contentId" ]
-                    "www.facebook.com", [ "attachment_id"; "comment_id"; "locale"; "lsrc"; "message_id"; "rdid"; "thread_id" ]
+                    "www.dragoncapital.com.vn", [ "contentId"; "moe_app_id" ]
+                    "www.facebook.com",
+                    [ "attachment_id"
+                      "comment_id"
+                      "locale"
+                      "lsrc"
+                      "message_id"
+                      "rdid"
+                      "sorting_setting"
+                      "thread_id" ]
                     "www.freelancer.com", [ "search_keyword" ]
-                    "www.google.com", [ "q" ]
+                    "www.google.com", [ "gsessionid"; "q"; "vsrid" ]
+                    "www.google.de", [ "q" ]
                     "www.guru.com", [ "SearchUrl" ]
+                    "www.idealo.de", [ "q" ]
                     "www.informatik.uni-leipzig.de", [ "word" ]
+                    "www.jetbrains.com", [ "billing" ]
                     "www.logixpathchef.com", [ "fdcid" ]
                     "www.kaufland.de", [ "search_value" ]
+                    "www.mermaidchart.com", [ "redirect" ]
+                    "www.msdmanuals.com", [ "query"; "ruleredirectid" ]
+                    "www.naturesway.com.au", [ "q" ]
                     "www.nhaccuatui.com", [ "st" ]
                     "www.npmjs.com", [ "activeTab"; "q" ]
                     "www.nuget.org", [ "q" ]
                     "www.nutritionvalue.org", [ "action"; "food_query"; "foods"; "register"; "size"; "tag" ]
-                    "www.perplexity.ai/search/", [ "q" ]
+                    "www.perplexity.ai/search/", [ "0"; "2"; "4"; "q" ]
+                    "www.pharmacity.vn", [ "keyword" ]
                     "www.reddit.com", [ "chainedPosts"; "context" ]
                     "www.rockmods.net", [ "m" ]
+                    "www.rossmann.de", [ "text"; "width" ]
                     "www.ruten.com.tw", [ "q"; "sort" ]
+                    "www.sciencedirect.com", [ "via" ]
                     "www.startpage.com", [ "query" ]
                     "www.tabletennis11.com", [ "q" ]
                     "www.tabletennisdaily.com", [ "page"; "q" ]
+                    "www.truecaller.com", [ "noei" ]
                     "www.upwork.com", [ "q" ]
                     "www.urbandictionary.com", [ "term" ]
                     "www.vietnamworks.com", [ "fromPage" ]
+                    "www.viettablet.com", [ "product_old" ]
                     "www.vinmec.com", [ "link_type" ]
+                    "www.vitaminhouse.vn", [ "variant" ]
                     "www.xing.com", [ "ijt"; "keywords"; "sc_o" ]
                     "www.xxl.se", [ "query" ]
-                    "www.youtube.com", [ "feature"; "index"; "search_query"; "t"; "time_continue" ]
+                    "www.yazio.com", [ "q" ]
+                    "www.youtube.com", [ "feature"; "index"; "pp"; "search_query"; "si"; "t"; "time_continue" ]
+                    "x.com", [ "redirect_after_login" ]
                     "yasakatabletennis.com", [ "filter" ]
                     "zen-browser.app", [ "v" ] ]
 
@@ -676,17 +853,31 @@ module Tests =
               // theory data
               let domainWithGarbageRegexTheoryData: (string * string list) list =
                   [ "apkpure.com", [ "/[\\w-]+/" ]
+                    "bacsytranvanphuc.com", [ "/page/\\d+/" ]
                     "batdongsan.com.vn", [ "/p\\d+$" ]
+                    "bongban.fanciko.com", [ "/page/\\d+/" ]
                     "bongban.org", [ "/forums/.+?\\d+/page-\\d+"; "/threads/.+?/page-\\d+" ]
                     "community.windy.com", [ "/\\d+/.+?/\\d+" ]
                     "diendan.footballvn.net", [ "/threads/\\d+-[^/]+/page\\d+\\.html" ]
                     "dungbongban.com", [ "-page\\d+\\.html" ]
-                    "github.com", [ "/commit/\\w{40}"; "/pull/\\d+/$"; "/pull/\\d+/commits"; "/pull/\\d+/files" ]
+                    "github.com",
+                    [ "/commit/\\w{40}"
+                      "/milestone/\\d+"
+                      "/pkgs/nuget/[\\w\\.]+/versions"
+                      "/pkgs/nuget/[\\w\\.]+/\\d+"
+                      "/pull/\\d+/$"
+                      "/pull/\\d+/commits"
+                      "/pull/\\d+/files" ]
+                    "hanoiskyteam.vn", [ "/page/\\d+" ]
                     "hanotour.com.vn", [ "/page-\\d+" ]
                     "kinhmatviettin.vn", [ "/page/\\d+/" ]
+                    "myphamxachtayduc.vn", [ "/page/\\d+/" ]
                     "mytabletennis.net", [ "_page\\d+\\.html" ]
                     "tabletennis-reference.com", [ "detail/\\d+/" ]
                     "thanglongkydao.com", [ "/threads/.+?/page\\d+" ]
+                    "ttgearlab.com", [ "/comment-page-\\d+" ]
+                    "vietnamnet.vn", [ "-page\\d+\\.html" ]
+                    "vnexpress.net", [ "-\\d+-p\\d+$" ]
                     "voz.party", [ "/d/\\d+-.+?/\\d+$" ]
                     "voz.vn", [ "\\.\\d+/reply"; "/unread$" ]
                     "www.apkmirror.com", [ "/apk/[\\w-]+/[\\w-]+/" ]
@@ -710,13 +901,16 @@ module Tests =
               // theory data
               let domainWithGarbageNotFirstThreadPostTheoryData: string list =
                   [ "community.e.foundation"
+                    "community.spiceworks.com"
                     "discuss.logseq.com"
                     "discuss.privacyguides.net"
                     "discuss.techlore.tech"
                     "f247.com"
                     "forum.f-droid.org"
-                    "forum.uipath.com"
                     "forum.rescript-lang.org"
+                    "forum.sublimetext.com"
+                    "forum.uipath.com"
+                    "forum.xojo.com"
                     "forums.fsharp.org" ]
 
               testTheoryAsync
@@ -739,7 +933,8 @@ module Tests =
                     "nuget.optimizely.com", Place.hasQueryParams [ "id"; "v" ]
                     "opti-dxp.datadoghq.com/logs", Place.withQueryParam
                     "opti-dxp.datadoghq.com/monitors/", Place.withQueryParam
-                    "world.taobao.com", Place.hasQueryParams [ "a"; "b" ] ]
+                    "world.taobao.com", Place.hasQueryParams [ "a"; "b" ]
+                    "www.jetbrains.com/help/", Place.withQueryParam ]
 
               testTheoryAsync
                   "Given domain with complex garbage place filter to delete"
