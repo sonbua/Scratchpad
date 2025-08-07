@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="TestData\moz_places.json" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="Reusables.fs" />
     <Compile Include="Clipboard.fs" />
     <Compile Include="FirefoxData.fs" />
