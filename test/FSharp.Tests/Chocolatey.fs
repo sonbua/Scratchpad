@@ -54,7 +54,6 @@ module Outdated =
 open Expecto
 open Expecto.Flip
 open Expecto.Logging
-open FSharpPlus
 
 [<Tests>]
 let specs =
@@ -88,6 +87,4 @@ Chocolatey has determined 3 package(s) are outdated.""",
               (fun (output, upgradeCommand) ->
                   output
                   |> Outdated.toUpgradeCommand
-                  |> Expect.equal "Should return correct `choco upgrade` command" upgradeCommand)
-
-          test "Run `choco outdated` command" { Outdated.run () |> Result.either id id |> writeln } ]
+                  |> Expect.equal "Should return correct `choco upgrade` command" upgradeCommand) ]

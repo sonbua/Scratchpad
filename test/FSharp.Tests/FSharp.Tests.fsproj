@@ -11,6 +11,7 @@
     <PackageReference Include="Fake.Core.Target" />
     <PackageReference Include="FSharp.Data" />
     <PackageReference Include="FSharp.Data.Dapper" />
+    <PackageReference Include="FSharp.SystemCommandLine" />
     <PackageReference Include="FSharpPlus" />
     <PackageReference Include="FsToolkit.ErrorHandling" />
     <PackageReference Include="Microsoft.Data.SQLite" />

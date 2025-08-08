@@ -12,7 +12,7 @@ type CleanupOptions =
     { LogRootDir: string
       CutOffTimestamp: DateTime }
 
-let private beforeCutOffTimestamp timestamp arg : bool = arg < timestamp
+let private beforeTimestamp timestamp arg : bool = arg < timestamp
 
 let private tryFindSubDirByName dirName parentDir : DirectoryInfo option =
     parentDir
@@ -66,25 +66,8 @@ let cleanup options : string list =
         dir |> DirectoryInfo.ensure
         dir
 
-    let beforeCutOffTimestamp' = options.CutOffTimestamp |> beforeCutOffTimestamp
-    let cleanupDirs' = cleanupDirs beforeCutOffTimestamp'
-    let cleanupFiles' = cleanupFiles beforeCutOffTimestamp'
+    let beforeCutOffTimestamp = options.CutOffTimestamp |> beforeTimestamp
+    let cleanupDirs' = cleanupDirs beforeCutOffTimestamp
+    let cleanupFiles' = cleanupFiles beforeCutOffTimestamp
 
     [ logRootDir ] |> List.apply [ cleanupDirs'; cleanupFiles' ] |> List.concat
-
-
-open Expecto
-open Expecto.Logging
-
-[<Tests>]
-let specs =
-    let logger = Log.create "RiderLog"
-    let writeln = Message.eventX >> logger.info
-
-    test "Run cleanup" {
-        let options =
-            { LogRootDir = "R:\\idea-log\\"
-              CutOffTimestamp = DateTime.Now.Date }
-
-        cleanup options |> map writeln |> ignore
-    }

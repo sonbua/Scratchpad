@@ -16,7 +16,7 @@ module internal Line =
     let tabToMarkdown line : string =
         line |> Regex.replace "\\t" " | " |> sprintf "| %s |"
 
-let private newLines = [| "\r\n"; "\n" |]
+let private newLines = [| "\r\n"; "\n"; Environment.NewLine |]
 
 let tabularToMarkdown (text: string) : string =
     text.Split(newLines, StringSplitOptions.RemoveEmptyEntries)
