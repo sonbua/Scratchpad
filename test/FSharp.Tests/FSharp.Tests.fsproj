@@ -30,7 +30,7 @@
     <Compile Include="GitLog.fs" />
     <Compile Include="TrangTrang.fs" />
     <Compile Include="GitBatchPull.fs" />
-    <Compile Include="VnEconomyRss.fs" />
+    <Compile Include="VnEconomy.fs" />
     <Compile Include="CopyPackagesToThisWeek.fs" />
     <Compile Include="LongmanActivator.fs" />
     <Compile Include="Logseq.fs" />

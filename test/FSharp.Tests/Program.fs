@@ -115,29 +115,24 @@ module Extract =
         }
 
 module Fetch =
-    module BlogChungKhoanRss =
-        open System.Text.RegularExpressions
-
-        /// Was used to decode the description
-        let private charDecode input =
-            let charCodeToString (m: Match) =
-                m.Groups[1].Value |> int |> char |> string
-
-            Regex.Replace(input, "\#(\d+);", charCodeToString)
-
-        let private isBlogChungKhoan (x: VnEconomyRss.RssFeed.Item) =
-            x.Title.Contains "Blog chứng khoán"
-            || String.isSubString "vneconomy.vn/blog-chung-khoan-" x.Link
+    module BlogChungKhoan =
+        let urls =
+            [ "https://vneconomy.vn/"
+              "https://vneconomy.vn/chung-khoan.htm"
+              "https://vneconomy.vn/thi-truong-chung-khoan.htm" ]
 
         let private blogChungKhoanAction () =
-            VnEconomyRss.RssFeed.GetSample()
-            |> _.Channel.Items
-            |> filter isBlogChungKhoan
-            |> sortByDescending _.PubDate
-            |> map VnEconomyRss.RssFeedItem.toFeedItem
-            |> map (sprintf "%A")
-            |> String.concat System.Environment.NewLine
-            |> printfn "%s"
+            urls
+            |> List.map VnEconomy.extractBlogChungKhoanLinks
+            |> Async.Parallel
+            |> Async.RunSynchronously
+            |> List.concat
+            |> List.distinct
+            |> List.map VnEconomy.loadArticleMetadata
+            |> Async.Parallel
+            |> Async.RunSynchronously
+            |> Array.sortByDescending _.Published
+            |> printfn "%A"
 
         let command =
             command "blog-chung-khoan" {
@@ -149,7 +144,7 @@ module Fetch =
         command "fetch" {
             description "Fetch RSS feed"
             noAction
-            addCommand BlogChungKhoanRss.command
+            addCommand BlogChungKhoan.command
         }
 
 module Outdated =
@@ -172,6 +167,7 @@ module Outdated =
 /// cleanup firefox-history --deleteUntitledPlaces false
 /// convert
 /// convert &lt;text&gt;
+/// fetch blog-chung-khoan
 /// outdated
 /// </code>
 /// </summary>

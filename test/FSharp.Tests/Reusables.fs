@@ -84,6 +84,11 @@ module Uri =
     let extract =
         extractUriStrings >> Seq.map Uri
 
+module HtmlNode =
+    open FSharp.Data
+
+    let cssSelectR selector node = HtmlNode.cssSelect node selector
+
 module IO =
     module File =
         open Fake.IO

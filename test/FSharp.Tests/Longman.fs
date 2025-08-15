@@ -9,9 +9,6 @@ module Option =
     let ifWith predicate onTrue inp =
         if inp |> predicate then Some(inp |> onTrue) else None
 
-module HtmlNode =
-    let cssSelectR selector node = HtmlNode.cssSelect node selector
-
 module Audio =
     /// Root node contains "data-src-mp3" attribute
     let extract = HtmlNode.attribute "data-src-mp3" >> HtmlAttribute.value
