@@ -4,6 +4,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <GenerateProgramFile>false</GenerateProgramFile>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>ut</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
