@@ -61,7 +61,7 @@ module Cleanup =
             |> sprintf "Data Source=%s;"
             |> Db
 
-        let private printPlace = _.Url >> printfn "%A"
+        let private printPlace = _.Url >> printfn "%s"
 
         let private firefoxHistoryAction (deleteUntitledPlaces: bool) : unit =
             async {
