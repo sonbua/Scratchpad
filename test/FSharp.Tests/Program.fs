@@ -43,7 +43,7 @@ module Cleanup =
 
         let command =
             command "rider-log" {
-                description "Cleanup Rider logs, except today's"
+                description "Cleanup Rider logs, except for today's"
                 setAction riderLogAction
             }
 
