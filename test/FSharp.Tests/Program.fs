@@ -48,12 +48,94 @@ module Cleanup =
             }
 
     module FirefoxHistory =
+        open System.Collections.Generic
+        open System.IO
         open Firefox.History
+        open YamlDotNet.Serialization
+        open YamlDotNet.Serialization.NamingConventions
 
-        let private deleteUntitledPlacesInput =
-            Input.option "--deleteUntitledPlaces"
-            |> Input.alias "--delete-untitled-places"
-            |> Input.desc "Delete untitled places"
+        [<CLIMutable>]
+        type Config =
+            { Domains: List<string>
+              DomainsHavingFragments: List<string>
+              DomainsHavingPaths: List<DomainWithPaths>
+              DomainsHavingAnyQueryParam: List<DomainWithQueryParams>
+              DomainsHavingAnyFragmentParam: List<DomainWithFragmentParam>
+              DomainsHavingPathPatterns: List<DomainWithPathPatterns>
+              DomainsHavingNotFirstThreadPost: List<string> }
+
+        and [<CLIMutable>] DomainWithPaths = { Domain: string; Paths: List<string> }
+
+        and [<CLIMutable>] DomainWithQueryParams =
+            { Domain: string
+              QueryParams: List<string> }
+
+        and [<CLIMutable>] DomainWithFragmentParam =
+            { Domain: string
+              FragmentParams: List<string> }
+
+        and [<CLIMutable>] DomainWithPathPatterns =
+            { Domain: string
+              Patterns: List<string> }
+
+        let deserializer =
+            DeserializerBuilder().WithNamingConvention(HyphenatedNamingConvention.Instance).Build()
+
+        let config =
+            lazy ("firefox-history.yml" |> File.ReadAllText |> deserializer.Deserialize<Config>)
+
+        let private untitledEntriesInput =
+            Input.option "--untitledEntries"
+            |> Input.alias "--untitled-entries"
+            |> Input.desc "Delete untitled history entries"
+            |> Input.defaultValue true
+
+        let private garbageDomainsInput =
+            Input.option "--garbageDomains"
+            |> Input.alias "--garbage-domains"
+            |> Input.desc "Delete history entries in the domain list"
+            |> Input.defaultValue true
+
+        let private garbageDomainsHavingFragmentsInput =
+            Input.option "--garbageDomainsHavingFragmentsInput"
+            |> Input.alias "--garbage-domains-having-fragments"
+            |> Input.desc "Delete history entries that have fragment(s) in the domain list"
+            |> Input.defaultValue true
+
+        let private domainsHavingGarbagePathsInput =
+            Input.option "--domainsHavingGarbagePathsInput"
+            |> Input.alias "--domains-having-garbage-paths"
+            |> Input.desc "Delete history entries that have matching domain and path(s) in the list"
+            |> Input.defaultValue true
+
+        let private domainsHavingAnyGarbageQueryParamInput =
+            Input.option "--domainsHavingAnyGarbageQueryParam"
+            |> Input.alias "--domains-having-any-garbage-query-param"
+            |> Input.desc "Delete history entries that have matching domain and any of the query params in the list"
+            |> Input.defaultValue true
+
+        let private domainsHavingAnyGarbageFragmentParamInput =
+            Input.option "--domainsHavingAnyGarbageFragmentParam"
+            |> Input.alias "--domains-having-any-garbage-fragment-param"
+            |> Input.desc "Delete history entries that have matching domain and any of the fragment param in the list"
+            |> Input.defaultValue true
+
+        let private domainsHavingPathPatternsInput =
+            Input.option "--domainsHavingPathPatterns"
+            |> Input.alias "--domains-having-path-patterns"
+            |> Input.desc "Delete history entries that have matching domain and path pattern(s) in the list"
+            |> Input.defaultValue true
+
+        let private domainsHavingNotFirstThreadPostInput =
+            Input.option "--domainsHavingNotFirstThreadPost"
+            |> Input.alias "--domains-having-not-first-thread-post"
+            |> Input.desc "Delete history entries that have matching domain and not first thread post in the list"
+            |> Input.defaultValue true
+
+        let private domainsHavingComplexPatternsInput =
+            Input.option "--domainsHavingComplexPatterns"
+            |> Input.alias "--domains-having-complex-patterns"
+            |> Input.desc "Delete history entries that having predefined complex patterns"
             |> Input.defaultValue true
 
         let private db =
@@ -63,19 +145,134 @@ module Cleanup =
 
         let private printPlace = _.Url >> printfn "%s"
 
-        let private firefoxHistoryAction (deleteUntitledPlaces: bool) : unit =
+        let private firefoxHistoryAction (ctx: ActionContext) : unit =
             async {
-                if deleteUntitledPlaces then
+                let parseResult = ctx.ParseResult
+
+                let deleteUntitledEntries = untitledEntriesInput.GetValue parseResult
+
+                if deleteUntitledEntries then
                     let! removed = db.deleteUntitled
                     removed |> map printPlace |> ignore
+
+                let config = config.Value
+
+                let deleteGarbageDomains = garbageDomainsInput.GetValue parseResult
+
+                if deleteGarbageDomains then
+                    let domains = config.Domains
+
+                    // TODO: Use AsyncSeq? https://fsprojects.github.io/FSharp.Control.AsyncSeq/AsyncSeq.html
+                    for domain in domains do
+                        let! removed = db.deletePlaces domain
+                        removed |> map printPlace |> ignore
+
+                let deleteGarbageDomainsHavingFragments =
+                    garbageDomainsHavingFragmentsInput.GetValue parseResult
+
+                if deleteGarbageDomainsHavingFragments then
+                    let domains = config.DomainsHavingFragments
+
+                    for domain in domains do
+                        let placeFilter = Place.withFragment
+                        let! removed = (domain, placeFilter) ||> db.deletePlacesWith
+                        removed |> map printPlace |> ignore
+
+                let deleteDomainsHavingGarbagePaths =
+                    domainsHavingGarbagePathsInput.GetValue parseResult
+
+                if deleteDomainsHavingGarbagePaths then
+                    let domains = config.DomainsHavingPaths
+
+                    for { Domain = domain; Paths = paths } in domains do
+                        let placeFilter = paths |> map String.isSubString |> orF |> (>>) _.Url
+                        let! removed = (domain, placeFilter) ||> db.deletePlacesWith
+                        removed |> map printPlace |> ignore
+
+                let deleteDomainsHavingAnyGarbageQueryParam =
+                    domainsHavingAnyGarbageQueryParamInput.GetValue parseResult
+
+                if deleteDomainsHavingAnyGarbageQueryParam then
+                    let domains = config.DomainsHavingAnyQueryParam
+
+                    for { Domain = domain
+                          QueryParams = queryParams } in domains do
+                        let placeFilter = queryParams |> List.ofSeq |> Place.hasAnyQueryParam
+                        let! removed = (domain, placeFilter) ||> db.deletePlacesWith
+                        removed |> map printPlace |> ignore
+
+                let deleteDomainsHavingAnyGarbageFragmentParam =
+                    domainsHavingAnyGarbageFragmentParamInput.GetValue parseResult
+
+                if deleteDomainsHavingAnyGarbageFragmentParam then
+                    let domains = config.DomainsHavingAnyFragmentParam
+
+                    for { Domain = domain
+                          FragmentParams = fragmentParams } in domains do
+                        let placeFilter = fragmentParams |> List.ofSeq |> Place.hasAnyFragmentParam
+                        let! removed = (domain, placeFilter) ||> db.deletePlacesWith
+                        removed |> map printPlace |> ignore
+
+                let deleteDomainsHavingPathPatterns =
+                    domainsHavingPathPatternsInput.GetValue parseResult
+
+                if deleteDomainsHavingPathPatterns then
+                    let domains = config.DomainsHavingPathPatterns
+
+                    for { Domain = domain; Patterns = patterns } in domains do
+                        let placeFilter = patterns |> map Regex.isMatch |> orF |> (>>) _.Url
+                        let! removed = (domain, placeFilter) ||> db.deletePlacesWith
+                        removed |> map printPlace |> ignore
+
+                let deleteDomainsHavingNotFirstThreadPost =
+                    domainsHavingNotFirstThreadPostInput.GetValue parseResult
+
+                if deleteDomainsHavingNotFirstThreadPost then
+                    let domains = config.DomainsHavingNotFirstThreadPost
+
+                    for domain in domains do
+                        let placeFilter = Place.isNotFirstThreadPost
+                        let! removed = (domain, placeFilter) ||> db.deletePlacesWith
+                        removed |> map printPlace |> ignore
+
+                let deleteDomainsHavingComplexPatterns =
+                    domainsHavingComplexPatternsInput.GetValue parseResult
+
+                if deleteDomainsHavingComplexPatterns then
+                    let domainsHavingComplexPatterns: (string * (Place -> bool)) list =
+                        [ "local",
+                          andF
+                              [ _.Url >> Regex.isMatch ":\\d+/"
+                                orF [ Place.withQueryParam; Place.withFragment ] ]
+                          "localhost/", Place.withQueryParam
+                          "nuget.optimizely.com", Place.hasQueryParams [ "id"; "v" ]
+                          "opti-dxp.datadoghq.com/logs", Place.withQueryParam
+                          "opti-dxp.datadoghq.com/monitors/", Place.withQueryParam
+                          "world.taobao.com", Place.hasQueryParams [ "a"; "b" ]
+                          "www.jetbrains.com/help/", Place.withQueryParam ]
+
+                    for domain, placeFilter in domainsHavingComplexPatterns do
+                        let! removed = (domain, placeFilter) ||> db.deletePlacesWith
+                        removed |> map printPlace |> ignore
             }
             |> Async.RunSynchronously
 
         let command =
             command "firefox-history" {
                 description "Cleanup Firefox history"
-                inputs deleteUntitledPlacesInput
+                inputs Input.context
                 setAction firefoxHistoryAction
+
+                addInputs
+                    [ untitledEntriesInput
+                      garbageDomainsInput
+                      garbageDomainsHavingFragmentsInput
+                      domainsHavingGarbagePathsInput
+                      domainsHavingAnyGarbageQueryParamInput
+                      domainsHavingAnyGarbageFragmentParamInput
+                      domainsHavingPathPatternsInput
+                      domainsHavingNotFirstThreadPostInput
+                      domainsHavingComplexPatternsInput ]
             }
 
     let command =
@@ -164,7 +361,16 @@ module Outdated =
 /// <code>
 /// cleanup rider-log
 /// cleanup firefox-history
-/// cleanup firefox-history --deleteUntitledPlaces false
+/// cleanup firefox-history
+///     --untitled-entries=false
+///     --garbage-domains=false
+///     --garbage-domains-having-fragments=false
+///     --domains-having-garbage-paths=false
+///     --domains-having-any-garbage-query-param=false
+///     --domains-having-any-garbage-fragment-param=false
+///     --domains-having-path-patterns=false
+///     --domains-having-not-first-thread-post=false
+///     --domains-having-complex-patterns=false
 /// convert
 /// convert &lt;text&gt;
 /// fetch blog-chung-khoan

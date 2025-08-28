@@ -18,6 +18,7 @@
     <PackageReference Include="FsToolkit.ErrorHandling" />
     <PackageReference Include="Microsoft.Data.SQLite" />
     <PackageReference Include="TextCopy" />
+    <PackageReference Include="YamlDotNet" />
     <PackageReference Include="YoloDev.Expecto.TestSdk" />
   </ItemGroup>
 
@@ -25,6 +26,7 @@
     <Compile Include="Reusables.fs" />
     <Compile Include="Clipboard.fs" />
     <Compile Include="FirefoxData.fs" />
+    <None Include="firefox-history.yml" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="FirefoxHistory.fs" />
     <Compile Include="CultureInfoTest.fs" />
     <Compile Include="WhatDayOfWeek.fs" />

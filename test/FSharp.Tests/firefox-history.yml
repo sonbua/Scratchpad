@@ -1,0 +1,1361 @@
+domains:
+  - file:///
+  - ?__cf_chl_tk=
+  - ?__cf_chl_rt_tk=
+  - /wp-content/uploads/
+  - .blob.core.windows.net
+  - .cmstest.optimizely.com
+  - .fbcdn.net
+  - .giphy.com/media/
+  - .googleusercontent.com
+  - .logseq-db-demo.pages.dev
+  - .logseq-db-test.pages.dev
+  - .s3.amazonaws.com
+  - .startpage.com/av/proxy?
+  - .susercontent.com
+  - .zdusercontent.com/attachment/
+  - 127.0.0.1
+  - 1tudien.com
+  - 5.vndic.net
+  - account.proton.me/authorize?
+  - accounts.fireant.vn
+  - accounts.firefox.com
+  - accounts.google.com
+  - apkdone.com/search/
+  - app.navan.com
+  - app.opsgenie.com
+  - bongban.org/search
+  - bonus.ly
+  - bot-verify.onrender.com
+  - calendar.google.com
+  - claude.ai/chat
+  - claude.ai/login
+  - claude.ai/magic-link
+  - community.upwork.com
+  - confluence.sso.episerver.net/login.action?
+  - confluence.sso.episerver.net/pages/viewpreviousversions.action?
+  - contacts.google.com/label
+  - contacts.google.com/person
+  - contacts.google.com/search
+  - dichvucong.dancuquocgia.gov.vn/portal
+  - dictionary.cambridge.org
+  - docs.google.com/accounts
+  - download.library.lol
+  - en.m.wikipedia.org
+  - engage.cloud.microsoft/main
+  - episerver99.sharepoint.com/sites/
+  - episerverex.qualtrics.com
+  - eu.docusign.net
+  - eu.onetimesecret.com/secret/
+  - euc-powerpoint.officeapps.live.com
+  - eur.delve.office.com/?
+  - external-content.duckduckgo.com
+  - fbtag.net
+  - feedly.com/i/login?
+  - forms.office.com
+  - github.com/login
+  - github.com/orgs
+  - go.microsoft.com
+  - hcm55.sapsf.eu
+  - hoachau.vn/search
+  - hvdic.thivien.net
+  - i.sstatic.net
+  - id.atlassian.com
+  - id.zalo.me/account
+  - info.hdbank.com.vn/subcriber
+  - ipfs.io
+  - jr.chat.zalo.me
+  - jr.nhatkyzalo.vn
+  - jr.zalo.cloud
+  - jr.zaloapp.com
+  - jr.zingmp3.vn
+  - khachhang.prudential.com.vn
+  - login.microsoftonline.com
+  - lucid.app/users/registerOrLogin/
+  - ludwig.guru/s/
+  - m.cafebiz.vn
+  - m.cafef.vn
+  - m.genk.vn
+  - m.ruten.com.tw
+  - m.youtube.com
+  - mail.google.com
+  - mail.proton.me/login
+  - mail.proton.me/u
+  - maps.app.goo.gl
+  - mimecast.com
+  - modyolo.com/download/
+  - my.vnexpress.net/users/feed/
+  - optimizely.litmos.com
+  - optimizely.okta.com
+  - paasportal.epimore.com/Error/
+  - pbs.twimg.com
+  - play.google.com
+  - portal.azure.com/Error/
+  - prep.home.optimizely.com/callback
+  - prep.login.optimizely.com
+  - prep.turnstile.episerver.net
+  - prod.outgoing.prod.webservices.mozgcp.net
+  - profiler.firefox.com
+  - rambda.vercel.app/?
+  - redirect.zalo.me
+  - revanced.app/patches?
+  - search.brave.com
+  - searchfox.org/mozilla-central/rev/
+  - shopee.vn/buyer/login
+  - shopee.vn/find_similar_products?
+  - shopee.vn/search
+  - shopee.vn/verify
+  - support.upwork.com
+  - tc01.ep.se
+  - teams.microsoft.com
+  - tracking.email.azfin.vn
+  - tracking.linkleads.com.vn
+  - translate.goog/
+  - translate.google.com
+  - tudien.dolenglish.vn/
+  - upwork-usw2-prod-agora-file-storage.s3.us-west-2.amazonaws.com
+  - url.de.m.mimecastprotect.com
+  - vi.m.wikipedia.org
+  - vietstock.vn/tag
+  - web.yammer.com
+  - web-frameworks-benchmark.netlify.app/compare?
+  - web-frameworks-benchmark.netlify.app/result?
+  - winmart.vn/search/
+  - world.optimizely.com/csclasslibraries
+  - www.amazon.com/s/
+  - www.amazon.com/s?
+  - www.bahn.de/buchung/fahrplan/suche#
+  - www.bing.com/search
+  - www.booking.com
+  - www.compositional-it.com/news-blog/page/
+  - www.dailymotion.com/search/
+  - www.dictionary.com/browse/
+  - www.facebook.com/photo
+  - www.facebook.com/reel
+  - www.google.com/maps
+  - www.guru.com/login.aspx?
+  - www.ldoceonline.com/dictionary/
+  - www.ldoceonline.com/spellcheck/
+  - www.linkedin.com/404/
+  - www.linkedin.com/authwall
+  - www.linkedin.com/feed/
+  - www.linkedin.com/login
+  - www.linkedin.com/mynetwork/
+  - www.linkedin.com/mypreferences/
+  - www.linkedin.com/signup
+  - www.linkedin.com/verify
+  - www.merriam-webster.com/dictionary/
+  - www.microsoft365.com/search/
+  - www.openstreetmap.org/search
+  - www.perplexity.ai/search/
+  - www.quora.com/?
+  - www.virustotal.com
+  - www.windy.com
+  - www.xing.com/jobs/search?
+  - www.youtube.com/results
+  - xacthuc.dichvucong.gov.vn
+  - you.com/search
+  - youtu.be
+  - zdusercontent.com
+domains-having-fragments:
+  - .sh-daily.ep.se
+  - analysiscenter.veracode.com
+  - andrewlock.net
+  - bongban.org
+  - cheatsheetseries.owasp.org
+  - chimviet.free.fr
+  - community.chocolatey.org
+  - confluence.sso.episerver.net
+  - connect.mozilla.org
+  - crontab.guru
+  - csdiy.wiki
+  - datatracker.ietf.org
+  - devblogs.microsoft.com
+  - developer.mozilla.org
+  - docs.controld.com
+  - docs.developers.optimizely.com
+  - docs.google.com
+  - docs.logseq.com
+  - docs.onionshare.org
+  - docs.syncthing.net
+  - dontkillmyapp.com
+  - duckduckgo.com
+  - efsa.onlinelibrary.wiley.com
+  - enlio.vn
+  - episerver99.sharepoint.com
+  - episerver99-my.sharepoint.com
+  - eur-lex.europa.eu
+  - examine.com
+  - fdc.nal.usda.gov
+  - fsharpforfunandprofit.com
+  - github.com
+  - github.io
+  - gitlab.com
+  - hoachau.vn
+  - hoanghamobile.com
+  - jira.sso.episerver.net
+  - jmeter.apache.org
+  - kagi.com
+  - keepass.info
+  - kylinsaigon.com
+  - learn.microsoft.com
+  - learnyouahaskell.com
+  - lemon.io
+  - lifestyle.znews.vn
+  - logseq-db-demo.pages.dev
+  - logseq-db-test.pages.dev
+  - lucid.app
+  - mermaid.live
+  - mullvad.net
+  - my.nextdns.io
+  - myaccount.microsoft.com
+  - myapps.microsoft.com
+  - mysignins.microsoft.com
+  - nap.nationalacademies.org
+  - naturesway.com
+  - ncbi.nlm.nih.gov
+  - nhandan.vn
+  - nhathuocvietnhat.vn
+  - nojaf.com
+  - npcap.com
+  - ods.od.nih.gov
+  - optimizely.brightfunds.org
+  - paasportal.episerver.net
+  - pingsunday.com
+  - portal.azure.com
+  - privacyguides.org/en/
+  - ramdajs.com/docs/
+  - readthedocs.io
+  - revancedmicrog.com
+  - sanctuary.js.org
+  - selfrefactor.github.io
+  - shopee.vn
+  - ss64.com
+  - stackedit.io
+  - status.umbrella.com
+  - suckhoe123.vn
+  - support.google.com
+  - support.mozilla.org
+  - support.optimizely.com
+  - tabletennis-reference.com
+  - thinkpro.vn
+  - tienphong.vn
+  - tridactyl.xyz
+  - tsf.telegram.org
+  - ttgearlab.com
+  - tuoitre.vn
+  - typesense.org
+  - viendinhduong.vn
+  - viethealthy.com
+  - vietnamnet.vn
+  - vnexpress.net
+  - vorapis.pages.dev
+  - voz.vn
+  - web.strem.io
+  - webhook.site/
+  - wikipedia.org/wiki/
+  - www.24h.com.vn
+  - www.amazon.com
+  - www.butterfly.tt
+  - www.dragoncapital.com.vn
+  - www.google.com
+  - www.health.com
+  - www.healthline.com
+  - www.jetbrains.com
+  - www.medicalnewstoday.com
+  - www.mermaidchart.com
+  - www.msdmanuals.com
+  - www.mybib.com
+  - www.ncb-bank.vn
+  - www.nuget.org
+  - www.nutritionvalue.org
+  - www.optimizely.com
+  - www.quad9.net
+  - www.rfc-editor.org
+  - www.shop-apotheke.com
+  - www.sqlite.org
+  - www.tabletennis11.com
+  - www.tabletennisdaily.com
+  - www.techempower.com
+  - www.vcbf.com
+  - www.voidtools.com
+  - xunit.net
+  - zen-browser.app
+  - zoom.earth
+domains-having-paths:
+  - domain: aas.com.vn
+    paths:
+      - /Content/Archive/FileAttact/
+  - domain: app.datadoghq.com
+    paths:
+      - /account/login
+      - /apm
+      - /dashboard
+      - /logs?
+  - domain: bongbanduyhung.com
+    paths:
+      - /page/
+  - domain: connect.mozilla.org
+    paths:
+      - /page/
+  - domain: episerver99-my.sharepoint.com
+    paths:
+      - AccessDenied.aspx?
+  - domain: episerver99.sharepoint.com
+    paths:
+      - download.aspx?
+      - spfxsinglesignon.aspx
+  - domain: eur.delve.office.com
+    paths:
+      - /profileimage?
+  - domain: exercism.org
+    paths:
+      - /solutions
+  - domain: www.facebook.com
+    paths:
+      - /about
+  - domain: feedly.com
+    paths:
+      - /auth/
+      - /i/discover/sources/search/
+  - domain: fireant.vn
+    paths:
+      - /charts/content/notifications/
+      - /dashboard/content/notifications/
+  - domain: github.com
+    paths:
+      - /blob/
+      - /commits/
+      - /compare/
+      - /releases/
+      - /runs/
+      - /tree/
+  - domain: gitlab.com
+    paths:
+      - /blob/
+  - domain: jira.sso.episerver.net
+    paths:
+      - /issue/CloneIssueProgress.jspa
+      - /login.jsp
+      - /secure/attachment/
+      - /secure/ConvertIssue.jspa?
+      - /secure/ConvertSubTask.jspa?
+      - /secure/MoveIssue!default.jspa?
+      - /secure/MoveIssueUpdateFields!default.jspa?
+  - domain: maybanbongban.vn
+    paths:
+      - /page/
+  - domain: opti-dxp.datadoghq.com
+    paths:
+      - /account/login
+      - /apm
+  - domain: optimizely.atlassian.net/servicedesk/
+    paths:
+      - /user/login?destination=
+  - domain: outlook.office.com
+    paths:
+      - /groups/
+      - /mail/
+      - /owa
+  - domain: www.rockmods.net
+    paths:
+      - /?
+      - /search/
+      - /search?
+  - domain: ttgearlab.com
+    paths:
+      - /page/
+  - domain: us3.datadoghq.com
+    paths:
+      - /account/login
+      - /apm
+      - /dashboard
+      - /logs?
+      - /monitors
+      - /services?
+  - domain: voz.vn
+    paths:
+      - /account/alerts
+      - /direct-messages/
+      - /goto/post?
+      - /p/
+      - /page-
+      - /search/
+      - /u/
+  - domain: write.as
+    paths:
+      - /edit
+  - domain: www.reddit.com
+    paths:
+      - /comment/
+domains-having-any-query-param:
+  - domain: .giphy.com
+    query-params:
+      - ep
+  - domain: accounts.fireant.vn
+    query-params:
+      - client_id
+      - redirect_uri
+      - signin
+  - domain: accounts.spotify.com
+    query-params:
+      - continue
+  - domain: accounts.x.ai
+    query-params:
+      - redirect
+  - domain: addons.mozilla.org
+    query-params:
+      - q
+      - utm_source
+  - domain: apkdone.com
+    query-params:
+      - s
+  - domain: apkpure.com
+    query-params:
+      - q
+  - domain: app.optimizely.com/signin
+    query-params:
+      - continue_to
+  - domain: app2.prismacloud.io
+    query-params:
+      - branch
+  - domain: asp-blogs.azurewebsites.net
+    query-params:
+      - page
+  - domain: nap.nationalacademies.org
+    query-params:
+      - record_id
+  - domain: batdongsan.com.vn
+    query-params:
+      - disIds
+      - dtln
+      - dtnn
+      - gcn
+      - gtn
+      - tpl
+  - domain: benxehanoi.vn
+    query-params:
+      - diem-den
+      - diem-di
+  - domain: bongban.org
+    query-params:
+      - page
+  - domain: bongban24h.com
+    query-params:
+      - page
+      - q
+  - domain: bongbanduyhung.com
+    query-params:
+      - s
+  - domain: books-search.typesense.org
+    query-params:
+      - b%5Bquery%5D
+  - domain: butterflyaustralia.com
+    query-params:
+      - variant
+  - domain: challenge.spotify.com
+    query-params:
+      - flow_ctx
+  - domain: chatgpt.com
+    query-params:
+      - callbackUrl
+      - error
+      - prompt
+      - q
+  - domain: community.chocolatey.org
+    query-params:
+      - q
+  - domain: confluence.sso.episerver.net
+    query-params:
+      - draftId
+      - preview
+      - src
+      - title
+  - domain: congtytui.info
+    query-params:
+      - page
+  - domain: controld.com
+    query-params:
+      - freeResolverType
+  - domain: cve.mitre.org
+    query-params:
+      - keyword
+  - domain: dailongsport.vn
+    query-params:
+      - page
+      - q
+  - domain: dash.readme.com
+    query-params:
+      - redirect
+  - domain: dev.to/
+    query-params:
+      - state
+  - domain: developer.mozilla.org
+    query-params:
+      - q
+  - domain: dichvucong.bocongan.gov.vn
+    query-params:
+      - tukhoa
+  - domain: dichvucong.gov.vn
+    query-params:
+      - group
+      - pkeyWord
+  - domain: dict.laban.vn
+    query-params:
+      - query
+  - domain: dictionary.zim.vn
+    query-params:
+      - /anh-viet/
+  - domain: dienquang.com
+    query-params:
+      - q
+  - domain: discord.com
+    query-params:
+      - key
+      - redirect_to
+  - domain: docs.azure.cn
+    query-params:
+      - tabs
+  - domain: docs.controld.com
+    query-params:
+      - ref
+  - domain: docs.google.com
+    query-params:
+      - fbzx
+      - ldf_id
+      - usp
+  - domain: docs.syncthing.net
+    query-params:
+      - version
+  - domain: dragonx.com.vn
+    query-params:
+      - id
+      - moe_app_id
+  - domain: drive.google.com
+    query-params:
+      - ldf_id
+      - pli
+      - q
+      - resourcekey
+      - url
+      - usp
+  - domain: drive.usercontent.google.com
+    query-params:
+      - export
+  - domain: duckduckgo.com
+    query-params:
+      - q
+  - domain: dungcubongban.vn
+    query-params:
+      - page
+  - domain: ecosystem.atlassian.net
+    query-params:
+      - src
+  - domain: efsa.onlinelibrary.wiley.com
+    query-params:
+      - file
+  - domain: en.wikipedia.org
+    query-params:
+      - search
+      - title
+  - domain: episerver99-my.sharepoint.com
+    query-params:
+      - id
+  - domain: episerveridentity.b2clogin.com
+    query-params:
+      - client_id
+  - domain: eur-lex.europa.eu
+    query-params:
+      - uri
+  - domain: examine.com
+    query-params:
+      - show_conditions
+  - domain: exercism.org
+    query-params:
+      - status
+  - domain: fado.vn
+    query-params:
+      - keywords
+  - domain: fastly.picsum.photos
+    query-params:
+      - hmac
+  - domain: fdc.nal.usda.gov
+    query-params:
+      - component
+      - query
+      - type
+  - domain: feedly.com
+    query-params:
+      - code
+      - gate
+  - domain: finance.yahoo.com
+    query-params:
+      - period1
+  - domain: fireant.vn
+    query-params:
+      - jskey
+  - domain: ftcshop.vn
+    query-params:
+      - key
+  - domain: galaxystore.samsung.com
+    query-params:
+      - langCd
+  - domain: gearshop.vn
+    query-params:
+      - page
+  - domain: github.com
+    query-params:
+      - after
+      - author
+      - check_run_id
+      - closed
+      - filename
+      - from
+      - notice
+      - page
+      - q
+      - query
+      - return_to
+      - tab
+  - domain: glycemic-index.net
+    query-params:
+      - s
+  - domain: glycemicindex.com
+    query-params:
+      - food_name
+  - domain: google.com
+    query-params:
+      - authuser
+  - domain: grok.com
+    query-params:
+      - _s
+      - tab
+  - domain: hanoian.com
+    query-params:
+      - start
+  - domain: hanoinew.vn
+    query-params:
+      - brand
+      - filter
+  - domain: hanoiprofile.ep.se
+    query-params:
+      - returnUrl
+  - domain: hika.fyi
+    query-params:
+      - question
+      - topic_id
+  - domain: hoachau.vn
+    query-params:
+      - brand
+      - page
+  - domain: hoangchopbongban.com
+    query-params:
+      - q
+  - domain: hoanghamobile.com
+    query-params:
+      - product_id
+      - sku
+  - domain: hungmobile.vn
+    query-params:
+      - search
+  - domain: identity.getpostman.com
+    query-params:
+      - auth_challenge
+      - redirect_uri
+  - domain: itviec.com
+    query-params:
+      - click_source
+      - job_selected
+      - lab_feature
+      - query
+  - domain: jira.sso.episerver.net
+    query-params:
+      - atlOrigin
+      - devStatusDetailDialog
+      - filter
+      - jql
+      - name
+      - page
+      - rapidView
+      - returnTo
+      - schema
+      - searchString
+      - selectedItem
+      - selectPageId
+  - domain: kb.mozillazine.org
+    query-params:
+      - printable
+      - redir
+  - domain: kinhmatviettin.vn
+    query-params:
+      - wpf_filter_thuong-hieu
+  - domain: learn.microsoft.com
+    query-params:
+      - pivots
+      - search
+      - tabs
+      - term
+      - viewFallbackFrom
+  - domain: libgen.li
+    query-params:
+      - downloadname
+      - req
+  - domain: login.optimizely.com
+    query-params:
+      - client_id
+      - stateToken
+      - stateTokenExternalId
+  - domain: login.taobao.com
+    query-params:
+      - redirectURL
+  - domain: login.yahoo.com
+    query-params:
+      - .done
+      - done
+  - domain: luatvietnam.vn
+    query-params:
+      - DistrictId
+      - page
+      - ProvinceId
+      - WardId
+  - domain: lucid.app
+    query-params:
+      - from_internal
+      - invitationId
+      - product
+      - redirect_url
+      - referredProduct
+      - returnUrlOverride
+  - domain: m.dict.laban.vn
+    query-params:
+      - keyword
+  - domain: masothue.com
+    query-params:
+      - q
+  - domain: mayanhcuhanoi.com
+    query-params:
+      - query
+  - domain: mytabletennis.net
+    query-params:
+      - MobileView
+  - domain: modyolo.com
+    query-params:
+      - s
+  - domain: monica.im
+    query-params:
+      - id
+  - domain: mrotherguy.github.io
+    query-params:
+      - file
+  - domain: music.youtube.com
+    query-params:
+      - list
+      - q
+  - domain: myaccount.google.com
+    query-params:
+      - backUrl
+      - continue
+      - gar
+      - rapt
+  - domain: myaccount.microsoft.com
+    query-params:
+      - ref
+      - tenant
+  - domain: myapps.microsoft.com
+    query-params:
+      - tenantId
+  - domain: mycroftproject.com/install.html
+    query-params:
+      - id
+  - domain: mycroftproject.com/search-engines.html
+    query-params:
+      - name
+  - domain: mysignins.microsoft.com
+    query-params:
+      - tenant
+  - domain: na2.docusign.net
+    query-params:
+      - a
+      - ti
+  - domain: naturesway.com
+    query-params:
+      - _pos
+      - page
+  - domain: nguoiquansat.vn
+    query-params:
+      - gidzl
+  - domain: nhathuoclongchau.com.vn
+    query-params:
+      - s
+  - domain: nhathuocphuongchinh.com
+    query-params:
+      - keyword
+  - domain: nhattao.com
+    query-params:
+      - q
+  - domain: nodeflair.com
+    query-params:
+      - page
+  - domain: nongsandungha.com
+    query-params:
+      - attribute_pa_khu-vuc
+  - domain: nuget.optimizely.com
+    query-params:
+      - q
+  - domain: old.reddit.com
+    query-params:
+      - context
+  - domain: one.google.com
+    query-params:
+      - g1_landing_page
+  - domain: ooakforum.com
+    query-params:
+      - sid
+      - start
+  - domain: open.spotify.com
+    query-params:
+      - flow_ctx
+  - domain: opti-dxp.datadoghq.com
+    query-params:
+      - compare_query_A
+      - fromUser
+      - p
+      - query
+      - search
+  - domain: opti-graph.datadoghq.com
+    query-params:
+      - next
+      - query
+  - domain: optimizely.atlassian.net/servicedesk/
+    query-params:
+      - page
+      - reporter
+      - src
+      - statuses
+      - token
+  - domain: optimizely.brightfunds.org
+    query-params:
+      - keywords
+      - page
+      - start_date
+  - domain: paasportal.epimore.com
+    query-params:
+      - message
+      - ReturnUrl
+  - domain: phobongban.vn
+    query-params:
+      - filter_thuong-hieu
+  - domain: pico.vn
+    query-params:
+      - property
+  - domain: piped.video
+    query-params:
+      - search_query
+  - domain: policies.account.samsung.com
+    query-params:
+      - appKey
+  - domain: portal.azure.com
+    query-params:
+      - bundlingKind
+  - domain: prep.admincenter.optimizely.com
+    query-params:
+      - code
+      - login_hint
+      - orgId
+      - state
+  - domain: prep.home.optimizely.com
+    query-params:
+      - idpId
+      - login_hint
+      - orgId
+  - domain: rethinkdns.com
+    query-params:
+      - q
+  - domain: s.taobao.com
+    query-params:
+      - q
+  - domain: searchfox.org
+    query-params:
+      - q
+  - domain: securitylabs.veracode.com
+    query-params:
+      - module
+  - domain: shopee.vn
+    query-params:
+      - cmtid
+      - d_id
+      - entryPoint
+      - flow_source
+      - is_from_login
+      - keyword
+      - orderIndex
+      - page
+      - searchKeyword
+      - sp_atk
+      - type
+      - uls_trackid
+      - xptdk
+  - domain: sso.tuoitre.vn
+    query-params:
+      - redirectUrl
+  - domain: stackoverflow.com
+    query-params:
+      - rq
+  - domain: subscene.com
+    query-params:
+      - q
+  - domain: support.mozilla.org
+    query-params:
+      - as
+  - domain: support.office.com
+    query-params:
+      - authtype
+      - context
+  - domain: support.optimizely.com
+    query-params:
+      - return_to
+  - domain: tabletennis.guide
+    query-params:
+      - query
+  - domain: tdeecalculator.net
+    query-params:
+      - age
+  - domain: thinkpro.vn
+    query-params:
+      - skuId
+      - tinh-trang
+  - domain: tichsancophieu.azfin.vn
+    query-params:
+      - ldf_id
+  - domain: tiemanhnhabap.gump.gg
+    query-params:
+      - sid
+  - domain: tiki.vn
+    query-params:
+      - q
+      - spid
+  - domain: topdev.vn
+    query-params:
+      - src
+  - domain: travel.b-europe.com
+    query-params:
+      - traveltype
+  - domain: trello.com
+    query-params:
+      - returnUrl
+  - domain: ttsport.vn
+    query-params:
+      - page
+  - domain: tudien.dolenglish.vn
+    query-params:
+      - q
+  - domain: usazu1sv-01pw.ep.se
+    query-params:
+      - Error
+  - domain: vi.wikipedia.org
+    query-params:
+      - search
+  - domain: viendinhduong.vn
+    query-params:
+      - page
+      - sort
+      - txtSearch
+  - domain: viethealthy.com
+    query-params:
+      - masp
+  - domain: vietmart.co
+    query-params:
+      - t
+      - trang
+  - domain: visa.vfsglobal.com
+    query-params:
+      - q
+  - domain: vneconomy.vn
+    query-params:
+      - page
+      - trang
+  - domain: voz.party
+    query-params:
+      - page
+  - domain: voz.vn
+    query-params:
+      - page
+      - prefix_id
+      - show_only
+  - domain: web.analysiscenter.veracode.com
+    query-params:
+      - code
+  - domain: webextension.org
+    query-params:
+      - type
+      - version
+  - domain: world.optimizely.com
+    query-params:
+      - releaseNoteId
+  - domain: www.accuweather.com
+    query-params:
+      - city
+      - year
+  - domain: www.adidas.com
+    query-params:
+      - q
+  - domain: www.airbnb.fr
+    query-params:
+      - source_impression_id
+  - domain: www.amazon.com
+    query-params:
+      - keywords
+      - rh
+      - th
+  - domain: www.amazon.fr
+    query-params:
+      - field-keywords
+  - domain: www.apkmirror.com
+    query-params:
+      - post_type
+  - domain: www.asics.com
+    query-params:
+      - pid
+  - domain: www.bachhoaxanh.com
+    query-params:
+      - key
+  - domain: www.bandovn.vn
+    query-params:
+      - AspxAutoDetectCookieSupport
+  - domain: www.bing.com
+    query-params:
+      - q
+  - domain: www.calculator.net
+    query-params:
+      - cage
+  - domain: www.cfl.lu
+    query-params:
+      - SearchDepartureExtId
+  - domain: www.cisa.gov
+    query-params:
+      - search_api_fulltext
+  - domain: www.contra.de
+    query-params:
+      - search
+  - domain: www.cpubenchmark.net
+    query-params:
+      - id
+  - domain: www.csgt.vn
+    query-params:
+      - LoaiXe
+  - domain: www.dict.cc
+    query-params:
+      - s
+  - domain: www.dm.de
+    query-params:
+      - brandName0
+      - query
+  - domain: www.docosan.com
+    query-params:
+      - keyword
+  - domain: www.donic.com
+    query-params:
+      - order
+      - p
+  - domain: www.dragoncapital.com.vn
+    query-params:
+      - contentId
+      - moe_app_id
+  - domain: www.facebook.com
+    query-params:
+      - __eep__
+      - attachment_id
+      - comment_id
+      - helpref
+      - ldf_id
+      - locale
+      - lsrc
+      - message_id
+      - notif_id
+      - profile_id
+      - q
+      - rdid
+      - ref
+      - share_url
+      - sk
+      - sorting_setting
+      - thread_id
+  - domain: www.freelancer.com
+    query-params:
+      - search_keyword
+  - domain: www.google.com
+    query-params:
+      - gsessionid
+      - lsessionid
+      - q
+      - vsrid
+  - domain: www.google.de
+    query-params:
+      - q
+  - domain: www.guru.com
+    query-params:
+      - SearchUrl
+  - domain: www.idealo.de
+    query-params:
+      - q
+  - domain: www.informatik.uni-leipzig.de
+    query-params:
+      - word
+  - domain: www.jetbrains.com
+    query-params:
+      - billing
+      - keymap
+      - section
+      - top
+  - domain: www.logixpathchef.com
+    query-params:
+      - fdcid
+  - domain: www.kaufland.de
+    query-params:
+      - search_value
+  - domain: www.mermaidchart.com
+    query-params:
+      - redirect
+  - domain: www.msdmanuals.com
+    query-params:
+      - query
+      - ruleredirectid
+  - domain: www.naturesway.com.au
+    query-params:
+      - q
+  - domain: www.ncbi.nlm.nih.gov
+    query-params:
+      - report
+      - term
+  - domain: www.nhaccuatui.com
+    query-params:
+      - st
+  - domain: www.npmjs.com
+    query-params:
+      - activeTab
+      - q
+  - domain: www.nuget.org
+    query-params:
+      - q
+  - domain: www.nutritionvalue.org
+    query-params:
+      - action
+      - food_query
+      - foods
+      - register
+      - size
+      - tag
+  - domain: www.perplexity.ai/search/
+    query-params:
+      - 0
+      - 2
+      - 4
+      - q
+  - domain: www.pharmacity.vn
+    query-params:
+      - keyword
+  - domain: www.reddit.com
+    query-params:
+      - chainedPosts
+      - context
+  - domain: www.rockmods.net
+    query-params:
+      - m
+  - domain: www.rossmann.de
+    query-params:
+      - text
+      - width
+  - domain: www.ruten.com.tw
+    query-params:
+      - q
+      - sort
+  - domain: www.sciencedirect.com
+    query-params:
+      - via
+  - domain: www.shop-apotheke.com
+    query-params:
+      - campaign
+  - domain: www.sqlite.org
+    query-params:
+      - q
+  - domain: www.startpage.com
+    query-params:
+      - query
+  - domain: www.tabletennis11.com
+    query-params:
+      - q
+  - domain: www.tabletennisdaily.com
+    query-params:
+      - page
+      - q
+  - domain: www.truecaller.com
+    query-params:
+      - noei
+  - domain: www.upwork.com
+    query-params:
+      - q
+  - domain: www.urbandictionary.com
+    query-params:
+      - term
+  - domain: www.vietnamworks.com
+    query-params:
+      - fromPage
+  - domain: www.viettablet.com
+    query-params:
+      - product_old
+  - domain: www.vinmec.com
+    query-params:
+      - link_type
+  - domain: www.vitaminhouse.vn
+    query-params:
+      - variant
+  - domain: www.webmd.com
+    query-params:
+      - mmtrack
+  - domain: www.xing.com
+    query-params:
+      - ijt
+      - keywords
+      - sc_o
+  - domain: www.xxl.se
+    query-params:
+      - query
+  - domain: www.yazio.com
+    query-params:
+      - q
+  - domain: www.youtube.com
+    query-params:
+      - feature
+      - index
+      - pp
+      - search_query
+      - si
+      - t
+      - time_continue
+  - domain: www.zotero.org
+    query-params:
+      - q
+  - domain: x.com
+    query-params:
+      - redirect_after_login
+  - domain: yasakatabletennis.com
+    query-params:
+      - filter
+  - domain: yattdb.pabuisson.com
+    query-params:
+      - page
+  - domain: zen-browser.app
+    query-params:
+      - v
+domains-having-any-fragment-param:
+  - domain: vietnamnet.vn
+    fragment-params:
+      - vnn_source
+domains-having-path-patterns:
+  - domain: apkpure.com
+    patterns:
+      - /[\w-]+/
+  - domain: bacsytranvanphuc.com
+    patterns:
+      - /page/\d+/
+  - domain: batdongsan.com.vn
+    patterns:
+      - /p\d+$
+  - domain: bongban.fanciko.com
+    patterns:
+      - /page/\d+/
+  - domain: bongban.org
+    patterns:
+      - /forums/.+?\d+/page-\d+
+      - /threads/.+?/page-\d+
+  - domain: community.windy.com
+    patterns:
+      - /\d+/.+?/\d+
+  - domain: diendan.footballvn.net
+    patterns:
+      - /threads/\d+-[^/]+/page\d+\.html
+  - domain: dungbongban.com
+    patterns:
+      - -page\d+\.html
+  - domain: github.com
+    patterns:
+      - /commit/\w{40}
+      - /milestone/\d+
+      - /pkgs/nuget/[\w\.]+/versions
+      - /pkgs/nuget/[\w\.]+/\d+
+      - /pull/\d+/$
+      - /pull/\d+/commits
+      - /pull/\d+/files
+  - domain: hanoiskyteam.vn
+    patterns:
+      - /page/\d+
+  - domain: hanotour.com.vn
+    patterns:
+      - /page-\d+
+  - domain: kinhmatviettin.vn
+    patterns:
+      - /page/\d+/
+  - domain: myphamxachtayduc.vn
+    patterns:
+      - /page/\d+/
+  - domain: mytabletennis.net
+    patterns:
+      - _page\d+\.html
+  - domain: tabletennis-reference.com
+    patterns:
+      - detail/\d+/
+  - domain: thanglongkydao.com
+    patterns:
+      - /threads/.+?/page\d+
+  - domain: ttgearlab.com
+    patterns:
+      - /comment-page-\d+
+  - domain: vietnamnet.vn
+    patterns:
+      - -page\d+\.html$
+  - domain: vnexpress.net
+    patterns:
+      - -\d+-p\d+$
+      - /[\w-]+-p\d+$
+  - domain: voz.party
+    patterns:
+      - /d/\d+-.+?/\d+$
+  - domain: voz.vn
+    patterns:
+      - \.\d+/reply
+      - /unread$
+  - domain: www.apkmirror.com
+    patterns:
+      - /apk/[\w-]+/[\w-]+/
+  - domain: www.compositional-it.com
+    patterns:
+      - /page/\d+/
+  - domain: www.nguyenkim.com
+    patterns:
+      - /page-\d+/
+  - domain: www.nuget.org
+    patterns:
+      - /packages/[\w\.]+/\d+\.\d+\.\d+
+  - domain: www.nutritionvalue.org
+    patterns:
+      - _content_page_\d+
+  - domain: www.otofun.net
+    patterns:
+      - \.\d+/page-\d+
+  - domain: www.tabletennisdaily.com
+    patterns:
+      - /forum/topics/.+?\d+/page-\d+
+domains-having-not-first-thread-post:
+  - community.e.foundation
+  - community.spiceworks.com
+  - discuss.logseq.com
+  - discuss.privacyguides.net
+  - discuss.techlore.tech
+  - f247.com
+  - forum.f-droid.org
+  - forum.graphviz.org
+  - forum.rescript-lang.org
+  - forum.sublimetext.com
+  - forum.uipath.com
+  - forum.xojo.com
+  - forums.fsharp.org
