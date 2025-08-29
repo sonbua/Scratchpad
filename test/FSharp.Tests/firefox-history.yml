@@ -1,7 +1,5 @@
 domains:
   - file:///
-  - ?__cf_chl_tk=
-  - ?__cf_chl_rt_tk=
   - /wp-content/uploads/
   - .blob.core.windows.net
   - .cmstest.optimizely.com
@@ -388,6 +386,9 @@ domains-having-paths:
   - domain: www.reddit.com
     paths:
       - /comment/
+query-params:
+  - __cf_chl_rt_tk
+  - __cf_chl_tk
 domains-having-any-query-param:
   - domain: .giphy.com
     query-params:

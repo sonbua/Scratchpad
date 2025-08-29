@@ -59,6 +59,7 @@ module Cleanup =
             { Domains: List<string>
               DomainsHavingFragments: List<string>
               DomainsHavingPaths: List<DomainWithPaths>
+              QueryParams: List<string>
               DomainsHavingAnyQueryParam: List<DomainWithQueryParams>
               DomainsHavingAnyFragmentParam: List<DomainWithFragmentParam>
               DomainsHavingPathPatterns: List<DomainWithPathPatterns>
@@ -106,6 +107,12 @@ module Cleanup =
             Input.option "--domainsHavingGarbagePathsInput"
             |> Input.alias "--domains-having-garbage-paths"
             |> Input.desc "Delete history entries that have matching domain and path(s) in the list"
+            |> Input.defaultValue true
+
+        let private garbageQueryParamsInput =
+            Input.option "--garbageQueryParams"
+            |> Input.alias "--garbage-query-params"
+            |> Input.desc "Delete history entries that have any of the query params in the list"
             |> Input.defaultValue true
 
         let private domainsHavingAnyGarbageQueryParamInput =
@@ -189,6 +196,16 @@ module Cleanup =
                         let! removed = (domain, placeFilter) ||> db.deletePlacesWith
                         removed |> map printPlace |> ignore
 
+                let deleteGarbageQueryParams = garbageQueryParamsInput.GetValue parseResult
+
+                if deleteGarbageQueryParams then
+                    let queryParams = config.QueryParams
+
+                    for queryParam in queryParams do
+                        let placeFilter = queryParams |> List.ofSeq |> Place.hasAnyQueryParam
+                        let! removed = (queryParam, placeFilter) ||> db.deletePlacesWith
+                        removed |> map printPlace |> ignore
+
                 let deleteDomainsHavingAnyGarbageQueryParam =
                     domainsHavingAnyGarbageQueryParamInput.GetValue parseResult
 
@@ -268,6 +285,7 @@ module Cleanup =
                       garbageDomainsInput
                       garbageDomainsHavingFragmentsInput
                       domainsHavingGarbagePathsInput
+                      garbageQueryParamsInput
                       domainsHavingAnyGarbageQueryParamInput
                       domainsHavingAnyGarbageFragmentParamInput
                       domainsHavingPathPatternsInput
@@ -375,6 +393,7 @@ module Outdated =
 ///     --garbage-domains=false
 ///     --garbage-domains-having-fragments=false
 ///     --domains-having-garbage-paths=false
+///     --garbage-query-params=false
 ///     --domains-having-any-garbage-query-param=false
 ///     --domains-having-any-garbage-fragment-param=false
 ///     --domains-having-path-patterns=false
