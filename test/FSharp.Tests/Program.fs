@@ -6,13 +6,13 @@ open FSharpPlus
 let fromClipboardInput =
     Input.option "--fromClipboard"
     |> Input.alias "--from-clipboard"
-    |> Input.desc "Read input from clipboard. When not specified, input is read from the command line."
+    |> Input.desc "Read input from clipboard."
     |> Input.defaultValue false
 
 let toClipboardInput =
     Input.option "--toClipboard"
     |> Input.alias "--to-clipboard"
-    |> Input.desc "Copy output to clipboard. When not specified, output is printed to the console."
+    |> Input.desc "Copy output to clipboard. When set to False, output is printed to the console."
     |> Input.defaultValue false
 
 let withClipboardChannel f (maybeText: string option, fromClipboard: bool, toClipboard: bool) : unit =
@@ -305,13 +305,31 @@ module Convert =
     let private maybeTextInput =
         Input.argumentMaybe "text" |> Input.desc "Text to convert"
 
-    let private convertAction = TableConverter.tabularToMarkdown |> withClipboardChannel
+    module Tab2Md =
+        let private tab2MdAction = TableConverter.tabularToMarkdown |> withClipboardChannel
+
+        let command =
+            command "tab2md" {
+                description "Convert tab-delimited text to markdown format"
+                inputs (maybeTextInput, fromClipboardInput |> Input.def true, toClipboardInput |> Input.def true)
+                setAction tab2MdAction
+            }
+
+    module Md2Tab =
+        let private md2TabAction = TableConverter.markdownToTabular |> withClipboardChannel
+
+        let command =
+            command "md2tab" {
+                description "Convert markdown table to tab-delimited format"
+                inputs (maybeTextInput, fromClipboardInput |> Input.def true, toClipboardInput |> Input.def true)
+                setAction md2TabAction
+            }
 
     let command =
         command "convert" {
-            description "Convert tab-delimited to markdown"
-            inputs (maybeTextInput, fromClipboardInput |> Input.def true, toClipboardInput |> Input.def true)
-            setAction convertAction
+            description "Convert between tab-delimited and markdown formats"
+            noAction
+            addCommands [ Tab2Md.command; Md2Tab.command ]
         }
 
 module Extract =
@@ -399,13 +417,13 @@ module Outdated =
 ///     --domains-having-path-patterns=false
 ///     --domains-having-not-first-thread-post=false
 ///     --domains-having-complex-patterns=false
-/// convert
-/// convert &lt;text&gt;
+/// convert tab2md
+/// convert md2tab
+/// extract "text with url https://example.com"
 /// fetch blog-chung-khoan
 /// outdated
 /// </code>
 /// </summary>
-/// TODO: convert tab2md
 [<EntryPoint>]
 let main argv =
     rootCommand argv {
