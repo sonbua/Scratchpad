@@ -313,10 +313,19 @@ module Extract =
 
 module Fetch =
     module BlogChungKhoan =
-        let urls =
+        let landingPages =
             [ "https://vneconomy.vn/"
               "https://vneconomy.vn/chung-khoan.htm"
               "https://vneconomy.vn/thi-truong-chung-khoan.htm" ]
+
+        let ckPages =
+            [ 2..10 ] |> List.map (sprintf "https://vneconomy.vn/chung-khoan.htm?page=%d")
+
+        let ttckPages =
+            [ 2..10 ]
+            |> List.map (sprintf "https://vneconomy.vn/thi-truong-chung-khoan.htm?page=%d")
+
+        let urls = landingPages @ ckPages @ ttckPages
 
         let private blogChungKhoanAction () =
             urls
