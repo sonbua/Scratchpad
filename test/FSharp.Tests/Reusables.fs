@@ -12,6 +12,8 @@ module Map =
         Map.change key (Option.map (fun _ -> newValue))
 
 module String =
+    open System
+
     let toOption text =
         match text with
         | null -> None
@@ -23,6 +25,18 @@ module String =
         | _ -> text
 
     let emptyIfNull = defaultIfNull ""
+
+    let splitWith (separators: string array) (options: StringSplitOptions) (text: string) =
+        text.Split(separators, options)
+
+    let splitCharWith (separators: char array) (options: StringSplitOptions) (text: string) =
+        text.Split(separators, options)
+
+    let splitWithRemovingEmptyEntries (separators: string array) (text: string) =
+        text |> splitWith separators StringSplitOptions.RemoveEmptyEntries
+
+    let splitCharWithRemovingEmptyEntries (separators: char array) (text: string) =
+        text |> splitCharWith separators StringSplitOptions.RemoveEmptyEntries
 
 module List =
     /// Like List.skip but rather than throwing System.ArgumentException, it returns an empty list if the number of
@@ -78,11 +92,9 @@ module Uri =
 
     let isValid (input: string) = urlPatternExact.IsMatch(input)
 
-    let extractUriStrings =
-        urlPattern.Matches >> Seq.map _.Value
+    let extractUriStrings = urlPattern.Matches >> Seq.map _.Value
 
-    let extract =
-        extractUriStrings >> Seq.map Uri
+    let extract = extractUriStrings >> Seq.map Uri
 
 module HtmlNode =
     open FSharp.Data

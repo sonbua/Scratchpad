@@ -1,8 +1,5 @@
 module TableConverter
 
-// #r "nuget: Fake.Core.Target"
-// #r "nuget: FSharpPlus"
-
 open System
 open FSharpPlus
 
@@ -17,20 +14,23 @@ module internal Line =
         line |> String.replace "\t" " | " |> sprintf "| %s |"
 
     let markdownToTab (line: string) : string =
-        line.Split("|", StringSplitOptions.RemoveEmptyEntries)
+        line
+        |> String.splitWithRemovingEmptyEntries [| "|" |]
         |> map String.trimWhiteSpaces
         |> String.concat "\t"
 
 let private newLines = [| "\r\n"; "\n"; Environment.NewLine |]
 
 let tabularToMarkdown (text: string) : string =
-    text.Split(newLines, StringSplitOptions.RemoveEmptyEntries)
-    |> map (String.trim [ ' '  ])
+    text
+    |> String.splitWithRemovingEmptyEntries newLines
+    |> map (String.trim [ ' ' ])
     |> map Line.tabToMarkdown
     |> fun lines -> String.Join(Environment.NewLine, lines)
 
 let markdownToTabular (text: string) : string =
-    text.Split(newLines, StringSplitOptions.RemoveEmptyEntries)
+    text
+    |> String.splitWithRemovingEmptyEntries newLines
     |> map String.trimWhiteSpaces
     |> map Line.markdownToTab
     |> fun lines -> String.Join(Environment.NewLine, lines)

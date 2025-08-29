@@ -1,9 +1,5 @@
 module Firefox.History
 
-// #r "nuget: FSharp.Data.Dapper"
-// #r "nuget: FSharpPlus"
-// #r "nuget: Microsoft.Data.SQLite"
-
 [<AutoOpen>]
 module Foldable =
     open FSharpPlus
@@ -42,7 +38,7 @@ module Uri =
     let private extractKeys (uri: Uri) =
         uri.Query
         |> String.trimStart [ '?' ]
-        |> _.Split('&', StringSplitOptions.RemoveEmptyEntries)
+        |> String.splitCharWithRemovingEmptyEntries [| '&' |]
         |> toList
         |> map (String.split [ "=" ] >> head)
 
@@ -55,14 +51,14 @@ module Uri =
     let withQueryParam (uri: Uri) : bool =
         uri.Query
         |> String.trimStart [ '?' ]
-        |> _.Split('&', StringSplitOptions.RemoveEmptyEntries)
+        |> String.splitCharWithRemovingEmptyEntries [| '&' |]
         |> Array.isEmpty
         |> not
 
     let hasAnyFragmentParam (fs: string list) (uri: Uri) =
         uri.Fragment
         |> String.trimStart [ '#' ]
-        |> _.Split('&', StringSplitOptions.RemoveEmptyEntries)
+        |> String.splitCharWithRemovingEmptyEntries [| '&' |]
         |> map (String.split [ "=" ] >> head)
         |> toList
         |> List.intersect fs
@@ -82,7 +78,7 @@ module UrlPart =
         | null
         | ""
         | "/" -> None
-        | path -> path.Split([| '/' |], StringSplitOptions.RemoveEmptyEntries) |> tryHead
+        | path -> path |> String.splitCharWithRemovingEmptyEntries [| '/' |] |> tryHead
 
     let create (uri: Uri) : UrlPart =
         { Authority = uri.Authority
@@ -185,7 +181,7 @@ type Db(connectionString) =
     /// This does not delete place records, which are bookmarks.
     /// </summary>
     /// <param name="urlPart">Part of the URL to match.</param>
-    member this.deletePlaces (urlPart: string) =
+    member this.deletePlaces(urlPart: string) =
         this.deletePlacesWith urlPart alwaysTrue
 
     /// <summary>

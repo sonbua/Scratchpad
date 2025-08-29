@@ -1,7 +1,6 @@
 module Chocolatey
 
-// #r "nuget: Fake.Core.Target"
-// #r "nuget: FSharpPlus"
+open FSharpPlus
 
 module ProcessResult =
     open Fake.Core
@@ -14,7 +13,6 @@ module ProcessResult =
 module Outdated =
     open System
     open Fake.Core
-    open FSharpPlus
 
     let private noSpace: string -> bool = String.contains ' ' >> not
 
@@ -27,7 +25,7 @@ module Outdated =
     /// Returns: <code>7-taskbar-tweaker</code>
     /// </param>
     let private parsePackageName (outdatedOutputLine: string) : string option =
-        let split = outdatedOutputLine.Split('|')
+        let split = outdatedOutputLine |> String.split '|'
 
         if split |> containsOutdatedPackage then
             split |> head |> Some
@@ -36,9 +34,9 @@ module Outdated =
 
     let toUpgradeCommand (outdatedOutput: string) : Result<string, string> =
         let installingPackages =
-            outdatedOutput.Split(Environment.NewLine) |> choose parsePackageName
+            outdatedOutput |> String.splitStr Environment.NewLine |> choose parsePackageName
 
-        if installingPackages |> Array.isEmpty then
+        if installingPackages |> List.isEmpty then
             Error "Chocolatey has determined no package is outdated."
         else
             installingPackages |> String.concat " " |> sprintf "choco upgrade -y %s" |> Ok
@@ -53,13 +51,9 @@ module Outdated =
 
 open Expecto
 open Expecto.Flip
-open Expecto.Logging
 
 [<Tests>]
 let specs =
-    let logger = Log.create "Chocolatey"
-    let writeln = Message.eventX >> logger.info
-
     testList
         "Chocolatey"
         [ // theory data
