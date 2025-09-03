@@ -53,6 +53,7 @@ let loadArticleMetadata url =
             |> Seq.tryHead
             |> Option.defaultValue "No title found"
 
+        // TODO: another way to get published date
         let published =
             doc
             |> HtmlDocument.html

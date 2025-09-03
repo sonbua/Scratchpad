@@ -374,7 +374,11 @@ module Fetch =
             |> Async.Parallel
             |> Async.RunSynchronously
             |> Array.sortByDescending _.Published
-            |> printfn "%A"
+            |> Array.map (fun a ->
+                {| Date = a.Published.Value.Date.ToString("dd/MM/yyyy")
+                   Url = a.Url |})
+            |> Array.map (fun a -> printfn $"{a.Date} {a.Url}")
+            |> ignore
 
         let command =
             command "blog-chung-khoan" {
