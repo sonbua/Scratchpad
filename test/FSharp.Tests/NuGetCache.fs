@@ -1,8 +1,5 @@
 module NuGetCache
 
-// #r "nuget: Fake.Core.Target"
-// #r "nuget: FSharpPlus"
-
 open System.IO
 open FSharpPlus
 open Fake.IO
@@ -32,33 +29,18 @@ module internal PackageDirectory =
             | [ _ ] -> Error "Nothing to remove"
             | _ :: removing -> removing |> rev |> map _.FullName |> Ok
 
-let listRemovables (rootDir: DirectoryInfo) : string list =
-    rootDir
+type CleanupOptions = { CacheRootDir: string }
+
+let listRemovables (options: CleanupOptions) : string list =
+    options
+    |> _.CacheRootDir
+    |> DirectoryInfo.ofPath
     |> DirectoryInfo.getSubDirectories
     |> map PackageDirectory.listRemovables
     |> choose Result.toOption
     |> List.concat
 
-type CleanupOptions = { CacheRootDir: string }
-
 let cleanup options : string list =
-    let removables = options.CacheRootDir |> DirectoryInfo.ofPath |> listRemovables
+    let removables = options |> listRemovables
     removables |> map Directory.delete |> ignore
     removables
-
-
-module Tests =
-    open Expecto
-    open Expecto.Logging
-
-    [<Tests>]
-    let specs =
-        let logger = Log.create "NuGetCache"
-        let writeln = Message.eventX >> logger.info
-
-        testList
-            "NuGetCache"
-            [ test "Cleanup" {
-                  let options = { CacheRootDir = @"C:\Users\song\.nuget\packages" }
-                  options |> cleanup |> map writeln |> ignore
-              } ]

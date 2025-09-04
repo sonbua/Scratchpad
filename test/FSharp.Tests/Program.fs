@@ -293,12 +293,36 @@ module Cleanup =
                       domainsHavingComplexPatternsInput ]
             }
 
+    module NuGetCache =
+        open NuGetCache
+
+        let private noopInput =
+            Input.option "--noop"
+            |> Input.desc "List removable package directories without deleting them."
+            |> Input.defaultValue false
+
+        let private nugetCacheAction (noop: bool) =
+            let cleanupOptions = { CacheRootDir = @"C:\Users\song\.nuget\packages" }
+
+            cleanupOptions
+            |> match noop with
+               | true -> listRemovables
+               | false -> cleanup
+            |> map (printfn "%s")
+            |> ignore
+
+        let command =
+            command "nuget-cache" {
+                description "Cleanup NuGet cache"
+                inputs noopInput
+                setAction nugetCacheAction
+            }
+
     let command =
         command "cleanup" {
             description "Cleanup garbage"
             noAction
-            addCommand FirefoxHistory.command
-            addCommand RiderLog.command
+            addCommands [ FirefoxHistory.command; RiderLog.command; NuGetCache.command ]
         }
 
 module Convert =
@@ -425,6 +449,7 @@ module Outdated =
 ///     --domains-having-path-patterns=false
 ///     --domains-having-not-first-thread-post=false
 ///     --domains-having-complex-patterns=false
+/// cleanup nuget-cache --noop
 /// convert tab2md
 /// convert md2tab
 /// extract "text with url https://example.com"
