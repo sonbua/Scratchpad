@@ -28,11 +28,9 @@
     <Compile Include="FirefoxData.fs" />
     <None Include="firefox-history.yml" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="FirefoxHistory.fs" />
-    <Compile Include="CultureInfoTest.fs" />
     <Compile Include="WhatDayOfWeek.fs" />
     <Compile Include="Bouncer.fs" />
     <Compile Include="GitLog.fs" />
-    <Compile Include="TrangTrang.fs" />
     <Compile Include="GitBatchPull.fs" />
     <Compile Include="VnEconomy.fs" />
     <Compile Include="CopyPackagesToThisWeek.fs" />
@@ -40,7 +38,6 @@
     <Compile Include="Logseq.fs" />
     <Compile Include="Longman.fs" />
     <Compile Include="Longman.Tests.fs" />
-    <Compile Include="UriUtils.fs" />
     <Compile Include="VozUserPosts.fs" />
     <Compile Include="Chocolatey.fs" />
     <Compile Include="RiderLog.fs" />
