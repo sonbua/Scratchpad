@@ -53,7 +53,7 @@ type RootBackupDirectory =
       FilePattern: string }
 
 module RootBackupDirectory =
-    let pendingCleanupDirectories options rootDir : PendingCleanupDirectory list =
+    let listPendingCleanupDirectories options rootDir : PendingCleanupDirectory list =
         rootDir.RootDirectory
         |> DirectoryInfo.getSubDirectories
         |> toList
@@ -62,28 +62,5 @@ module RootBackupDirectory =
 
     let cleanup options rootDir : string list list =
         rootDir
-        |> pendingCleanupDirectories options
+        |> listPendingCleanupDirectories options
         |> map PendingCleanupDirectory.cleanup
-
-
-open Expecto
-open Expecto.Logging
-
-[<Tests>]
-let specs =
-    test "Logseq" {
-        let rootBackupDirectories =
-            [ { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\pages\"; FilePattern = "*.md" }
-              { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\journals\"; FilePattern = "*.md" }
-              { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\logseq\"; FilePattern = "*.edn" }
-              { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\logseq\"; FilePattern = "*.css" } ]
-
-        let options = { ItemsToKeep = 1 }
-        let logger = Log.create "Logseq"
-        let writeln = Message.eventX >> logger.info
-
-        rootBackupDirectories
-        |> map (RootBackupDirectory.pendingCleanupDirectories options)
-        // |> map (RootBackupDirectory.cleanup options)
-        |> (sprintf "%A" >> writeln)
-    }

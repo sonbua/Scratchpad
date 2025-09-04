@@ -293,6 +293,45 @@ module Cleanup =
                       domainsHavingComplexPatternsInput ]
             }
 
+    module Logseq =
+        open System.IO
+        open Logseq
+
+        let private noopInput =
+            Input.option "--noop"
+            |> Input.desc "List removable backup directories without deleting them."
+            |> Input.defaultValue false
+
+        let private logseqAction (noop: bool) =
+            let backupDirectories =
+                [ { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\pages\"
+                    FilePattern = "*.md" }
+                  { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\journals\"
+                    FilePattern = "*.md" }
+                  { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\logseq\"
+                    FilePattern = "*.edn" }
+                  { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\logseq\"
+                    FilePattern = "*.css" } ]
+
+            let options = { ItemsToKeep = 1 }
+
+            backupDirectories
+            |> map (fun d ->
+                match noop with
+                | true ->
+                    (options, d)
+                    ||> RootBackupDirectory.listPendingCleanupDirectories
+                    |> printfn "%A"
+                | _ -> (options, d) ||> RootBackupDirectory.cleanup |> printfn "%A")
+            |> ignore
+
+        let command =
+            command "logseq" {
+                description "Cleanup Logseq backup files"
+                inputs noopInput
+                setAction logseqAction
+            }
+
     module NuGetCache =
         open NuGetCache
 
@@ -322,7 +361,7 @@ module Cleanup =
         command "cleanup" {
             description "Cleanup garbage"
             noAction
-            addCommands [ FirefoxHistory.command; RiderLog.command; NuGetCache.command ]
+            addCommands [ FirefoxHistory.command; RiderLog.command; Logseq.command; NuGetCache.command ]
         }
 
 module Convert =
@@ -449,6 +488,7 @@ module Outdated =
 ///     --domains-having-path-patterns=false
 ///     --domains-having-not-first-thread-post=false
 ///     --domains-having-complex-patterns=false
+/// cleanup logseq --noop
 /// cleanup nuget-cache --noop
 /// convert tab2md
 /// convert md2tab
