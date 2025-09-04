@@ -334,6 +334,13 @@ module Cleanup =
     module NuGetCache =
         open NuGetCache
 
+        module Removable =
+            let format (r: Removable) =
+                let versionsFormatted =
+                    r.RemovingVersions |> map _.Name |> String.concat ", " |> sprintf "[ %s ]"
+
+                $"{r.PackageDir.Name} -> {versionsFormatted}"
+
         let private noopInput =
             Input.option "--noop"
             |> Input.desc "List removable package directories without deleting them."
@@ -346,6 +353,7 @@ module Cleanup =
             |> match noop with
                | true -> listRemovables
                | false -> cleanup
+            |> map Removable.format
             |> map (printfn "%s")
             |> ignore
 

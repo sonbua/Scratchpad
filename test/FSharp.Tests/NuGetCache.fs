@@ -4,6 +4,10 @@ open System.IO
 open FSharpPlus
 open Fake.IO
 
+type Removable =
+    { PackageDir: DirectoryInfo
+      RemovingVersions: DirectoryInfo list }
+
 module internal PackageDirectory =
     let private defaultVersionKey versionString : int * int * int * string = (0, 0, 0, versionString)
 
@@ -19,7 +23,7 @@ module internal PackageDirectory =
             | [ Some major; Some minor; None ] -> (major, minor, -1, versionString)
             | _ -> defaultVersionKey versionString
 
-    let listRemovables (packageDir: DirectoryInfo) : Result<string list, string> =
+    let listRemovables (packageDir: DirectoryInfo) : Result<Removable, string> =
         packageDir
         |> DirectoryInfo.getSubDirectories
         |> toList
@@ -27,20 +31,32 @@ module internal PackageDirectory =
         |> function
             | [] -> Error "No version"
             | [ _ ] -> Error "Nothing to remove"
-            | _ :: removing -> removing |> rev |> map _.FullName |> Ok
+            | _ :: removing ->
+                removing
+                |> rev
+                |> fun rs ->
+                    { PackageDir = packageDir
+                      RemovingVersions = rs }
+                    |> Ok
 
 type CleanupOptions = { CacheRootDir: string }
 
-let listRemovables (options: CleanupOptions) : string list =
+let listRemovables (options: CleanupOptions) : Removable list =
     options
     |> _.CacheRootDir
     |> DirectoryInfo.ofPath
     |> DirectoryInfo.getSubDirectories
+    |> toList
     |> map PackageDirectory.listRemovables
     |> choose Result.toOption
-    |> List.concat
 
-let cleanup options : string list =
+let cleanup options : Removable list =
     let removables = options |> listRemovables
-    removables |> map Directory.delete |> ignore
+
+    removables
+    |> map _.RemovingVersions
+    |> List.concat
+    |> map (_.FullName >> Directory.delete)
+    |> ignore
+
     removables
