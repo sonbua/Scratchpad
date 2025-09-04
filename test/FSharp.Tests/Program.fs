@@ -1,5 +1,6 @@
 module Program
 
+open System
 open FSharp.SystemCommandLine
 open FSharpPlus
 
@@ -31,7 +32,6 @@ let withClipboardChannel f (maybeText: string option, fromClipboard: bool, toCli
 
 module Cleanup =
     module RiderLog =
-        open System
         open RiderLog
 
         let private riderLogAction () =
@@ -404,7 +404,7 @@ module Convert =
 
 module Extract =
     let private extractAction =
-        let f = Uri.extractUriStrings >> String.concat System.Environment.NewLine
+        let f = Uri.extractUriStrings >> String.concat Environment.NewLine
         f |> withClipboardChannel
 
     let private maybeTextInput =
@@ -479,6 +479,35 @@ module Outdated =
             setAction outdatedAction
         }
 
+module WhatDayOfWeek =
+    open WhatDayOfWeek
+
+    let private dayInput =
+        Input.argument "day"
+        |> Input.acceptOnlyFromAmong ([ 1..31 ] |> List.map string)
+        |> Input.desc "Day (1-31)"
+
+    let private monthInput =
+        Input.argumentMaybe "month"
+        |> Input.acceptOnlyFromAmong ([ 1..12 ] |> List.map string)
+        |> Input.desc "Month (1-12)"
+
+    let private yearInput = Input.argumentMaybe "year" |> Input.desc "Year (e.g., 2024)"
+
+    let private whatDayOfWeekAction (day: int, month: int option, year: int option) =
+        let month = month |> Option.defaultValue DateTime.Now.Month
+        let year = year |> Option.defaultValue DateTime.Now.Year
+
+        whatDayOfWeek (year, month, day) |> printfn "%A"
+
+    let command =
+        command "what-day-of-week" {
+            addAlias "whatdayofweek"
+            description "Determine the day of the week for a given date"
+            inputs (dayInput, monthInput, yearInput)
+            setAction whatDayOfWeekAction
+        }
+
 /// <summary>
 /// Sample usages:
 /// <code>
@@ -502,6 +531,9 @@ module Outdated =
 /// extract "text with url https://example.com"
 /// fetch blog-chung-khoan
 /// outdated
+/// what-day-of-week 25
+/// what-day-of-week 25 12
+/// what-day-of-week 25 12 2024
 /// </code>
 /// </summary>
 [<EntryPoint>]
@@ -509,9 +541,12 @@ let main argv =
     rootCommand argv {
         description "Utility tools"
         noAction
-        addCommand Cleanup.command
-        addCommand Convert.command
-        addCommand Extract.command
-        addCommand Fetch.command
-        addCommand Outdated.command
+
+        addCommands
+            [ Cleanup.command
+              Convert.command
+              Extract.command
+              Fetch.command
+              Outdated.command
+              WhatDayOfWeek.command ]
     }

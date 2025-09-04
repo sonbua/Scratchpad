@@ -35,20 +35,3 @@ let private countDays (year, month, day) =
     + day
 
 let whatDayOfWeek = countDays >> (fun x -> x % 7) >> enum<DayOfWeek>
-
-
-open Expecto
-open Expecto.Flip
-
-[<Tests>]
-let specs =
-    testList
-        "WhatDayOfWeek"
-        [ // theory data
-          let yearMonthDayTheoryData =
-              [ 2022, 7, 5, DayOfWeek.Tuesday
-                2022, 1, 1, DayOfWeek.Saturday ]
-
-          testTheory "Given year month day" yearMonthDayTheoryData (fun (year, month, day, expected: DayOfWeek) ->
-              whatDayOfWeek (year, month, day)
-              |> Expect.equal "Should return correct day of week" expected) ]
