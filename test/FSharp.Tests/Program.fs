@@ -294,7 +294,6 @@ module Cleanup =
             }
 
     module Logseq =
-        open System.IO
         open Logseq
 
         let private noopInput =
@@ -302,28 +301,28 @@ module Cleanup =
             |> Input.desc "List removable backup directories without deleting them."
             |> Input.defaultValue false
 
+        let private backupDirectories =
+            [ { Path = @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\pages\"
+                Pattern = "*.md" }
+              { Path = @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\journals\"
+                Pattern = "*.md" }
+              { Path = @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\logseq\"
+                Pattern = "*.edn" }
+              { Path = @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\logseq\"
+                Pattern = "*.css" } ]
+
+        let private options = { ItemsToKeep = 1 }
+
         let private logseqAction (noop: bool) =
-            let backupDirectories =
-                [ { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\pages\"
-                    FilePattern = "*.md" }
-                  { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\journals\"
-                    FilePattern = "*.md" }
-                  { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\logseq\"
-                    FilePattern = "*.edn" }
-                  { RootDirectory = DirectoryInfo @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\logseq\"
-                    FilePattern = "*.css" } ]
+            let backupDirectoryF options dir =
+                if noop then
+                    (options, dir)
+                    ||> RootBackupDirectory.pendingCleanupDirectories
+                    |> map (printfn "%A")
+                else
+                    (options, dir) ||> RootBackupDirectory.cleanup |> map (printfn "%s")
 
-            let options = { ItemsToKeep = 1 }
-
-            backupDirectories
-            |> map (fun d ->
-                match noop with
-                | true ->
-                    (options, d)
-                    ||> RootBackupDirectory.listPendingCleanupDirectories
-                    |> printfn "%A"
-                | _ -> (options, d) ||> RootBackupDirectory.cleanup |> printfn "%A")
-            |> ignore
+            backupDirectories |> map (backupDirectoryF options) |> ignore
 
         let command =
             command "logseq" {

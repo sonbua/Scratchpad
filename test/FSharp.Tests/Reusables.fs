@@ -1,6 +1,8 @@
 [<AutoOpen>]
 module Reusables
 
+let inline isGreaterThan n = (<) n
+
 let inline stringf format (x: 'a) =
     (^a: (member ToString: string -> string) (x, format))
 
@@ -42,7 +44,7 @@ module List =
     /// Like List.skip but rather than throwing System.ArgumentException, it returns an empty list if the number of
     /// skipped items is greater than the length of the list.
     let skipSafe count list =
-        if list |> List.length |> (<) count then
+        if list |> List.length |> isGreaterThan count then
             list |> List.skip count
         else
             []

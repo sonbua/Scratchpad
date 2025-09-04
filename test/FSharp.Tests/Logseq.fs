@@ -27,40 +27,38 @@ module BackupDirectory =
         deleting
 
 type PendingCleanupDirectory =
-    | HasPendingItems of BackupDirectory * itemsToKeep: int
+    | HasPendingItems of BackupDirectory
     | Empty of DirectoryInfo
 
 module PendingCleanupDirectory =
-    let inline private moreThan n = (<) n
-
     let create options dir : PendingCleanupDirectory option =
         if dir.Directory |> DirectoryInfo.getFiles |> Array.isEmpty then
             dir.Directory |> Empty |> Some
-        elif dir |> BackupDirectory.items |> length |> moreThan options.ItemsToKeep then
-            (dir, options.ItemsToKeep) |> HasPendingItems |> Some
+        elif dir |> BackupDirectory.items |> length |> isGreaterThan options.ItemsToKeep then
+            dir |> HasPendingItems |> Some
         else
             None
 
-    let cleanup dir : string list =
+    let cleanup options dir : string list =
         match dir with
-        | HasPendingItems(d, itemsToKeep) -> BackupDirectory.cleanup itemsToKeep d
+        | HasPendingItems d -> d |> BackupDirectory.cleanup options.ItemsToKeep
         | Empty d ->
             d.Delete()
             [ d.FullName ]
 
-type RootBackupDirectory =
-    { RootDirectory: DirectoryInfo
-      FilePattern: string }
+type RootBackupDirectory = { Path: string; Pattern: string }
 
 module RootBackupDirectory =
-    let listPendingCleanupDirectories options rootDir : PendingCleanupDirectory list =
-        rootDir.RootDirectory
+    let pendingCleanupDirectories options rootDir : PendingCleanupDirectory list =
+        rootDir.Path
+        |> DirectoryInfo.ofPath
         |> DirectoryInfo.getSubDirectories
         |> toList
-        |> map (BackupDirectory.create rootDir.FilePattern)
+        |> map (BackupDirectory.create rootDir.Pattern)
         |> choose (PendingCleanupDirectory.create options)
 
-    let cleanup options rootDir : string list list =
+    let cleanup options rootDir : string list =
         rootDir
-        |> listPendingCleanupDirectories options
-        |> map PendingCleanupDirectory.cleanup
+        |> pendingCleanupDirectories options
+        |> List.map (PendingCleanupDirectory.cleanup options)
+        |> List.concat
