@@ -364,21 +364,25 @@ module Fetch =
         let urls = landingPages @ ckPages @ ttckPages
 
         let private blogChungKhoanAction () =
-            urls
-            |> List.map VnEconomy.extractBlogChungKhoanLinks
-            |> Async.Parallel
+            async {
+                let! links = urls |> map VnEconomy.extractBlogChungKhoanLinks |> Async.Parallel
+
+                let! articles =
+                    links
+                    |> List.concat
+                    |> distinct
+                    |> map VnEconomy.loadArticleMetadata
+                    |> Async.Parallel
+
+                articles
+                |> sortByDescending _.Published
+                |> map (fun a ->
+                    {| Date = a.Published.Value.Date.ToString("dd/MM/yyyy")
+                       Url = a.Url |})
+                |> map (fun a -> printfn $"{a.Date} {a.Url}")
+                |> ignore
+            }
             |> Async.RunSynchronously
-            |> List.concat
-            |> List.distinct
-            |> List.map VnEconomy.loadArticleMetadata
-            |> Async.Parallel
-            |> Async.RunSynchronously
-            |> Array.sortByDescending _.Published
-            |> Array.map (fun a ->
-                {| Date = a.Published.Value.Date.ToString("dd/MM/yyyy")
-                   Url = a.Url |})
-            |> Array.map (fun a -> printfn $"{a.Date} {a.Url}")
-            |> ignore
 
         let command =
             command "blog-chung-khoan" {
