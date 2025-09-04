@@ -25,21 +25,19 @@ module Outdated =
     /// Returns: <code>7-taskbar-tweaker</code>
     /// </param>
     let private parsePackageName (outdatedOutputLine: string) : string option =
-        let split = outdatedOutputLine |> String.split '|'
-
-        if split |> containsOutdatedPackage then
-            split |> head |> Some
-        else
-            None
+        outdatedOutputLine
+        |> String.split '|'
+        |> Some
+        |> Option.filter containsOutdatedPackage
+        |> Option.map head
 
     let toUpgradeCommand (outdatedOutput: string) : Result<string, string> =
-        let installingPackages =
-            outdatedOutput |> String.splitStr Environment.NewLine |> choose parsePackageName
-
-        if installingPackages |> List.isEmpty then
-            Error "Chocolatey has determined no package is outdated."
-        else
-            installingPackages |> String.concat " " |> sprintf "choco upgrade -y %s" |> Ok
+        outdatedOutput
+        |> String.splitStr Environment.NewLine
+        |> choose parsePackageName
+        |> function
+            | [] -> Error "Chocolatey has determined no package is outdated."
+            | ps -> ps |> String.concat " " |> sprintf "choco upgrade -y %s" |> Ok
 
     let run () : Result<string, string> =
         CreateProcess.fromRawCommandLine "choco" "outdated"
