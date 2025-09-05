@@ -65,7 +65,10 @@ module Regex =
     open System.Text.RegularExpressions
 
     /// Indicates whether the specified regular expression finds a match in the specified input string.
-    let isMatch pattern (text: string) = Regex.IsMatch(text, pattern)
+    let isMatch pattern (input: string) : bool = Regex.IsMatch(input, pattern)
+
+    /// Searches the specified input string for the first occurrence of the specified regular expression.
+    let findMatch pattern (input: string) : Match = Regex.Match(input, pattern)
 
 module Result =
     let isOk =

@@ -490,6 +490,34 @@ module Outdated =
             setAction outdatedAction
         }
 
+module Voz =
+    module UserPosts =
+        open VozUserPosts
+
+        let private usernameInput =
+            Input.argument "username" |> Input.desc "The username of the user"
+
+        let private profileUrlInput =
+            Input.argument "profileUrl"
+            |> Input.desc "The URL to the user's profile page"
+
+        let private userPostsAction (username: string, profileUrl: string) =
+            userPosts username profileUrl |> printfn "%s"
+
+        let command =
+            command "user-posts" {
+                description "Generate URL to page listing all posts of a given user"
+                inputs (usernameInput, profileUrlInput)
+                setAction userPostsAction
+            }
+
+    let command =
+        command "voz" {
+            description "VOZ.vn tools"
+            noAction
+            addCommand UserPosts.command
+        }
+
 module WhatDayOfWeek =
     open WhatDayOfWeek
 
@@ -543,6 +571,7 @@ module WhatDayOfWeek =
 /// fetch blog-chung-khoan
 /// longman "vocabulary"
 /// outdated
+/// voz user-posts "Fire Of Heart" https://voz.vn/u/fire-of-heart.873787/
 /// what-day-of-week 25
 /// what-day-of-week 25 12
 /// what-day-of-week 25 12 2024
@@ -561,5 +590,6 @@ let main argv =
               Fetch.command
               Longman.command
               Outdated.command
+              Voz.command
               WhatDayOfWeek.command ]
     }
