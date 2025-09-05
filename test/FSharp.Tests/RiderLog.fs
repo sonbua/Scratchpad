@@ -1,10 +1,7 @@
 module RiderLog
 
-// #r "nuget: Fake.Core.Target"
-// #r "nuget: FSharpPlus"
-
 open FSharpPlus
-open Fake.IO
+open Reusables.IO
 
 type CleanupOptions =
     { LogRootDir: string
@@ -12,28 +9,28 @@ type CleanupOptions =
 
 let private beforeTimestamp timestamp arg : bool = arg < timestamp
 
-let private tryFindSubDirByName dirName parentDir : DirectoryInfo option =
-    parentDir
-    |> DirectoryInfo.getSubDirectories
-    |> tryFind (fun dir -> dir.Name = dirName)
-
 let private cleanupDirs beforeCutOffTimestamp rootDir : string list =
     let deletingThreadDumps rootDir =
         rootDir
         |> DirectoryInfo.getSubDirectories
-        |> filter (_.Name >> String.startsWith "threadDumps-freeze-")
         |> toList
+        |> filter (_.Name >> String.startsWith "threadDumps-freeze-")
 
     let deletingDebuggerWorker rootDir =
         rootDir
-        |> tryFindSubDirByName "DebuggerWorker"
-        |> Option.map DirectoryInfo.getSubDirectories
-        |> Option.defaultValue [||]
-        |> toList
+        |> DirectoryInfo.tryFind "DebuggerWorker"
+        |> Option.map (DirectoryInfo.getSubDirectories >> toList)
+        |> Option.defaultValue []
+
+    let deletingIndexingDiagnostic rootDir =
+        rootDir
+        |> DirectoryInfo.tryFind "indexing-diagnostic"
+        |> Option.map (DirectoryInfo.getSubDirectories >> toList)
+        |> Option.defaultValue []
 
     let deletingDirs =
         [ rootDir ]
-        |> List.apply [ deletingThreadDumps; deletingDebuggerWorker ]
+        |> List.apply [ deletingThreadDumps; deletingDebuggerWorker; deletingIndexingDiagnostic ]
         |> List.concat
         |> filter (_.LastWriteTime >> beforeCutOffTimestamp)
         |> map _.FullName
@@ -43,24 +40,22 @@ let private cleanupDirs beforeCutOffTimestamp rootDir : string list =
     deletingDirs
 
 let private cleanupFiles beforeCutOffTimestamp rootDir : string list =
-    let dirsToCleanup rootDir =
-        [ rootDir ]
-        |> List.apply
-            [ Some
-              tryFindSubDirByName "SolutionBuilder"
-              tryFindSubDirByName "BackendThreadDump" ]
-        |> choose id
-
-    rootDir
-    |> dirsToCleanup
+    [ rootDir ]
+    |> List.apply
+        [ Some
+          DirectoryInfo.tryFind "BackendThreadDump"
+          DirectoryInfo.tryFind "JetBrains.DPA.Protocol.Backend"
+          DirectoryInfo.tryFind "SolutionBuilder"
+          DirectoryInfo.tryFindPath [ "UnitTestLogs"; "Sessions" ] ]
+    |> choose id
     |> List.collect (DirectoryInfo.getFiles >> toList)
     |> filter (_.LastWriteTime >> beforeCutOffTimestamp)
-    |> map (_.FullName >> IO.File.tryDelete)
+    |> map (_.FullName >> File.tryDelete)
     |> choose Result.toOption
 
 let cleanup options : string list =
     let logRootDir =
-        let dir = options.LogRootDir |> DirectoryInfo.ofPath
+        let dir = options.LogRootDir |> DirectoryInfo
         dir |> DirectoryInfo.ensure
         dir
 
