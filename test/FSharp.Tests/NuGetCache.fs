@@ -1,7 +1,7 @@
 module NuGetCache
 
 open FSharpPlus
-open Fake.IO
+open Reusables.IO
 
 type Removable =
     { PackageDir: DirectoryInfo
@@ -43,7 +43,7 @@ type CleanupOptions = { CacheRootDir: string }
 let listRemovables (options: CleanupOptions) : Removable list =
     options
     |> _.CacheRootDir
-    |> DirectoryInfo.ofPath
+    |> DirectoryInfo
     |> DirectoryInfo.getSubDirectories
     |> toList
     |> map PackageDirectory.listRemovables

@@ -113,6 +113,10 @@ module IO =
         /// Returns a file list from the current directory.
         let getFiles (dir: DirectoryInfo) : FileInfo[] = dir.GetFiles()
 
+        /// Returns a file list from the current directory matching the given search pattern.
+        let getMatchingFiles (pattern: string) (dir: DirectoryInfo) : FileInfo[] =
+            if dir |> exists then dir.GetFiles(pattern) else [||]
+
         /// Ensure that directory chain exists. Create necessary directories if necessary.
         let ensure (dir: DirectoryInfo) =
             if dir |> notF exists then

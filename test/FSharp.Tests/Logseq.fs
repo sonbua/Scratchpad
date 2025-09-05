@@ -1,7 +1,7 @@
 module Logseq
 
-open Fake.IO
 open FSharpPlus
+open Reusables.IO
 
 type Options = { ItemsToKeep: int }
 
@@ -50,7 +50,7 @@ type RootBackupDirectory = { Path: string; Pattern: string }
 module RootBackupDirectory =
     let pendingCleanupDirectories options rootDir : PendingCleanupDirectory list =
         rootDir.Path
-        |> DirectoryInfo.ofPath
+        |> DirectoryInfo
         |> DirectoryInfo.getSubDirectories
         |> toList
         |> map (BackupDirectory.create rootDir.Pattern)
