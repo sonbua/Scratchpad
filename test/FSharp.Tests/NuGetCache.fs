@@ -53,8 +53,7 @@ let cleanup options : Removable list =
     let removables = options |> listRemovables
 
     removables
-    |> map _.RemovingVersions
-    |> List.concat
+    |> List.collect _.RemovingVersions
     |> map (_.FullName >> Directory.delete)
     |> ignore
 

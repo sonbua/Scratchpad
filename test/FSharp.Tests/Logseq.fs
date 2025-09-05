@@ -59,5 +59,4 @@ module RootBackupDirectory =
     let cleanup options rootDir : string list =
         rootDir
         |> pendingCleanupDirectories options
-        |> List.map (PendingCleanupDirectory.cleanup options)
-        |> List.concat
+        |> List.collect (PendingCleanupDirectory.cleanup options)
