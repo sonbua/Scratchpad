@@ -1,7 +1,5 @@
 module GitBatchPull
 
-open System
-open System.IO
 open System.Reactive.Linq
 open Fake.Core
 open FSharpPlus

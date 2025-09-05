@@ -1,6 +1,5 @@
 module NuGetCache
 
-open System.IO
 open FSharpPlus
 open Fake.IO
 

@@ -1,6 +1,5 @@
 module WhatDayOfWeek
 
-open System
 open FSharpPlus
 
 let private countDaysUpToYear year =

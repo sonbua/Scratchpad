@@ -1,6 +1,5 @@
 module Firefox.History
 
-open System
 open FSharpPlus
 
 type UrlPart =

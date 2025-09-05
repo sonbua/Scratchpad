@@ -3,7 +3,6 @@ module UMatrix
 // #r "nuget: FSharpPlus"
 // #r "nuget: FsToolkit.ErrorHandling"
 
-open System
 open FSharpPlus
 open FsToolkit.ErrorHandling
 

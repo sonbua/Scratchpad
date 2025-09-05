@@ -11,7 +11,6 @@ module ProcessResult =
         | _ -> Error <| result.Result.Error
 
 module Outdated =
-    open System
     open Fake.Core
 
     let private noSpace: string -> bool = String.contains ' ' >> not

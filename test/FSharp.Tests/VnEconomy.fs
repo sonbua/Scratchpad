@@ -1,12 +1,9 @@
 module VnEconomy
 
-open System
 open FSharpPlus
 open FSharp.Data
 
 module Html =
-    open System.Text.RegularExpressions
-
     let private decimalCharToString (m: Match) =
         m.Groups[1].Value |> int |> char |> string
 

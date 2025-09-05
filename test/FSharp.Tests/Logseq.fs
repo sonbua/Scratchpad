@@ -1,6 +1,5 @@
 module Logseq
 
-open System.IO
 open Fake.IO
 open FSharpPlus
 

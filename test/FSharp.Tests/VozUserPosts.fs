@@ -1,14 +1,11 @@
 module VozUserPosts
 
 module Regex =
-    open System.Text.RegularExpressions
-
     let findMatch pattern input = Regex.Match(input, pattern)
 
 let extractUserId =
     Regex.findMatch "https://voz\.vn/u/.+?\.(\d+)/?$" >> _.Groups[1].Value
 
-open System
 open FSharpPlus
 
 let extractUsername =

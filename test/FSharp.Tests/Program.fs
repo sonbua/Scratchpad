@@ -1,6 +1,5 @@
 module Program
 
-open System
 open FSharp.SystemCommandLine
 open FSharpPlus
 
@@ -48,8 +47,6 @@ module Cleanup =
             }
 
     module FirefoxHistory =
-        open System.Collections.Generic
-        open System.IO
         open Firefox.History
         open YamlDotNet.Serialization
         open YamlDotNet.Serialization.NamingConventions

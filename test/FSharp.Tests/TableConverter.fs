@@ -1,11 +1,8 @@
 module TableConverter
 
-open System
 open FSharpPlus
 
 module internal Regex =
-    open System.Text.RegularExpressions
-
     let replace pattern (replacement: string) text : string =
         Regex.Replace(text, pattern, replacement)
 

@@ -1,8 +1,5 @@
 namespace Firefox
 
-open System
-open System.IO
-open System.Text.RegularExpressions
 open FSharpPlus
 
 module Domain =

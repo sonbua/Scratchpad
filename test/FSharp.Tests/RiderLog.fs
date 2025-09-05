@@ -3,8 +3,6 @@ module RiderLog
 // #r "nuget: Fake.Core.Target"
 // #r "nuget: FSharpPlus"
 
-open System
-open System.IO
 open FSharpPlus
 open Fake.IO
 
