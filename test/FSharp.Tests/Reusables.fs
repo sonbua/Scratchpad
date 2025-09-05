@@ -49,6 +49,24 @@ module List =
         else
             []
 
+    let intersect list1 list2 =
+        let rec aux list1 list2 acc =
+            match list1 with
+            | head1 :: tail1 ->
+                if List.contains head1 list2 then
+                    aux tail1 list2 (head1 :: acc)
+                else
+                    aux tail1 list2 acc
+            | [] -> List.rev acc
+
+        aux list1 list2 []
+
+module Regex =
+    open System.Text.RegularExpressions
+
+    /// Indicates whether the specified regular expression finds a match in the specified input string.
+    let isMatch pattern (text: string) = Regex.IsMatch(text, pattern)
+
 module Result =
     let isOk =
         function
@@ -98,6 +116,44 @@ module Uri =
 
     let extract = extractUriStrings >> Seq.map Uri
 
+    open FSharpPlus
+
+    let private extractKeys (uri: Uri) =
+        uri.Query
+        |> String.trimStart [ '?' ]
+        |> String.splitCharWithRemovingEmptyEntries [| '&' |]
+        |> toList
+        |> map (String.split [ "=" ] >> head)
+
+    let hasQueryParams (qs: string list) (uri: Uri) : bool =
+        uri |> extractKeys |> List.intersect qs |> (=) qs
+
+    let hasAnyQueryParam (qs: string list) (uri: Uri) : bool =
+        uri |> extractKeys |> List.intersect qs |> Seq.any
+
+    let withQueryParam (uri: Uri) : bool =
+        uri.Query
+        |> String.trimStart [ '?' ]
+        |> String.splitCharWithRemovingEmptyEntries [| '&' |]
+        |> Seq.any
+
+    let hasAnyFragmentParam (fs: string list) (uri: Uri) =
+        uri.Fragment
+        |> String.trimStart [ '#' ]
+        |> String.splitCharWithRemovingEmptyEntries [| '&' |]
+        |> map (String.split [ "=" ] >> head)
+        |> toList
+        |> List.intersect fs
+        |> Seq.any
+
+[<AutoOpen>]
+module Operators =
+    open FSharpPlus
+
+    let andF (fs: ('a -> bool) seq) (arg: 'a) : bool = fs |> forall (fun f -> f arg)
+
+    let orF (fs: ('a -> bool) seq) (arg: 'a) : bool = fs |> exists (fun f -> f arg)
+
 module HtmlNode =
     open FSharp.Data
 
@@ -114,17 +170,18 @@ module IO =
             with exn ->
                 Error exn
 
+[<AutoOpen>]
+module Expr =
+    open Microsoft.FSharp.Quotations.Patterns
+    open Microsoft.FSharp.Reflection
 
-open Microsoft.FSharp.Quotations.Patterns
-open Microsoft.FSharp.Reflection
-
-/// Credit: https://stackoverflow.com/a/11798829
-let rec ofCase =
-    function
-    | Lambda(_, expr)
-    | Let(_, _, expr) -> ofCase expr
-    | NewTuple exprs -> fun value -> exprs |> Seq.map ofCase |> Seq.exists ((|>) value)
-    | NewUnionCase(uci, _) ->
-        let utr = FSharpValue.PreComputeUnionTagReader uci.DeclaringType
-        box >> utr >> (=) uci.Tag
-    | _ -> failwith "Expression is not union case."
+    /// Credit: https://stackoverflow.com/a/11798829
+    let rec ofCase =
+        function
+        | Lambda(_, expr)
+        | Let(_, _, expr) -> ofCase expr
+        | NewTuple exprs -> fun value -> exprs |> Seq.map ofCase |> Seq.exists ((|>) value)
+        | NewUnionCase(uci, _) ->
+            let utr = FSharpValue.PreComputeUnionTagReader uci.DeclaringType
+            box >> utr >> (=) uci.Tag
+        | _ -> failwith "Expression is not union case."

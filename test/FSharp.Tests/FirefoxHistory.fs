@@ -1,78 +1,13 @@
 module Firefox.History
 
-[<AutoOpen>]
-module Foldable =
-    open FSharpPlus
-
-    let andF (fs: ('a -> bool) seq) arg : bool = fs |> forall (fun f -> f arg)
-
-    let orF (fs: ('a -> bool) seq) arg : bool = fs |> exists (fun f -> f arg)
-
-module Regex =
-    open System.Text.RegularExpressions
-
-    /// <summary>
-    /// Indicates whether the specified regular expression finds a match in the specified input string.
-    /// </summary>
-    /// <param name="pattern">The regular expression pattern to match.</param>
-    /// <param name="text">The string to search for a match.</param>
-    let isMatch pattern (text: string) = Regex.IsMatch(text, pattern)
-
-module List =
-    let intersect list1 list2 =
-        let rec aux list1 list2 acc =
-            match list1 with
-            | head1 :: tail1 ->
-                if List.contains head1 list2 then
-                    aux tail1 list2 (head1 :: acc)
-                else
-                    aux tail1 list2 acc
-            | [] -> List.rev acc
-
-        aux list1 list2 []
-
-module Uri =
-    open System
-    open FSharpPlus
-
-    let private extractKeys (uri: Uri) =
-        uri.Query
-        |> String.trimStart [ '?' ]
-        |> String.splitCharWithRemovingEmptyEntries [| '&' |]
-        |> toList
-        |> map (String.split [ "=" ] >> head)
-
-    let hasQueryParams (qs: string list) (uri: Uri) : bool =
-        uri |> extractKeys |> List.intersect qs |> (=) qs
-
-    let hasAnyQueryParam (qs: string list) (uri: Uri) : bool =
-        uri |> extractKeys |> List.intersect qs |> List.isEmpty |> not
-
-    let withQueryParam (uri: Uri) : bool =
-        uri.Query
-        |> String.trimStart [ '?' ]
-        |> String.splitCharWithRemovingEmptyEntries [| '&' |]
-        |> Array.isEmpty
-        |> not
-
-    let hasAnyFragmentParam (fs: string list) (uri: Uri) =
-        uri.Fragment
-        |> String.trimStart [ '#' ]
-        |> String.splitCharWithRemovingEmptyEntries [| '&' |]
-        |> map (String.split [ "=" ] >> head)
-        |> toList
-        |> List.intersect fs
-        |> List.isEmpty
-        |> not
+open System
+open FSharpPlus
 
 type UrlPart =
     { Authority: string
       FirstSegment: string option }
 
 module UrlPart =
-    open System
-    open FSharpPlus
-
     let private firstSegment path =
         match path with
         | null
@@ -104,9 +39,6 @@ module ConnectionFactory =
 type Place = { Id: int; Url: string }
 
 module Place =
-    open System
-    open FSharpPlus
-
     let hasQueryParams qs place : bool =
         place.Url |> Uri |> Uri.hasQueryParams qs
 
@@ -123,7 +55,6 @@ module Place =
     let isNotFirstThreadPost: Place -> bool = _.Url >> Regex.isMatch "/t/.+?/\\d+/\\d+"
 
 open FSharp.Data.Dapper
-open FSharpPlus
 
 type Db(connectionString) =
     let alwaysTrue _ = true
@@ -206,7 +137,6 @@ type Db(connectionString) =
         }
 
 module Tests =
-    open System
     open Expecto
     open Expecto.Logging
 
