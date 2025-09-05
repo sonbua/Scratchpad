@@ -464,6 +464,20 @@ module Fetch =
             addCommand BlogChungKhoan.command
         }
 
+module Longman =
+    open Longman
+
+    let private wordInput = Input.argument "word" |> Input.desc "Word to look up"
+    let private longmanAction (word: string) = word |> lookup |> printfn "%A"
+
+    let command =
+        command "longman" {
+            addAlias "ldoce"
+            description "Lookup a word in Longman Dictionary of Contemporary English online"
+            inputs wordInput
+            setAction longmanAction
+        }
+
 module Outdated =
     open Chocolatey.Outdated
 
@@ -527,6 +541,7 @@ module WhatDayOfWeek =
 /// convert md2tab
 /// extract "text with url https://example.com"
 /// fetch blog-chung-khoan
+/// longman "vocabulary"
 /// outdated
 /// what-day-of-week 25
 /// what-day-of-week 25 12
@@ -544,6 +559,7 @@ let main argv =
               Convert.command
               Extract.command
               Fetch.command
+              Longman.command
               Outdated.command
               WhatDayOfWeek.command ]
     }
