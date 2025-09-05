@@ -498,8 +498,7 @@ module Voz =
             Input.argument "username" |> Input.desc "The username of the user"
 
         let private profileUrlInput =
-            Input.argument "profileUrl"
-            |> Input.desc "The URL to the user's profile page"
+            Input.argument "profileUrl" |> Input.desc "The URL to the user's profile page"
 
         let private userPostsAction (username: string, profileUrl: string) =
             userPosts username profileUrl |> printfn "%s"
@@ -529,15 +528,18 @@ module WhatDayOfWeek =
     let private monthInput =
         Input.argumentMaybe "month"
         |> Input.acceptOnlyFromAmong ([ 1..12 ] |> List.map string)
-        |> Input.desc "Month (1-12)"
+        |> Input.desc "Month (1-12). Default to current month if not provided."
 
-    let private yearInput = Input.argumentMaybe "year" |> Input.desc "Year (e.g., 2024)"
+    let private yearInput =
+        Input.argumentMaybe "year"
+        |> Input.desc "Year (e.g., 2024). Default to current year if not provided."
 
     let private whatDayOfWeekAction (day: int, month: int option, year: int option) =
         let month = month |> Option.defaultValue DateTime.Now.Month
         let year = year |> Option.defaultValue DateTime.Now.Year
 
-        whatDayOfWeek (year, month, day) |> printfn "%A"
+        whatDayOfWeek (year, month, day)
+        |> fun r -> printfn $"{day}/{month}/{year} -> %A{r}"
 
     let command =
         command "what-day-of-week" {
