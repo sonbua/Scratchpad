@@ -3,6 +3,7 @@ module GitBatchPull
 open System.Reactive.Linq
 open Fake.Core
 open FSharpPlus
+open Reusables.IO
 
 // Repo
 type Repo = private Repo of string
@@ -45,10 +46,7 @@ let private getCurrentBranch repo : Result<Branch, GitPullError> =
     |> fun result ->
         match result.ExitCode with
         | 0 -> result.Result.Output |> Branch.create repo |> Ok
-        | _ ->
-            (repo, result.Result.Error)
-            |> GetCurrentBranchError
-            |> Error
+        | _ -> (repo, result.Result.Error) |> GetCurrentBranchError |> Error
 
 let private rejectNonMajorBranch branch : Result<Branch, GitPullError> =
     if branch |> Branch.isMajorBranch then
@@ -70,28 +68,14 @@ let private gitPullBranch branch : Result<Branch * string, GitPullError> =
         | _ -> CannotPull(branch, result.Result.Error) |> Error
 
 let private gitPull: string -> Result<Branch * string, GitPullError> =
-    toRepo
-    >=> getCurrentBranch
-    >=> rejectNonMajorBranch
-    >=> gitPullBranch
+    toRepo >=> getCurrentBranch >=> rejectNonMajorBranch >=> gitPullBranch
 
-let gitBatchPull: string -> IObservable<Result<Branch * string, GitPullError>> =
-    Directory.EnumerateDirectories
-    >> Observable.ToObservable
-    >> map gitPull
-
-
-open Expecto
-open Expecto.Logging
-
-[<Tests>]
-let specs =
-    let logger = Log.create "GitBatchPull"
-    let writeln = Message.eventX >> logger.info
-    // theory data
-    let subdirsTheoryData = [
-        @"C:\repo\"
-        @"C:\repo\_\"
-    ]
-    testTheory "Perform 'git pull' against all subdirectories" subdirsTheoryData (fun parentDir ->
-        parentDir |> gitBatchPull |> Observable.subscribe (sprintf "%A" >> writeln))
+let gitBatchPull: string list -> string -> IObservable<Result<Branch * string, GitPullError>> =
+    fun exclusions parentDir ->
+        parentDir
+        |> DirectoryInfo
+        |> DirectoryInfo.getSubDirectories
+        |> filter (fun d -> exclusions |> notF (List.contains d.Name))
+        |> map _.FullName
+        |> Observable.ToObservable
+        |> map gitPull

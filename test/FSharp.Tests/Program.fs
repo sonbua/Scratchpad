@@ -584,6 +584,45 @@ module Fetch =
             addCommand BlogChungKhoan.command
         }
 
+module Git =
+    module BatchPull =
+        open GitBatchPull
+
+        let private rootDirInput =
+            Input.argument "rootDir"
+            |> Input.desc "Path to the root directory of Git repositories to pull"
+            |> Input.defaultValue (@"C:\repo" |> DirectoryInfo)
+            |> Input.validateDirectoryExists
+
+        let private exclusionsInput =
+            Input.option "-e"
+            |> Input.alias "--exclusions"
+            |> Input.desc "List of directory names to exclude (space-separated)"
+            |> Input.allowMultipleArgumentsPerToken
+            |> Input.defaultValue [| "_"; "archived" |]
+
+        let private gitBatchPullAction (rootDir: DirectoryInfo, exclusions: string array) =
+            let exclusions = exclusions |> toList
+
+            rootDir.FullName
+            |> gitBatchPull exclusions
+            |> Observable.subscribe (printfn "%A")
+            |> ignore
+
+        let command =
+            command "batch-pull" {
+                description "Batch pull multiple Git repositories"
+                inputs (rootDirInput, exclusionsInput)
+                setAction gitBatchPullAction
+            }
+
+    let command =
+        command "git" {
+            description "Git tools"
+            noAction
+            addCommand BatchPull.command
+        }
+
 module Longman =
     open Longman
 
@@ -694,6 +733,7 @@ module WhatDayOfWeek =
 /// convert md2tab
 /// extract "text with url https://example.com"
 /// fetch blog-chung-khoan
+/// git batch-pull "C:\repo" -e archived some-other-dirs
 /// longman "vocabulary"
 /// outdated
 /// voz user-posts "Fire Of Heart" https://voz.vn/u/fire-of-heart.873787/
@@ -714,6 +754,7 @@ let main argv =
               Convert.command
               Extract.command
               Fetch.command
+              Git.command
               Longman.command
               Outdated.command
               Voz.command
