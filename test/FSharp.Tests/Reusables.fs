@@ -6,8 +6,6 @@ let inline isGreaterThan n = (<) n
 let inline stringf format (x: 'a) =
     (^a: (member ToString: string -> string) (x, format))
 
-let inline notF f x = f x |> not
-
 module Seq =
     let any xs = xs |> Seq.isEmpty |> not
 
@@ -124,7 +122,7 @@ module IO =
 
         /// Ensure that directory chain exists. Create necessary directories if necessary.
         let ensure (dir: DirectoryInfo) =
-            if dir |> notF exists then
+            if not <| exists dir then
                 dir.Create()
 
     module Directory =
@@ -224,9 +222,11 @@ module Uri =
 module Operators =
     open FSharpPlus
 
-    let andF (fs: ('a -> bool) seq) (arg: 'a) : bool = fs |> forall (fun f -> f arg)
+    let inline andF (fs: ('a -> bool) seq) (arg: 'a) : bool = fs |> forall (fun f -> f arg)
 
-    let orF (fs: ('a -> bool) seq) (arg: 'a) : bool = fs |> exists (fun f -> f arg)
+    let inline orF (fs: ('a -> bool) seq) (arg: 'a) : bool = fs |> exists (fun f -> f arg)
+
+    let inline notF f x = f x |> not
 
 module HtmlNode =
     open FSharp.Data
