@@ -746,7 +746,8 @@ module WhatDayOfWeek =
 let main argv =
     rootCommand argv {
         description "Utility tools"
-        noAction
+        inputs Input.context
+        helpAction
 
         addCommands
             [ Azure.command
