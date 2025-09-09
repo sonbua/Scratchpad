@@ -5,6 +5,8 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup Label="Public dependencies">
+    <PackageVersion Include="Azure.Identity" Version="1.13.2" />
+    <PackageVersion Include="Azure.ResourceManager.EventGrid" Version="1.1.0" />
     <PackageVersion Include="FSharp.Data" Version="6.6.0" />
     <PackageVersion Include="FSharp.Data.Dapper" Version="2.0.0" />
     <PackageVersion Include="FSharp.SystemCommandLine" Version="2.0.0-beta5.8" />

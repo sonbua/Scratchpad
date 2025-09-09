@@ -83,6 +83,11 @@ module Result =
         | Error _ -> true
         | Ok _ -> false
 
+    let getError =
+        function
+        | Error e -> e
+        | Ok _ -> failwith "Result is Ok"
+
 module IO =
     open System.IO
 

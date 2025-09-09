@@ -2,6 +2,7 @@ module Program
 
 open FSharp.SystemCommandLine
 open FSharpPlus
+open FsToolkit.ErrorHandling
 
 let fromClipboardInput =
     Input.option "--fromClipboard"
@@ -28,6 +29,78 @@ let withClipboardChannel f (maybeText: string option, fromClipboard: bool, toCli
         output |> Clipboard.set
     else
         output |> printfn "%s"
+
+module Azure =
+    module EventGrid =
+        module Topic =
+            module Delete =
+                open Azure.EventGrid
+                open Fake.IO
+                open YamlDotNet.Serialization
+                open YamlDotNet.Serialization.NamingConventions
+
+                let private topicNamesInput =
+                    Input.argument "topic-names"
+                    |> Input.desc "The names of the topics to delete"
+                    |> Input.allowMultipleArgumentsPerToken
+
+                let private azureConfigInput =
+                    Input.option "azure-config"
+                    |> Input.desc "The Azure config file path"
+                    // TODO: use environment variable to expand path
+                    |> Input.defaultValue (@"C:\Users\song\Downloads\azure.yml" |> FileInfo)
+                    |> Input.validateFileExists
+
+                let private deserializer =
+                    DeserializerBuilder().WithNamingConvention(HyphenatedNamingConvention.Instance).Build()
+
+                let private deleteAction (topicNames: string array, azureConfig: FileInfo) =
+                    asyncResult {
+                        let azureOptions =
+                            azureConfig.FullName
+                            |> File.readAsString
+                            |> deserializer.Deserialize<AzureOptions>
+
+                        for topicName in topicNames do
+                            do! topicName |> deleteTopic azureOptions
+                    }
+                    |> fun ar ->
+                        match ar |> Async.RunSynchronously with
+                        | Error e -> e |> printfn "%A"
+                        | _ -> ()
+
+                let command =
+                    command "delete" {
+                        description "Delete an Event Grid topic"
+                        inputs (topicNamesInput, azureConfigInput)
+                        setAction deleteAction
+                    }
+
+            let command =
+                command "topic" {
+                    description "Event Grid topic tools"
+                    inputs Input.context
+                    helpAction
+                    addCommands [ Delete.command ]
+                }
+
+        let command =
+            command "event-grid" {
+                addAlias "eg"
+                description "Azure Event Grid tools"
+                inputs Input.context
+                helpAction
+                addCommand Topic.command
+            }
+
+    let command =
+        command "azure" {
+            addAlias "az"
+            description "Azure tools"
+            inputs Input.context
+            helpAction
+            addCommand EventGrid.command
+        }
 
 module Cleanup =
     module RiderLog =
@@ -76,10 +149,10 @@ module Cleanup =
             { Domain: string
               Patterns: List<string> }
 
-        let deserializer =
+        let private deserializer =
             DeserializerBuilder().WithNamingConvention(HyphenatedNamingConvention.Instance).Build()
 
-        let config =
+        let private config =
             lazy ("firefox-history.yml" |> File.ReadAllText |> deserializer.Deserialize<Config>)
 
         let private untitledEntriesInput =
@@ -552,6 +625,7 @@ module WhatDayOfWeek =
 /// <summary>
 /// Sample usages:
 /// <code>
+/// azure event-grid topic delete "my-topic"
 /// cleanup rider-log
 /// cleanup firefox-history
 /// cleanup firefox-history
@@ -586,7 +660,8 @@ let main argv =
         noAction
 
         addCommands
-            [ Cleanup.command
+            [ Azure.command
+              Cleanup.command
               Convert.command
               Extract.command
               Fetch.command

@@ -26,3 +26,11 @@ type Path = System.IO.Path
 type Match = System.Text.RegularExpressions.Match
 type Regex = System.Text.RegularExpressions.Regex
 type RegexOptions = System.Text.RegularExpressions.RegexOptions
+
+// System.Threading
+type CancellationToken = System.Threading.CancellationToken
+type CancellationTokenSource = System.Threading.CancellationTokenSource
+
+// System.Threading.Tasks
+type Task = System.Threading.Tasks.Task
+type Task<'T> = System.Threading.Tasks.Task<'T>
