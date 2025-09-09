@@ -1,5 +1,5 @@
 [<AutoOpen>]
-module CommonTypes
+module Aliases
 
 // System
 type Console = System.Console

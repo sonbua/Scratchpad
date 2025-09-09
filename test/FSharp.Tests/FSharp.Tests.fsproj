@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <Compile Include="Reusables.fs" />
-    <Compile Include="CommonTypes.fs" />
+    <Compile Include="Aliases.fs" />
     <Compile Include="Clipboard.fs" />
     <Compile Include="FirefoxData.fs" />
     <None Include="firefox-history.yml" CopyToOutputDirectory="PreserveNewest" />
