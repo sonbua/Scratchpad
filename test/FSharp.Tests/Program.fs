@@ -481,7 +481,8 @@ module Cleanup =
     let command =
         command "cleanup" {
             description "Cleanup garbage"
-            noAction
+            inputs Input.context
+            helpAction
             addCommands [ FirefoxHistory.command; RiderLog.command; Logseq.command; NuGetCache.command ]
         }
 
@@ -512,7 +513,8 @@ module Convert =
     let command =
         command "convert" {
             description "Convert between tab-delimited and markdown formats"
-            noAction
+            inputs Input.context
+            helpAction
             addCommands [ Tab2Md.command; Md2Tab.command ]
         }
 
@@ -577,7 +579,8 @@ module Fetch =
     let command =
         command "fetch" {
             description "Fetch RSS feed"
-            noAction
+            inputs Input.context
+            helpAction
             addCommand BlogChungKhoan.command
         }
 
@@ -630,7 +633,8 @@ module Voz =
     let command =
         command "voz" {
             description "VOZ.vn tools"
-            noAction
+            inputs Input.context
+            helpAction
             addCommand UserPosts.command
         }
 
