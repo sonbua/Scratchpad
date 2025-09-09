@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Azure.Identity" />
     <PackageReference Include="Azure.ResourceManager.EventGrid" />
+    <PackageReference Include="Azure.ResourceManager.Storage" />
     <PackageReference Include="Expecto" />
     <PackageReference Include="Fake.Core.Target" />
     <PackageReference Include="FSharp.Data" />
@@ -48,7 +49,7 @@
     <Compile Include="UMatrix.fs" />
     <Compile Include="UMatrix.Tests.fs" />
     <Compile Include="NuGetCache.fs" />
-    <Compile Include="AzureEventGrid.fs" />
+    <Compile Include="Azure.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

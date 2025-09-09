@@ -31,6 +31,8 @@ let withClipboardChannel f (maybeText: string option, fromClipboard: bool, toCli
         output |> printfn "%s"
 
 module Azure =
+    open Azure
+
     module EventGrid =
         module Topic =
             module Delete =
@@ -63,6 +65,7 @@ module Azure =
 
                         for topicName in topicNames do
                             do! topicName |> deleteTopic azureOptions
+                            printfn $"Deleted topic '%s{topicName}'."
                     }
                     |> fun ar ->
                         match ar |> Async.RunSynchronously with
@@ -71,7 +74,7 @@ module Azure =
 
                 let command =
                     command "delete" {
-                        description "Delete an Event Grid topic"
+                        description "Delete multiple topics, separated by space"
                         inputs (topicNamesInput, azureConfigInput)
                         setAction deleteAction
                     }
@@ -81,7 +84,7 @@ module Azure =
                     description "Event Grid topic tools"
                     inputs Input.context
                     helpAction
-                    addCommands [ Delete.command ]
+                    addCommand Delete.command
                 }
 
         let command =
@@ -93,13 +96,66 @@ module Azure =
                 addCommand Topic.command
             }
 
+    module StorageAccount =
+        module Delete =
+            open Fake.IO
+            open YamlDotNet.Serialization
+            open YamlDotNet.Serialization.NamingConventions
+
+            let private accountNamesInput =
+                Input.argument "account-names"
+                |> Input.desc "The names of the storage accounts to delete"
+                |> Input.allowMultipleArgumentsPerToken
+
+            let private azureConfigInput =
+                Input.option "azure-config"
+                |> Input.desc "The Azure config file path"
+                // TODO: use environment variable to expand path
+                |> Input.defaultValue (@"C:\Users\song\Downloads\azure.yml" |> FileInfo)
+                |> Input.validateFileExists
+
+            let private deserializer =
+                DeserializerBuilder().WithNamingConvention(HyphenatedNamingConvention.Instance).Build()
+
+            let private deleteAction (accountNames: string array, azureConfig: FileInfo) =
+                asyncResult {
+                    let azureOptions =
+                        azureConfig.FullName
+                        |> File.readAsString
+                        |> deserializer.Deserialize<AzureOptions>
+
+                    for accountName in accountNames do
+                        do! accountName |> StorageAccount.delete azureOptions
+                        printfn $"Deleted storage account '%s{accountName}'."
+                }
+                |> fun ar ->
+                    match ar |> Async.RunSynchronously with
+                    | Error e -> e |> printfn "%A"
+                    | _ -> ()
+
+            let command =
+                command "delete" {
+                    description "Delete multiple storage accounts, separated by space"
+                    inputs (accountNamesInput, azureConfigInput)
+                    setAction deleteAction
+                }
+
+        let command =
+            command "storage-account" {
+                addAlias "sa"
+                description "Azure Storage Account tools"
+                inputs Input.context
+                helpAction
+                addCommand Delete.command
+            }
+
     let command =
         command "azure" {
             addAlias "az"
             description "Azure tools"
             inputs Input.context
             helpAction
-            addCommand EventGrid.command
+            addCommands [ EventGrid.command; StorageAccount.command ]
         }
 
 module Cleanup =
@@ -626,6 +682,7 @@ module WhatDayOfWeek =
 /// Sample usages:
 /// <code>
 /// azure event-grid topic delete "my-topic"
+/// azure storage-account delete "my-storage-account"
 /// cleanup rider-log
 /// cleanup firefox-history
 /// cleanup firefox-history
