@@ -32,29 +32,29 @@ let withClipboardChannel f (maybeText: string option, fromClipboard: bool, toCli
 
 module Azure =
     open Azure
+    open YamlDotNet.Serialization
+    open YamlDotNet.Serialization.NamingConventions
+
+    let private azureConfigInput =
+        Input.option "--azure-config"
+        |> Input.desc "The path to the Azure config file"
+        // TODO: use environment variable to expand path
+        |> Input.defaultValue (@"C:\Users\song\Downloads\azure.yml" |> FileInfo)
+        |> Input.validateFileExists
+
+    let private deserializer =
+        DeserializerBuilder().WithNamingConvention(HyphenatedNamingConvention.Instance).Build()
 
     module EventGrid =
         module Topic =
             module Delete =
                 open Azure.EventGrid
                 open Fake.IO
-                open YamlDotNet.Serialization
-                open YamlDotNet.Serialization.NamingConventions
 
                 let private topicNamesInput =
                     Input.argument "topic-names"
                     |> Input.desc "The names of the topics to delete"
                     |> Input.allowMultipleArgumentsPerToken
-
-                let private azureConfigInput =
-                    Input.option "azure-config"
-                    |> Input.desc "The Azure config file path"
-                    // TODO: use environment variable to expand path
-                    |> Input.defaultValue (@"C:\Users\song\Downloads\azure.yml" |> FileInfo)
-                    |> Input.validateFileExists
-
-                let private deserializer =
-                    DeserializerBuilder().WithNamingConvention(HyphenatedNamingConvention.Instance).Build()
 
                 let private deleteAction (topicNames: string array, azureConfig: FileInfo) =
                     asyncResult {
@@ -99,23 +99,11 @@ module Azure =
     module StorageAccount =
         module Delete =
             open Fake.IO
-            open YamlDotNet.Serialization
-            open YamlDotNet.Serialization.NamingConventions
 
             let private accountNamesInput =
                 Input.argument "account-names"
                 |> Input.desc "The names of the storage accounts to delete"
                 |> Input.allowMultipleArgumentsPerToken
-
-            let private azureConfigInput =
-                Input.option "azure-config"
-                |> Input.desc "The Azure config file path"
-                // TODO: use environment variable to expand path
-                |> Input.defaultValue (@"C:\Users\song\Downloads\azure.yml" |> FileInfo)
-                |> Input.validateFileExists
-
-            let private deserializer =
-                DeserializerBuilder().WithNamingConvention(HyphenatedNamingConvention.Instance).Build()
 
             let private deleteAction (accountNames: string array, azureConfig: FileInfo) =
                 asyncResult {
