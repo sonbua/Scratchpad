@@ -673,8 +673,8 @@ module WhatDayOfWeek =
 /// <summary>
 /// Sample usages:
 /// <code>
-/// azure event-grid topic delete "my-topic"
-/// azure storage-account delete "my-storage-account"
+/// azure event-grid topic delete topic1 topic2
+/// azure storage-account delete storageAccount1 storageAccount2
 /// cleanup rider-log
 /// cleanup firefox-history
 /// cleanup firefox-history
