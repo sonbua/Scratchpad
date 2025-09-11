@@ -533,7 +533,14 @@ module Cleanup =
             }
 
     module Logseq =
+        open Fake.IO.FileSystemOperators
         open Logseq
+
+        let private rootDirectoryInput =
+            Input.argument "root-directory"
+            |> Input.desc "Path to the root directory of Logseq notes"
+            |> Input.defaultValue (@"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\" |> DirectoryInfo)
+            |> Input.validateDirectoryExists
 
         let private noopInput =
             Input.option "--noop"
@@ -541,23 +548,29 @@ module Cleanup =
             |> Input.defaultValue false
 
         let private backupDirectories =
-            [ { Path = @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\pages\"
+            [ { Path = @"bak\pages\"
                 Pattern = "*.md" }
-              { Path = @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\journals\"
+              { Path = @"bak\journals\"
                 Pattern = "*.md" }
-              { Path = @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\logseq\"
+              { Path = @"bak\logseq\"
                 Pattern = "*.edn" }
-              { Path = @"C:\Users\song\OneDrive - Episerver\doc\Note\logseq\bak\logseq\"
+              { Path = @"bak\logseq\"
                 Pattern = "*.css" } ]
 
         let private options = { ItemsToKeep = 1 }
 
-        let private logseqAction (noop: bool) =
+        let private logseqAction (rootDirectory: DirectoryInfo, noop: bool) =
             let backupDirectoryF options dir =
+                let dir =
+                    { dir with
+                        Path = rootDirectory.FullName </> dir.Path }
+
                 if noop then
                     (options, dir)
                     ||> RootBackupDirectory.pendingCleanupDirectories
-                    |> map (printfn "%A")
+                    |> map (function
+                        | Empty _ -> ()
+                        | HasPendingItems d -> d.Directory.FullName |> printfn "%s")
                 else
                     (options, dir) ||> RootBackupDirectory.cleanup |> map (printfn "%s")
 
@@ -566,7 +579,7 @@ module Cleanup =
         let command =
             command "logseq" {
                 description "Cleanup Logseq backup files"
-                inputs noopInput
+                inputs (rootDirectoryInput, noopInput)
                 setAction logseqAction
             }
 
@@ -862,7 +875,7 @@ module WhatDayOfWeek =
 ///     --domains-having-path-patterns=false
 ///     --domains-having-not-first-thread-post=false
 ///     --domains-having-complex-patterns=false
-/// cleanup logseq --noop
+/// cleanup logseq "C:\logseq-notes" --noop
 /// cleanup nuget-cache --noop
 /// convert tab2md
 /// convert md2tab
