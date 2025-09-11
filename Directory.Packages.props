@@ -5,16 +5,16 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup Label="Public dependencies">
-    <PackageVersion Include="Azure.Identity" Version="1.13.2" />
+    <PackageVersion Include="Azure.Identity" Version="1.16.0" />
     <PackageVersion Include="Azure.ResourceManager.EventGrid" Version="1.1.0" />
-    <PackageVersion Include="Azure.ResourceManager.Storage" Version="1.4.3" />
+    <PackageVersion Include="Azure.ResourceManager.Storage" Version="1.4.4" />
     <PackageVersion Include="FSharp.Data" Version="6.6.0" />
     <PackageVersion Include="FSharp.Data.Dapper" Version="2.0.0" />
-    <PackageVersion Include="FSharp.SystemCommandLine" Version="2.0.0-beta5.8" />
+    <PackageVersion Include="FSharp.SystemCommandLine" Version="2.0.0-beta7.0" />
     <PackageVersion Include="FSharpPlus" Version="1.7.0" />
     <PackageVersion Include="FsToolkit.ErrorHandling" Version="5.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.8" />
-    <PackageVersion Include="Microsoft.Data.SQLite" Version="9.0.8" />
+    <PackageVersion Include="Microsoft.Data.SQLite" Version="9.0.9" />
     <PackageVersion Include="TextCopy" Version="6.2.1" />
     <PackageVersion Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
