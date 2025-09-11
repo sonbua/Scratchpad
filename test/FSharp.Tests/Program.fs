@@ -150,9 +150,15 @@ module Cleanup =
     module RiderLog =
         open RiderLog
 
-        let private riderLogAction () =
+        let rootDirectoryInput =
+            Input.argument "root-directory"
+            |> Input.desc "Path to the root directory of Rider logs"
+            |> Input.defaultValue (@"R:\idea-log\" |> DirectoryInfo)
+            |> Input.validateDirectoryExists
+
+        let private riderLogAction (rootDirectoryInput: DirectoryInfo) =
             let options =
-                { LogRootDir = "R:\\idea-log\\"
+                { LogRootDir = rootDirectoryInput.FullName
                   CutOffTimestamp = DateTime.Now.Date }
 
             options |> cleanup |> map (printfn "%s") |> ignore
@@ -160,6 +166,7 @@ module Cleanup =
         let command =
             command "rider-log" {
                 description "Cleanup Rider logs, except for today's"
+                inputs rootDirectoryInput
                 setAction riderLogAction
             }
 
