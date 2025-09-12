@@ -146,6 +146,106 @@ module Azure =
             addCommands [ EventGrid.command; StorageAccount.command ]
         }
 
+module Calendar =
+    open Calendar
+
+    let private isLeapStr isLeap = if isLeap then " (leap month)" else ""
+
+    let private getTimeZone () =
+        TimeZoneInfo.Local.GetUtcOffset(DateTime.Now).TotalHours
+
+    module Solar2Lunar =
+        let private dayInput =
+            Input.argumentMaybe "day"
+            |> Input.acceptOnlyFromAmong ([ 1..31 ] |> List.map string)
+            |> Input.desc "Day (1-31). Default to today if not provided."
+
+        let private monthInput =
+            Input.argumentMaybe "month"
+            |> Input.acceptOnlyFromAmong ([ 1..12 ] |> List.map string)
+            |> Input.desc "Month (1-12). Default to current month if not provided."
+
+        let private yearInput =
+            Input.argumentMaybe "year"
+            |> Input.desc "Year (e.g., 2024). Default to current year if not provided."
+
+        let private solar2LunarAction (day: int option, month: int option, year: int option) =
+            let now = DateTime.Now
+
+            let day = day |> Option.defaultValue now.Day
+            let month = month |> Option.defaultValue now.Month
+            let year = year |> Option.defaultValue now.Year
+            let timeZone = getTimeZone ()
+
+            let lunarDay, lunarMonth, lunarYear, isLeap = solar2Lunar day month year timeZone
+            let dayInWeek = WhatDayOfWeek.whatDayOfWeek (year, month, day)
+
+            printfn
+                $"{day}/{month}/{year} ({dayInWeek}) --> {lunarDay}/{lunarMonth}/{lunarYear}{isLeap |> isLeapStr} [AL]"
+
+        let command =
+            command "solar2lunar" {
+                addAliases [ "al"; "dl2al" ]
+                description "Convert a solar date to a lunar date (Vietnamese calendar)"
+                inputs (dayInput, monthInput, yearInput)
+                setAction solar2LunarAction
+            }
+
+    module Lunar2Solar =
+        let private lunarDayInput =
+            Input.argumentMaybe "lunar-day"
+            |> Input.acceptOnlyFromAmong ([ 1..30 ] |> List.map string)
+            |> Input.desc "Lunar day (1-30). Default to today if not provided."
+
+        let private lunarMonthInput =
+            Input.argumentMaybe "lunar-month"
+            |> Input.acceptOnlyFromAmong ([ 1..12 ] |> List.map string)
+            |> Input.desc "Lunar month (1-12). Default to current lunar month if not provided."
+
+        let private lunarYearInput =
+            Input.argumentMaybe "lunar-year"
+            |> Input.desc "Lunar year (e.g., 2024). Default to current lunar year if not provided."
+
+        let private isLeapInput =
+            Input.option "-l"
+            |> Input.alias "--is-leap"
+            |> Input.defaultValue false
+            |> Input.desc "Whether the lunar month is a leap month. Default to false if not provided."
+
+        let lunar2SolarAction (lunarDay, lunarMonth, lunarYear, isLeap) =
+            let now = DateTime.Now
+            let timeZone = getTimeZone ()
+
+            let d, m, y, _ = solar2Lunar now.Day now.Month now.Year timeZone
+
+            let lunarDay = lunarDay |> Option.defaultValue d
+            let lunarMonth = lunarMonth |> Option.defaultValue m
+            let lunarYear = lunarYear |> Option.defaultValue y
+
+            let day, month, year = lunar2Solar lunarDay lunarMonth lunarYear isLeap timeZone
+            let dayInWeek = WhatDayOfWeek.whatDayOfWeek (year, month, day)
+
+            printfn
+                $"{day}/{month}/{year} ({dayInWeek}) <-- {lunarDay}/{lunarMonth}/{lunarYear}{isLeap |> isLeapStr} [AL]"
+
+        let command =
+            command "lunar2solar" {
+                addAliases [ "dl"; "al2dl" ]
+                description "Convert a lunar date to a solar date (Vietnamese calendar)"
+                inputs (lunarDayInput, lunarMonthInput, lunarYearInput, isLeapInput)
+
+                setAction lunar2SolarAction
+            }
+
+    let command =
+        command "calendar" {
+            addAlias "cal"
+            description "Calendar tools"
+            inputs Input.context
+            helpAction
+            addCommands [ Solar2Lunar.command; Lunar2Solar.command ]
+        }
+
 module Cleanup =
     module RiderLog =
         open RiderLog
@@ -702,8 +802,9 @@ module WhatDayOfWeek =
         |> Input.desc "Year (e.g., 2024). Default to current year if not provided."
 
     let private whatDayOfWeekAction (day: int, month: int option, year: int option) =
-        let month = month |> Option.defaultValue DateTime.Now.Month
-        let year = year |> Option.defaultValue DateTime.Now.Year
+        let now = DateTime.Now
+        let month = month |> Option.defaultValue now.Month
+        let year = year |> Option.defaultValue now.Year
 
         whatDayOfWeek (year, month, day)
         |> fun r -> printfn $"{day}/{month}/{year} -> %A{r}"
@@ -721,6 +822,14 @@ module WhatDayOfWeek =
 /// <code>
 /// azure event-grid topic delete topic1 topic2
 /// azure storage-account delete storageAccount1 storageAccount2
+/// calendar al2dl
+/// calendar al2dl 15
+/// calendar al2dl 15 8
+/// calendar al2dl 15 8 2024
+/// calendar dl2al
+/// calendar dl2al 31
+/// calendar dl2al 31 12
+/// calendar dl2al 31 12 2024
 /// cleanup rider-log
 /// cleanup firefox-history
 /// cleanup firefox-history
@@ -758,6 +867,7 @@ let main argv =
 
         addCommands
             [ Azure.command
+              Calendar.command
               Cleanup.command
               Convert.command
               Extract.command

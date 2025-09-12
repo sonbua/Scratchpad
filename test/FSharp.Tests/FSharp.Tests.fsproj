@@ -50,6 +50,7 @@
     <Compile Include="UMatrix.Tests.fs" />
     <Compile Include="NuGetCache.fs" />
     <Compile Include="Azure.fs" />
+    <Compile Include="Calendar.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

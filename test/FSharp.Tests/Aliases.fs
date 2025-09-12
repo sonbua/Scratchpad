@@ -8,7 +8,9 @@ type DateTime = System.DateTime
 type DayOfWeek = System.DayOfWeek
 type Environment = System.Environment
 type IObservable<'T> = System.IObservable<'T>
+type Math = System.Math
 type String = System.String
+type TimeZoneInfo = System.TimeZoneInfo
 type Uri = System.Uri
 type UriHostNameType = System.UriHostNameType
 
