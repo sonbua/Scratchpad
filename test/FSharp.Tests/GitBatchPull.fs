@@ -2,18 +2,21 @@ module GitBatchPull
 
 open System.Reactive.Linq
 open Fake.Core
+open Fake.IO.FileSystemOperators
 open FSharpPlus
 open Reusables.IO
 
 // Repo
-type Repo = private Repo of string
+type Repo =
+    private
+    | Repo of string
 
-module Repo =
-    let create dir =
-        match Path.Combine [| dir; ".git" |] |> Directory.Exists with
+    static member TryCreate dir =
+        match dir </> ".git" |> Directory.exists with
         | true -> Ok(Repo dir)
         | false -> Error $"'{dir}' is not a Git repository."
 
+module Repo =
     let value (Repo name) = name
 
 // Branch
@@ -36,7 +39,7 @@ type GitPullError =
     | CannotPull of (Branch * string)
 
 let private toRepo: string -> Result<Repo, GitPullError> =
-    Repo.create >> Result.mapError NotAGitRepo
+    Repo.TryCreate >> Result.mapError NotAGitRepo
 
 let private getCurrentBranch repo : Result<Branch, GitPullError> =
     CreateProcess.fromRawCommandLine "git" "branch --show-current"
@@ -52,8 +55,7 @@ let private rejectNonMajorBranch branch : Result<Branch, GitPullError> =
     if branch |> Branch.isMajorBranch then
         Ok branch
     else
-        $"Current branch, '{branch.Name}', is not one of the major branches (master, main, develop)."
-        |> tuple2 branch
+        (branch, $"Current branch, '{branch.Name}', is not one of the major branches (master, main, develop).")
         |> NotAMajorBranch
         |> Error
 
