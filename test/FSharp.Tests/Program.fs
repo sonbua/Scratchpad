@@ -686,35 +686,29 @@ module Extract =
 
 module Fetch =
     module BlogChungKhoan =
-        let landingPages =
+        let private landingPages =
             [ "https://vneconomy.vn/"
               "https://vneconomy.vn/chung-khoan.htm"
               "https://vneconomy.vn/thi-truong-chung-khoan.htm" ]
 
-        let ckPages =
+        let private ckPages =
             [ 2..10 ] |> List.map (sprintf "https://vneconomy.vn/chung-khoan.htm?page=%d")
 
-        let ttckPages =
+        let private ttckPages =
             [ 2..10 ]
             |> List.map (sprintf "https://vneconomy.vn/thi-truong-chung-khoan.htm?page=%d")
 
-        let urls = landingPages @ ckPages @ ttckPages
+        let private urls = landingPages @ ckPages @ ttckPages
 
         let private blogChungKhoanAction () =
             async {
-                let! links = urls |> map VnEconomy.extractBlogChungKhoanLinks |> Async.Parallel
-
-                let! articles =
-                    links
-                    |> List.concat
-                    |> distinct
-                    |> map VnEconomy.loadArticleMetadata
-                    |> Async.Parallel
+                let! links = urls |> traverse VnEconomy.extractBlogChungKhoanLinks
+                let! articles = links |> List.concat |> distinct |> traverse VnEconomy.loadArticleMetadata
 
                 articles
                 |> sortByDescending _.Published
                 |> map (fun a ->
-                    {| Date = a.Published.Value.Date.ToString("dd/MM/yyyy")
+                    {| Date = a.Published.Value.Date |> stringf "dd/MM/yyyy"
                        Url = a.Url |})
                 |> map (fun a -> printfn $"{a.Date} {a.Url}")
                 |> ignore
