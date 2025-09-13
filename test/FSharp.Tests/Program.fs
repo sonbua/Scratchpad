@@ -157,13 +157,19 @@ module Calendar =
     module Solar2Lunar =
         let private dayInput =
             Input.argumentMaybe "day"
-            |> Input.acceptOnlyFromAmong ([ 1..31 ] |> List.map string)
             |> Input.desc "Day (1-31). Default to today if not provided."
+            |> Input.validate (fun d ->
+                match d with
+                | Some d when d < 1 || d > 31 -> Error "Day must be between 1 and 31"
+                | _ -> Ok())
 
         let private monthInput =
             Input.argumentMaybe "month"
-            |> Input.acceptOnlyFromAmong ([ 1..12 ] |> List.map string)
             |> Input.desc "Month (1-12). Default to current month if not provided."
+            |> Input.validate (fun m ->
+                match m with
+                | Some m when m < 1 || m > 12 -> Error "Month must be between 1 and 12"
+                | _ -> Ok())
 
         let private yearInput =
             Input.argumentMaybe "year"
@@ -194,13 +200,19 @@ module Calendar =
     module Lunar2Solar =
         let private lunarDayInput =
             Input.argumentMaybe "lunar-day"
-            |> Input.acceptOnlyFromAmong ([ 1..30 ] |> List.map string)
             |> Input.desc "Lunar day (1-30). Default to today if not provided."
+            |> Input.validate (fun d ->
+                match d with
+                | Some d when d < 1 || d > 30 -> Error "Lunar day must be between 1 and 30"
+                | _ -> Ok())
 
         let private lunarMonthInput =
             Input.argumentMaybe "lunar-month"
-            |> Input.acceptOnlyFromAmong ([ 1..12 ] |> List.map string)
             |> Input.desc "Lunar month (1-12). Default to current lunar month if not provided."
+            |> Input.validate (fun m ->
+                match m with
+                | Some m when m < 1 || m > 12 -> Error "Lunar month must be between 1 and 12"
+                | _ -> Ok())
 
         let private lunarYearInput =
             Input.argumentMaybe "lunar-year"
@@ -820,13 +832,19 @@ module WhatDayOfWeek =
 
     let private dayInput =
         Input.argument "day"
-        |> Input.acceptOnlyFromAmong ([ 1..31 ] |> List.map string)
         |> Input.desc "Day (1-31)"
+        |> Input.validate (fun d ->
+            match d with
+            | d when d < 1 || d > 31 -> Error "Day must be between 1 and 31"
+            | _ -> Ok())
 
     let private monthInput =
         Input.argumentMaybe "month"
-        |> Input.acceptOnlyFromAmong ([ 1..12 ] |> List.map string)
         |> Input.desc "Month (1-12). Default to current month if not provided."
+        |> Input.validate (fun m ->
+            match m with
+            | Some m when m < 1 || m > 12 -> Error "Month must be between 1 and 12"
+            | _ -> Ok())
 
     let private yearInput =
         Input.argumentMaybe "year"
