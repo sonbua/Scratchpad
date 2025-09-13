@@ -559,7 +559,7 @@ module Cleanup =
             |> Input.desc "List removable backup directories without deleting them."
             |> Input.defaultValue false
 
-        let private backupDirectories =
+        let private backupDirectoriesRelativeToRoot =
             [ { Path = @"bak\pages\"
                 Pattern = "*.md" }
               { Path = @"bak\journals\"
@@ -573,20 +573,21 @@ module Cleanup =
 
         let private logseqAction (rootDirectory: DirectoryInfo, noop: bool) =
             let backupDirectoryF options dir =
-                let dir =
-                    { dir with
-                        Path = rootDirectory.FullName </> dir.Path }
-
                 if noop then
                     (options, dir)
                     ||> RootBackupDirectory.pendingCleanupDirectories
                     |> map (function
-                        | Empty _ -> ()
-                        | HasPendingItems d -> d.Directory.FullName |> printfn "%s")
+                        | Empty d -> printfn $"%s{d.FullName}"
+                        | HasPendingItems { Directory = d } -> printfn $"%s{d.FullName}")
                 else
                     (options, dir) ||> RootBackupDirectory.cleanup |> map (printfn "%s")
 
-            backupDirectories |> map (backupDirectoryF options) |> ignore
+            backupDirectoriesRelativeToRoot
+            |> map (fun d ->
+                { d with
+                    Path = rootDirectory.FullName </> d.Path })
+            |> map (backupDirectoryF options)
+            |> ignore
 
         let command =
             command "logseq" {
