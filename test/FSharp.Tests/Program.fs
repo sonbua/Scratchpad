@@ -282,6 +282,7 @@ module Cleanup =
               DomainsHavingPaths: List<DomainWithPaths>
               QueryParams: List<string>
               DomainsHavingAnyQueryParam: List<DomainWithQueryParams>
+              DomainsHavingAllQueryParams: List<DomainWithQueryParams>
               DomainsHavingAnyFragmentParam: List<DomainWithFragmentParam>
               DomainsHavingPathPatterns: List<DomainWithPathPatterns>
               DomainsHavingNotFirstThreadPost: List<string> }
@@ -340,6 +341,12 @@ module Cleanup =
             Input.option "--domainsHavingAnyGarbageQueryParam"
             |> Input.alias "--domains-having-any-garbage-query-param"
             |> Input.desc "Delete history entries that have matching domain and any of the query params in the list"
+            |> Input.defaultValue true
+
+        let private domainsHavingAllGarbageQueryParamsInput =
+            Input.option "--domainsHavingAllGarbageQueryParams"
+            |> Input.alias "--domains-having-all-garbage-query-params"
+            |> Input.desc "Delete history entries that have matching domain and all of the query params in the list"
             |> Input.defaultValue true
 
         let private domainsHavingAnyGarbageFragmentParamInput =
@@ -439,6 +446,18 @@ module Cleanup =
                         let! removed = (domain, placeFilter) ||> db.deletePlacesWith
                         removed |> map printPlace |> ignore
 
+                let deleteDomainsHavingAllGarbageQueryParams =
+                    domainsHavingAllGarbageQueryParamsInput.GetValue parseResult
+
+                if deleteDomainsHavingAllGarbageQueryParams then
+                    let domains = config.DomainsHavingAllQueryParams
+
+                    for { Domain = domain
+                          QueryParams = queryParams } in domains do
+                        let placeFilter = queryParams |> List.ofSeq |> Place.hasQueryParams
+                        let! removed = (domain, placeFilter) ||> db.deletePlacesWith
+                        removed |> map printPlace |> ignore
+
                 let deleteDomainsHavingAnyGarbageFragmentParam =
                     domainsHavingAnyGarbageFragmentParamInput.GetValue parseResult
 
@@ -483,10 +502,8 @@ module Cleanup =
                               [ _.Url >> Regex.isMatch ":\\d+/"
                                 orF [ Place.withQueryParam; Place.withFragment ] ]
                           "localhost/", Place.withQueryParam
-                          "nuget.optimizely.com", Place.hasQueryParams [ "id"; "v" ]
                           "opti-dxp.datadoghq.com/logs", Place.withQueryParam
                           "opti-dxp.datadoghq.com/monitors/", Place.withQueryParam
-                          "world.taobao.com", Place.hasQueryParams [ "a"; "b" ]
                           "www.jetbrains.com/help/", Place.withQueryParam ]
 
                     for domain, placeFilter in domainsHavingComplexPatterns do
@@ -508,6 +525,7 @@ module Cleanup =
                       domainsHavingGarbagePathsInput
                       garbageQueryParamsInput
                       domainsHavingAnyGarbageQueryParamInput
+                      domainsHavingAllGarbageQueryParamsInput
                       domainsHavingAnyGarbageFragmentParamInput
                       domainsHavingPathPatternsInput
                       domainsHavingNotFirstThreadPostInput
@@ -839,6 +857,7 @@ module WhatDayOfWeek =
 ///     --domains-having-garbage-paths=false
 ///     --garbage-query-params=false
 ///     --domains-having-any-garbage-query-param=false
+///     --domains-having-all-garbage-query-params=false
 ///     --domains-having-any-garbage-fragment-param=false
 ///     --domains-having-path-patterns=false
 ///     --domains-having-not-first-thread-post=false

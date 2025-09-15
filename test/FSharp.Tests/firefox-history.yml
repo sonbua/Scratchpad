@@ -1248,6 +1248,15 @@ domains-having-any-query-param:
   - domain: zen-browser.app
     query-params:
       - v
+domains-having-all-query-params:
+  - domain: nuget.optimizely.com
+    query-params:
+      - id
+      - v
+  - domain: world.taobao.com
+    query-params:
+      - a
+      - b
 domains-having-any-fragment-param:
   - domain: vietnamnet.vn
     fragment-params:
