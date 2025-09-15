@@ -155,7 +155,7 @@ domains:
   - you.com/search
   - youtu.be
   - zdusercontent.com
-domains-having-fragments:
+domains-with-fragment:
   - .sh-daily.ep.se
   - analysiscenter.veracode.com
   - andrewlock.net

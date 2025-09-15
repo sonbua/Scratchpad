@@ -278,7 +278,7 @@ module Cleanup =
         [<CLIMutable>]
         type Config =
             { Domains: List<string>
-              DomainsHavingFragments: List<string>
+              DomainsWithFragment: List<string>
               DomainsHavingPaths: List<DomainWithPaths>
               QueryParams: List<string>
               DomainsHavingAnyQueryParam: List<DomainWithQueryParams>
@@ -318,10 +318,10 @@ module Cleanup =
             |> Input.desc "Delete history entries in the domain list"
             |> Input.defaultValue true
 
-        let private garbageDomainsHavingFragmentsInput =
-            Input.option "--garbageDomainsHavingFragmentsInput"
-            |> Input.alias "--garbage-domains-having-fragments"
-            |> Input.desc "Delete history entries that have fragment(s) in the domain list"
+        let private garbageDomainsWithFragmentInput =
+            Input.option "--garbageDomainsWithFragmentInput"
+            |> Input.alias "--garbage-domains-with-fragment"
+            |> Input.desc "Delete history entries that contain fragment(s) in the domain list"
             |> Input.defaultValue true
 
         let private domainsHavingGarbagePathsInput =
@@ -395,11 +395,11 @@ module Cleanup =
                         let! removed = db.deletePlaces domain
                         removed |> map printPlace |> ignore
 
-                let deleteGarbageDomainsHavingFragments =
-                    garbageDomainsHavingFragmentsInput.GetValue parseResult
+                let deleteGarbageDomainsWithFragment =
+                    garbageDomainsWithFragmentInput.GetValue parseResult
 
-                if deleteGarbageDomainsHavingFragments then
-                    let domains = config.DomainsHavingFragments
+                if deleteGarbageDomainsWithFragment then
+                    let domains = config.DomainsWithFragment
 
                     for domain in domains do
                         let placeFilter = Place.withFragment
@@ -504,7 +504,7 @@ module Cleanup =
                 addInputs
                     [ untitledEntriesInput
                       garbageDomainsInput
-                      garbageDomainsHavingFragmentsInput
+                      garbageDomainsWithFragmentInput
                       domainsHavingGarbagePathsInput
                       garbageQueryParamsInput
                       domainsHavingAnyGarbageQueryParamInput
@@ -835,7 +835,7 @@ module WhatDayOfWeek =
 /// cleanup firefox-history
 ///     --untitled-entries=false
 ///     --garbage-domains=false
-///     --garbage-domains-having-fragments=false
+///     --garbage-domains-with-fragment=false
 ///     --domains-having-garbage-paths=false
 ///     --garbage-query-params=false
 ///     --domains-having-any-garbage-query-param=false
