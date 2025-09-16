@@ -40,13 +40,29 @@ let private cleanupDirs beforeCutOffTimestamp rootDir : string list =
     deletingDirs
 
 let private cleanupFiles beforeCutOffTimestamp rootDir : string list =
-    [ rootDir ]
-    |> List.apply
-        [ Some
-          DirectoryInfo.tryFind "BackendThreadDump"
-          DirectoryInfo.tryFind "JetBrains.DPA.Protocol.Backend"
-          DirectoryInfo.tryFind "SolutionBuilder"
-          DirectoryInfo.tryFindPath [ "UnitTestLogs"; "Sessions" ] ]
+    let dirs =
+        [ rootDir ]
+        |> List.apply
+            [ Some
+              DirectoryInfo.tryFind "BackendThreadDump"
+              DirectoryInfo.tryFindPath [ "BackendThreadDump"; "WorkerLogs" ]
+              DirectoryInfo.tryFind "indexing-diagnostic"
+              DirectoryInfo.tryFind "JetBrains.DPA.Protocol.Backend"
+              DirectoryInfo.tryFind "MsBuildTask"
+              DirectoryInfo.tryFind "SolutionBuilder"
+              DirectoryInfo.tryFindPath [ "UnitTestLogs"; "Sessions" ] ]
+
+    let dirsWithSubDirs: DirectoryInfo option list =
+        [ rootDir ]
+        |> List.apply
+            [ DirectoryInfo.tryFind "ProcessEnumerator.Worker"
+              DirectoryInfo.tryFind "RoslynWorker"
+              DirectoryInfo.tryFind "SqlProjectsWorker" ]
+        |> List.collect (traverse (DirectoryInfo.getSubDirectories >> toList))
+
+    let possibleDirectoriesToLookup = dirs @ dirsWithSubDirs
+
+    possibleDirectoriesToLookup
     |> choose id
     |> List.collect (DirectoryInfo.getFiles >> toList)
     |> filter (_.LastWriteTime >> beforeCutOffTimestamp)
