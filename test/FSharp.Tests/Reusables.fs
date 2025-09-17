@@ -103,15 +103,15 @@ module IO =
         /// Returns an array of Directories in the current directory.
         let getSubDirectories (dir: DirectoryInfo) : DirectoryInfo[] = dir.GetDirectories()
 
-        let ofPath2 path =
+        let ofPath path =
             let dir = DirectoryInfo path
             if dir |> exists then Some dir else None
 
         let tryFind dirName (parentDir: DirectoryInfo) : DirectoryInfo option =
-            dirName |> Path.combine parentDir.FullName |> ofPath2
+            dirName |> Path.combine parentDir.FullName |> ofPath
 
         let tryFindPath (dirPath: string list) (parentDir: DirectoryInfo) : DirectoryInfo option =
-            parentDir.FullName :: dirPath |> Path.combineN |> ofPath2
+            parentDir.FullName :: dirPath |> Path.combineN |> ofPath
 
         /// Returns a file list from the current directory.
         let getFiles (dir: DirectoryInfo) : FileInfo[] = dir.GetFiles()
