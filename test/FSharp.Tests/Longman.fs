@@ -114,7 +114,7 @@ module GrammaticalExamples =
         |> List.tryExactlyOne
         |> Option.map HtmlNode.innerText
         |> Option.map (fun x ->
-            { Pattern = x
+            { Pattern = x |> String.trimWhiteSpaces // Example: get-on__1
               Type = grammaticalType
               Examples = node |> SimpleExample.extractMany })
 
