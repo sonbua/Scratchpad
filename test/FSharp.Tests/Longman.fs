@@ -70,11 +70,11 @@ type Pronunciation =
 
 module Pronunciation =
     let private extractTranscriptions =
-        HtmlNode.cssSelectR ".PRON"
+        HtmlNode.cssSelectR ".Head > .PronCodes > .PRON"
         >> List.map (HtmlNode.innerText >> String.trimWhiteSpaces)
 
     let private extractAmericanVariant =
-        HtmlNode.cssSelectR ".AMEVARPRON"
+        HtmlNode.cssSelectR ".Head > .PronCodes > .AMEVARPRON"
         >> List.tryExactlyOne
         >> Option.map HtmlNode.directInnerText
 
