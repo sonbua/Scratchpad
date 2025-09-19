@@ -39,6 +39,9 @@ let private cleanupDirs beforeCutOffTimestamp rootDir : string list =
 
     deletingDirs
 
+let private tryDelete' d =
+    d |> File.tryDelete |> map (fun () -> d)
+
 let private cleanupFiles beforeCutOffTimestamp rootDir : string list =
     let dirs =
         [ rootDir ]
@@ -66,7 +69,7 @@ let private cleanupFiles beforeCutOffTimestamp rootDir : string list =
     |> choose id
     |> List.collect (DirectoryInfo.getFiles >> toList)
     |> filter (_.LastWriteTime >> beforeCutOffTimestamp)
-    |> map (_.FullName >> File.tryDelete)
+    |> map (_.FullName >> tryDelete')
     |> choose Result.toOption
 
 let cleanup options : string list =

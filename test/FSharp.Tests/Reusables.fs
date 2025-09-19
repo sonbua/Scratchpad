@@ -143,10 +143,10 @@ module IO =
             if path |> exists then
                 File.Delete path
 
-        let tryDelete path : Result<string, exn> =
+        let tryDelete path : Result<unit, exn> =
             try
                 delete path
-                Ok path
+                Ok()
             with exn ->
                 Error exn
 
