@@ -2,6 +2,7 @@
 module Aliases
 
 // System
+type Char = System.Char
 type Console = System.Console
 type Convert = System.Convert
 type DateTime = System.DateTime

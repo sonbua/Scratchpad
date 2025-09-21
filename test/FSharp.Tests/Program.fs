@@ -771,12 +771,168 @@ module Git =
 module Longman =
     open Longman
 
+    let private newLine = Environment.NewLine
+
+    let private stringAppend additional s = $"%s{s}%s{additional}"
+    let private stringPrepend additional s = $"%s{additional}%s{s}"
+
+    let private indent level =
+        stringPrepend (String.replicate level "  ")
+
+    let private indent1 = indent 1
+
+    let private mapHead f xs =
+        match xs with
+        | [] -> []
+        | x :: xs -> (f x) :: xs
+
+    let private mapTail f xs =
+        match xs with
+        | [] -> []
+        | x :: xs -> x :: (xs |> map f)
+
+    let private alphabeticalOrder = [ 'a' .. 'z' ] |> map Char.ToString
+    let private numericalOrder = [ 1..100 ] |> map string
+
+    let private replaceRecursive oldList newList list =
+        let rec loop oldList newList list =
+            let tmp = List.replace oldList newList list
+            if tmp = list then tmp else loop oldList newList tmp
+
+        loop oldList newList list
+
+    let private renderNo (no: int option) =
+        no |> Option.map (string >> stringAppend " ") |> Option.defaultValue ""
+
+    module private WordFamily =
+        let render (wordFamily: WordFamily option) : string list =
+            wordFamily
+            |> Option.map (String.concat " " >> List.singleton)
+            |> Option.defaultValue []
+
+    module private Word =
+        let render (word: Word) : string =
+            match word with
+            | Word w -> w
+            | PhrasalVerb p -> p
+
+    module private Pronunciation =
+        let private renderTranscriptions (transcriptions: string list) =
+            match transcriptions with
+            | [] -> ""
+            | ts -> ts |> String.concat " $ " |> sprintf "/%s/"
+
+        let private renderAmericanVariant (americanVariant: string option) =
+            americanVariant |> Option.map (sprintf " AmE /%s/") |> Option.defaultValue ""
+
+        let render (pronunciation: Pronunciation) =
+            let transcriptions = pronunciation.Transcriptions |> renderTranscriptions
+            let americanVariant = pronunciation.AmericanVariant |> renderAmericanVariant
+
+            $"{transcriptions}{americanVariant}"
+
+    module private CrossRef =
+        let renderMany (refs: string list) : string list = refs |> map (stringPrepend "-> ")
+
+    module private Example =
+        let private renderSimpleExample = _.Text >> stringPrepend "* "
+
+        let private renderGrammaticalExamples (examples: GrammaticalExamples) =
+            let pattern = examples.Pattern
+            let examples = examples.Examples |> map renderSimpleExample
+
+            pattern :: examples
+
+        let private renderCollocationalExamples (examples: CollocationalExamples) =
+            let pattern = examples.Pattern
+            let examples = examples.Examples |> map renderSimpleExample
+
+            pattern :: examples
+
+        let private render example =
+            match example with
+            | Simple se -> se |> renderSimpleExample |> List.singleton
+            | Grammatical ge -> renderGrammaticalExamples ge
+            | Collocational ce -> renderCollocationalExamples ce
+
+        let renderMany (examples: Example list) : string list = examples |> List.collect render
+
+    module private Thesaurus =
+        let renderMany thesauruses : string list =
+            match thesauruses with
+            | [] -> []
+            | ts -> ts |> String.concat ", " |> stringPrepend "see thesaurus: " |> List.singleton
+
+    module private Sense =
+        module private SenseData =
+            let render (order: string) (sense: SenseData) : string list =
+                let definition =
+                    sense.Definition |> Option.map List.singleton |> Option.defaultValue []
+
+                let examples = sense.Examples |> Example.renderMany
+                let crossRefs = sense.CrossRefs |> CrossRef.renderMany
+                let thesauruses = sense.Thesauruses |> Thesaurus.renderMany
+
+                definition @ examples @ crossRefs @ thesauruses
+                |> mapHead (stringPrepend $"%s{order} ")
+                |> mapTail indent1
+
+        module private SubsenseGroupData =
+            module private SubsenseData =
+                let private render numbering subsense =
+                    let definition = subsense.Definition |> stringPrepend $"%s{numbering}) "
+                    let examples = subsense.Examples |> Example.renderMany |> map indent1
+
+                    definition :: examples
+
+                let renderMany (subsenses: SubsenseData list) : string list =
+                    subsenses |> List.map2Shortest render alphabeticalOrder |> List.concat
+
+            let render (order: string) (subsenseGroup: SubsenseGroupData) : string list =
+                let subsenses = subsenseGroup.Subsenses |> SubsenseData.renderMany
+                let thesauruses = subsenseGroup.Thesauruses |> Thesaurus.renderMany
+
+                subsenses @ thesauruses |> List.cons $"%s{order} " |> mapTail indent1
+
+        let private render order sense : string list =
+            match sense with
+            | Sense s -> s |> SenseData.render order
+            | SubsenseGroup g -> g |> SubsenseGroupData.render order
+
+        let renderMany (senses: Sense list) : string list =
+            senses |> List.map2Shortest render numericalOrder |> List.concat
+
+    module private Entry =
+        let private render entry =
+            let no = entry.No |> renderNo
+            let word = entry.Word |> Word.render
+            let pronunciation = entry.Pronunciation |> Pronunciation.render
+            let senses = entry.Senses |> Sense.renderMany
+            let crossRefs = entry.CrossRefs |> CrossRef.renderMany
+
+            [ $"%s{word}%s{no} %s{pronunciation}" ] @ senses @ crossRefs
+
+        let renderMany (entries: Entry list) : string list =
+            entries |> map render |> List.intercalate [ newLine ]
+
+    module private Dictionary =
+        let render (d: Dictionary) =
+            let wordFamilies = d.WordFamily |> WordFamily.render
+            let entries = d.Entries |> Entry.renderMany
+
+            wordFamilies @ entries
+            |> List.intersperse newLine
+            |> replaceRecursive [ newLine; newLine; newLine ] [ newLine; newLine ]
+            |> String.concat ""
+
     let private wordInput = Input.argument "word" |> Input.desc "Word to look up"
-    let private longmanAction (word: string) = word |> lookup |> printfn "%A"
+
+    let private longmanAction (word: string) =
+        word |> lookup |> Dictionary.render |> printfn "%s"
 
     let command =
         command "longman" {
-            addAlias "ldoce"
+            addAliases [ "ld"; "ldoce" ]
             description "Lookup a word in Longman Dictionary of Contemporary English online"
             inputs wordInput
             setAction longmanAction
