@@ -2,6 +2,7 @@ module Program
 
 open FSharp.SystemCommandLine
 open FSharpPlus
+open FSharpPlus.Data
 open FsToolkit.ErrorHandling
 
 let fromClipboardInput =
@@ -843,11 +844,19 @@ module Longman =
 
             pattern :: examples
 
+        let private renderPatterns patterns =
+            match patterns |> toList with
+            | [ p ] -> p
+            | p :: ps ->
+                let alternatives = ps |> String.concat ", "
+                $"{p} (also {alternatives})"
+            | [] -> failwith "Unreachable"
+
         let private renderCollocationalExamples (examples: CollocationalExamples) =
-            let pattern = examples.Pattern
+            let patterns = examples.Patterns |> renderPatterns
             let examples = examples.Examples |> map renderSimpleExample
 
-            pattern :: examples
+            patterns :: examples
 
         let private render example =
             match example with
@@ -913,7 +922,7 @@ module Longman =
             [ $"%s{word}%s{no} %s{pronunciation}" ] @ senses @ crossRefs
 
         let renderMany (entries: Entry list) : string list =
-            entries |> map render |> List.intercalate [ newLine ]
+            entries |> map render |> intercalate [ newLine ]
 
     module private Dictionary =
         let render (d: Dictionary) =
@@ -921,7 +930,7 @@ module Longman =
             let entries = d.Entries |> Entry.renderMany
 
             wordFamilies @ entries
-            |> List.intersperse newLine
+            |> intersperse newLine
             |> replaceRecursive [ newLine; newLine; newLine ] [ newLine; newLine ]
             |> String.concat ""
 

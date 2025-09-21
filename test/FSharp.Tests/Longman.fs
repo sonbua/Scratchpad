@@ -3,6 +3,8 @@ module Longman
 
 open FSharp.Data
 open FSharpPlus
+open FSharpPlus.Data
+open FsToolkit.ErrorHandling.OptionCE
 open Microsoft.FSharp.Core
 
 module Option =
@@ -103,7 +105,7 @@ type GrammaticalExamples =
     {
         Pattern: string
         Type: GrammaticalType
-        /// Example of more than two examples: case__2
+        /// Example of more than one example: case__2
         Examples: SimpleExample list
     }
 
@@ -132,20 +134,24 @@ module GrammaticalExamples =
         | _ -> failwith $"Unexpected grammatical pattern: '{exampleWithGrammarNode |> string}'"
 
 type CollocationalExamples =
-    { Pattern: string
-      Examples: SimpleExample list }
+    {
+        /// Example: set__6
+        Patterns: string nelist
+        Examples: SimpleExample list
+    }
 
 module CollocationalExamples =
     /// Root node: class="ColloExa"
     let extract (collocationNode: HtmlNode) : CollocationalExamples =
         collocationNode
         |> HtmlNode.cssSelectR ".COLLO"
-        |> List.tryExactlyOne
-        |> Option.map HtmlNode.innerText
-        |> Option.map (fun x ->
-            { Pattern = x
-              Examples = collocationNode |> SimpleExample.extractMany })
-        |> Option.defaultWith (fun () -> failwith $"Unexpected collocational example: '{collocationNode |> string}'")
+        |> map (HtmlNode.directInnerText >> String.trimWhiteSpaces) // Example: set__6
+        |> fun patterns ->
+            match patterns with
+            | [] -> failwith $"No collocational patterns found: '{collocationNode}'"
+            | ps ->
+                { Patterns = ps |> NonEmptyList.ofList
+                  Examples = collocationNode |> SimpleExample.extractMany }
 
 type Example =
     | Simple of SimpleExample
@@ -245,29 +251,32 @@ module Sense =
               CrossRefs = extractCrossRefs subsenseNode }
 
     let private (|SubsenseGroup|_|) subsenseGroupNode =
-        subsenseGroupNode
-        |> HtmlNode.cssSelectR ".Subsense"
-        |> List.map SubsenseData.extract
-        |> function
-            | [] -> None
-            | xs ->
-                Sense.SubsenseGroup
-                    { Id = extractId subsenseGroupNode
-                      Subsenses = xs
-                      Thesauruses = extractThesauruses subsenseGroupNode }
-                |> Some
+        option {
+            let! subsenseNodes = subsenseGroupNode |> HtmlNode.cssSelectR ".Subsense" |> NonEmptyList.tryOfList
+
+            return
+                subsenseNodes
+                |> NonEmptyList.map SubsenseData.extract
+                |> fun xs ->
+                    Sense.SubsenseGroup
+                        { Id = extractId subsenseGroupNode
+                          Subsenses = xs |> toList
+                          Thesauruses = extractThesauruses subsenseGroupNode }
+        }
 
     let private (|Sense|_|) senseNode =
         try
-            senseNode |> SenseData.extract |> Sense.Sense |> Some
-        with _ ->
-            None
+            senseNode |> SenseData.extract |> Sense.Sense |> Ok
+        with ex ->
+            Error("Unexpected sense node", ex)
+        |> Some
 
     /// Root node: class="Sense"
     let extract (senseNode: HtmlNode) : Sense =
         match senseNode with
         | SubsenseGroup s -> s
-        | Sense s -> s
+        | Sense(Ok s) -> s
+        | Sense(Error(msg, ex)) -> failwith $"Failed to parse sense: {msg}. Exception: {ex}"
         | _ -> failwith $"Unexpected sense or subsenses node: {senseNode |> string}"
 
 type Entry =
