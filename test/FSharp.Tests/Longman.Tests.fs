@@ -157,7 +157,7 @@ let specs =
                      |> _.Subsenses
                      |> List.item subsenseIndex
                      |> _.Definition
-                 actualDefinition |> Expect.equal "Should have definition" (Some definition))
+                 actualDefinition |> Expect.equal "Should have definition" definition)
 
         // theory data
         let subsenseGroupTheoryData = [ "else", "else__1", 2 ]

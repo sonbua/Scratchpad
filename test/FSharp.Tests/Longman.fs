@@ -189,7 +189,7 @@ type SenseData =
 
 type SubsenseData =
     {
-        Definition: string option
+        Definition: string
         Examples: Example list
         /// Example: case__8
         CrossRefs: string list
@@ -240,7 +240,7 @@ module Sense =
     module SubsenseData =
         /// Root node: class="Subsense"
         let extract (subsenseNode: HtmlNode) : SubsenseData =
-            { Definition = extractDefinition subsenseNode
+            { Definition = extractDefinition subsenseNode |> Option.get
               Examples = Example.extract subsenseNode
               CrossRefs = extractCrossRefs subsenseNode }
 
