@@ -389,6 +389,11 @@ domains-having-paths:
 query-params:
   - __cf_chl_rt_tk
   - __cf_chl_tk
+domains-with-query-param:
+  - localhost/
+  - opti-dxp.datadoghq.com/logs
+  - opti-dxp.datadoghq.com/monitors/
+  - www.jetbrains.com/help/
 domains-having-any-query-param:
   - domain: .giphy.com
     query-params:

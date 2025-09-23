@@ -2,7 +2,6 @@ module Program
 
 open FSharp.SystemCommandLine
 open FSharpPlus
-open FSharpPlus.Data
 open FsToolkit.ErrorHandling
 
 let fromClipboardInput =
@@ -294,6 +293,7 @@ module Cleanup =
               DomainsWithFragment: List<string>
               DomainsHavingPaths: List<DomainWithPaths>
               QueryParams: List<string>
+              DomainsWithQueryParam: List<string>
               DomainsHavingAnyQueryParam: List<DomainWithQueryParams>
               DomainsHavingAllQueryParams: List<DomainWithQueryParams>
               DomainsHavingAnyFragmentParam: List<DomainWithFragmentParam>
@@ -348,6 +348,12 @@ module Cleanup =
             Input.option "--garbageQueryParams"
             |> Input.alias "--garbage-query-params"
             |> Input.desc "Delete history entries that have any of the query params in the list"
+            |> Input.defaultValue true
+
+        let private domainsWithQueryParamInput =
+            Input.option "--domainsWithQueryParam"
+            |> Input.alias "--domains-with-query-param"
+            |> Input.desc "Delete history entries that have matching domain in the list and query param(s)"
             |> Input.defaultValue true
 
         let private domainsHavingAnyGarbageQueryParamInput =
@@ -447,6 +453,16 @@ module Cleanup =
                         let! removed = (queryParam, placeFilter) ||> db.deletePlacesWith
                         removed |> map printPlace |> ignore
 
+                let deleteDomainsWithQueryParam = domainsWithQueryParamInput.GetValue parseResult
+
+                if deleteDomainsWithQueryParam then
+                    let domains = config.DomainsWithQueryParam
+
+                    for domain in domains do
+                        let placeFilter = Place.withQueryParam
+                        let! removed = (domain, placeFilter) ||> db.deletePlacesWith
+                        removed |> map printPlace |> ignore
+
                 let deleteDomainsHavingAnyGarbageQueryParam =
                     domainsHavingAnyGarbageQueryParamInput.GetValue parseResult
 
@@ -513,11 +529,7 @@ module Cleanup =
                         [ "local",
                           andF
                               [ _.Url >> Regex.isMatch ":\\d+/"
-                                orF [ Place.withQueryParam; Place.withFragment ] ]
-                          "localhost/", Place.withQueryParam
-                          "opti-dxp.datadoghq.com/logs", Place.withQueryParam
-                          "opti-dxp.datadoghq.com/monitors/", Place.withQueryParam
-                          "www.jetbrains.com/help/", Place.withQueryParam ]
+                                orF [ Place.withQueryParam; Place.withFragment ] ] ]
 
                     for domain, placeFilter in domainsHavingComplexPatterns do
                         let! removed = (domain, placeFilter) ||> db.deletePlacesWith
@@ -537,6 +549,7 @@ module Cleanup =
                       garbageDomainsWithFragmentInput
                       domainsHavingGarbagePathsInput
                       garbageQueryParamsInput
+                      domainsWithQueryParamInput
                       domainsHavingAnyGarbageQueryParamInput
                       domainsHavingAllGarbageQueryParamsInput
                       domainsHavingAnyGarbageFragmentParamInput
@@ -1047,6 +1060,7 @@ module WhatDayOfWeek =
 ///     --garbage-domains-with-fragment=false
 ///     --domains-having-garbage-paths=false
 ///     --garbage-query-params=false
+///     --domains-with-query-param=false
 ///     --domains-having-any-garbage-query-param=false
 ///     --domains-having-all-garbage-query-params=false
 ///     --domains-having-any-garbage-fragment-param=false
