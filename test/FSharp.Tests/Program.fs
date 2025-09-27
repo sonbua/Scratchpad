@@ -816,7 +816,7 @@ module Longman =
         loop oldList newList list
 
     let private renderNo (no: int option) =
-        no |> Option.map (string >> stringAppend " ") |> Option.defaultValue ""
+        no |> Option.map string |> Option.defaultValue ""
 
     module private WordFamily =
         let render (wordFamily: WordFamily option) : string list =
@@ -911,7 +911,7 @@ module Longman =
                     subsenses |> List.map2Shortest render alphabeticalOrder |> List.concat
 
             let render (order: string) (subsenseGroup: SubsenseGroupData) : string list =
-                let subsenses = subsenseGroup.Subsenses |> SubsenseData.renderMany
+                let subsenses = subsenseGroup.Subsenses |> toList |> SubsenseData.renderMany
                 let thesauruses = subsenseGroup.Thesauruses |> Thesaurus.renderMany
 
                 subsenses @ thesauruses |> List.cons $"%s{order} " |> mapTail indent1
@@ -950,7 +950,11 @@ module Longman =
     let private wordInput = Input.argument "word" |> Input.desc "Word to look up"
 
     let private longmanAction (word: string) =
-        word |> lookup |> Dictionary.render |> printfn "%s"
+        word
+        |> lookup
+        |> Result.map (Dictionary.render >> printfn "%s")
+        |> Result.mapError (eprintfn "%s")
+        |> ignore
 
     let command =
         command "longman" {

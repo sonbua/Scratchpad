@@ -4,16 +4,12 @@ module Longman
 open FSharp.Data
 open FSharpPlus
 open FSharpPlus.Data
-open FsToolkit.ErrorHandling.OptionCE
+open FsToolkit.ErrorHandling
 open Microsoft.FSharp.Core
 
 module Option =
     let ifWith predicate onTrue inp =
         if inp |> predicate then Some(inp |> onTrue) else None
-
-module Audio =
-    /// Root node contains "data-src-mp3" attribute
-    let extract = HtmlNode.attribute "data-src-mp3" >> HtmlAttribute.value
 
 type WordFamily = string list
 
@@ -30,17 +26,23 @@ module Word =
     let private maybe wordCtor cssSelector node =
         node
         |> HtmlNode.cssSelectR cssSelector
-        |> List.tryExactlyOne
-        |> Option.map (HtmlNode.innerText >> wordCtor)
+        |> function
+            | [] -> None
+            | [ node ] -> node |> HtmlNode.innerText |> wordCtor |> Ok |> Some
+            | _ -> Some(Error $"There should be at most one word (CSS selector '{cssSelector}') in entry: '{node}'")
 
     let private (|PhrasalVerb|_|) = maybe Word.PhrasalVerb ".PHRVBHWD"
     let private (|Word|_|) = maybe Word.Word ".HWD"
 
-    let extract (entryNode: HtmlNode) : Word =
+    let extract (entryNode: HtmlNode) : Result<Word, string> =
         match entryNode with
-        | PhrasalVerb w -> w
+        | PhrasalVerb w
         | Word w -> w
-        | _ -> failwith $"Unexpected entry's word: '{entryNode |> string}'"
+        | _ -> Error $"Unknown entry's word: '{entryNode}'"
+
+module Audio =
+    /// Root node contains "data-src-mp3" attribute
+    let extract = HtmlNode.attribute "data-src-mp3" >> HtmlAttribute.value
 
 type Label =
     | British
@@ -53,13 +55,14 @@ module Label =
     let private (|British|_|) = maybeLabel Label.British "brefile"
     let private (|American|_|) = maybeLabel Label.American "amefile"
 
-    let private tryParse node =
+    let private extract node =
         match node with
-        | British l -> Some l
-        | American l -> Some l
-        | _ -> failwith $"Unexpected label: '{node |> string}'"
+        | British l -> Ok l
+        | American l -> Ok l
+        | _ -> Error $"Unknown label: '{node}'"
 
-    let extract = HtmlNode.cssSelectR ".Head .speaker" >> List.choose tryParse
+    let extractMany: HtmlNode -> Result<(Label * string) list, string> =
+        HtmlNode.cssSelectR ".Head .speaker" >> List.traverseResultM extract
 
 type Pronunciation =
     {
@@ -81,21 +84,40 @@ module Pronunciation =
         >> Option.map HtmlNode.directInnerText
 
     /// Root node: class="ldoceEntry"
-    let extract (entryNode: HtmlNode) : Pronunciation =
-        { Transcriptions = extractTranscriptions entryNode
-          AmericanVariant = extractAmericanVariant entryNode
-          Audio = Label.extract entryNode }
+    let extract (entryNode: HtmlNode) : Result<Pronunciation, string> =
+        result {
+            let transcriptions = entryNode |> extractTranscriptions
+            let americanVariant = entryNode |> extractAmericanVariant
+            let! audio = entryNode |> Label.extractMany
+
+            return
+                { Transcriptions = transcriptions
+                  AmericanVariant = americanVariant
+                  Audio = audio }
+        }
 
 type SimpleExample = { Text: string; Audio: string }
 
 module SimpleExample =
     /// Root node: class="EXAMPLE"
-    let extract node : SimpleExample =
-        { Text = node |> HtmlNode.innerText
-          Audio = node |> HtmlNode.cssSelectR ".exafile" |> List.exactlyOne |> Audio.extract }
+    let extract (node: HtmlNode) : Result<SimpleExample, string> =
+        result {
+            let text = node |> HtmlNode.innerText
+
+            let! audio =
+                node
+                |> HtmlNode.cssSelectR ".exafile"
+                |> List.tryExactlyOne
+                |> Result.requireSome
+                    $"There should be exactly one audio (CSS selector `.exafile`) for simple example: '{node}'"
+                |> Result.map Audio.extract
+
+            return { Text = text; Audio = audio }
+        }
 
     /// Root node contains child nodes with class="EXAMPLE"
-    let extractMany = HtmlNode.cssSelectR ".EXAMPLE" >> List.map extract
+    let extractMany: HtmlNode -> Result<SimpleExample list, string> =
+        HtmlNode.cssSelectR ".EXAMPLE" >> List.traverseResultM extract
 
 type GrammaticalType =
     | Preposition
@@ -113,12 +135,23 @@ module GrammaticalExamples =
     let private maybeGrammaticalType grammaticalType cssSelector node =
         node
         |> HtmlNode.cssSelectR cssSelector
-        |> List.tryExactlyOne
-        |> Option.map HtmlNode.innerText
-        |> Option.map (fun x ->
-            { Pattern = x |> String.trimWhiteSpaces // Example: get-on__1
-              Type = grammaticalType
-              Examples = node |> SimpleExample.extractMany })
+        |> function
+            | [] -> None
+            | [ node ] ->
+                result {
+                    let pattern = node |> HtmlNode.innerText |> String.trimWhiteSpaces // Example: get-on__1
+                    let grammaticalType = grammaticalType
+                    let! examples = node |> SimpleExample.extractMany
+
+                    return
+                        { Pattern = pattern
+                          Type = grammaticalType
+                          Examples = examples }
+                }
+                |> Some
+            | _ ->
+                Error $"There should be at most one grammatical type CSS selector '{cssSelector}'. Node: '{node}'"
+                |> Some
 
     let private (|Preposition|_|) =
         maybeGrammaticalType GrammaticalType.Preposition ".PROPFORMPREP"
@@ -127,11 +160,11 @@ module GrammaticalExamples =
         maybeGrammaticalType GrammaticalType.PropositionalForm ".PROPFORM"
 
     /// Root node: class="GramExa"
-    let extract (exampleWithGrammarNode: HtmlNode) : GrammaticalExamples =
+    let extract (exampleWithGrammarNode: HtmlNode) : Result<GrammaticalExamples, string> =
         match exampleWithGrammarNode with
-        | Preposition t -> t
+        | Preposition t
         | PropositionalForm t -> t
-        | _ -> failwith $"Unexpected grammatical pattern: '{exampleWithGrammarNode |> string}'"
+        | _ -> Error $"Unknown grammatical pattern: '{exampleWithGrammarNode}'"
 
 type CollocationalExamples =
     {
@@ -142,16 +175,22 @@ type CollocationalExamples =
 
 module CollocationalExamples =
     /// Root node: class="ColloExa"
-    let extract (collocationNode: HtmlNode) : CollocationalExamples =
+    let extract (collocationNode: HtmlNode) : Result<CollocationalExamples, string> =
         collocationNode
         |> HtmlNode.cssSelectR ".COLLO"
         |> map (HtmlNode.directInnerText >> String.trimWhiteSpaces) // Example: set__6
         |> fun patterns ->
             match patterns with
-            | [] -> failwith $"No collocational patterns found: '{collocationNode}'"
+            | [] -> Error $"No collocational patterns found: '{collocationNode}'"
             | ps ->
-                { Patterns = ps |> NonEmptyList.ofList
-                  Examples = collocationNode |> SimpleExample.extractMany }
+                result {
+                    let patterns = ps |> NonEmptyList.ofList
+                    let! examples = collocationNode |> SimpleExample.extractMany
+
+                    return
+                        { Patterns = patterns
+                          Examples = examples }
+                }
 
 type Example =
     | Simple of SimpleExample
@@ -162,23 +201,24 @@ type Example =
 
 module Example =
     let private (|GrammaticalExample|_|) =
-        Option.ifWith (HtmlNode.hasClass "GramExa") (GrammaticalExamples.extract >> Grammatical)
+        Option.ifWith (HtmlNode.hasClass "GramExa") (GrammaticalExamples.extract >> Result.map Grammatical)
 
     let private (|CollocationalExample|_|) =
-        Option.ifWith (HtmlNode.hasClass "ColloExa") (CollocationalExamples.extract >> Collocational)
+        Option.ifWith (HtmlNode.hasClass "ColloExa") (CollocationalExamples.extract >> Result.map Collocational)
 
     let private (|SimpleExample|_|) =
-        Option.ifWith (HtmlNode.hasClass "EXAMPLE") (SimpleExample.extract >> Simple)
+        Option.ifWith (HtmlNode.hasClass "EXAMPLE") (SimpleExample.extract >> Result.map Simple)
 
-    let private tryParse =
-        function
+    let private tryParse node =
+        match node with
         | GrammaticalExample e
         | CollocationalExample e
         | SimpleExample e -> Some e
-        | _ -> None
+        | _ -> Some(Error $"Unknown example node: '{node}'")
 
     /// Root node: class="Sense" or class="Subsense"
-    let extract: HtmlNode -> Example list = HtmlNode.elements >> List.choose tryParse
+    let extract: HtmlNode -> Result<Example list, string> =
+        HtmlNode.elements >> List.choose tryParse >> List.sequenceResultM
 
 type SenseData =
     {
@@ -204,7 +244,7 @@ type SubsenseData =
 type SubsenseGroupData =
     {
         Id: string option
-        Subsenses: SubsenseData list
+        Subsenses: SubsenseData nelist
         /// Example: get__4, get__5
         Thesauruses: string list
     }
@@ -236,48 +276,61 @@ module Sense =
 
     module SenseData =
         /// Root node: class="Sense"
-        let extract (senseNode: HtmlNode) : SenseData =
-            { Id = extractId senseNode
-              Definition = extractDefinition senseNode
-              Examples = Example.extract senseNode
-              CrossRefs = extractCrossRefs senseNode
-              Thesauruses = extractThesauruses senseNode }
+        let extract (senseNode: HtmlNode) : Result<SenseData, string> =
+            result {
+                let id = senseNode |> extractId
+                let definition = senseNode |> extractDefinition
+                let! examples = senseNode |> Example.extract
+                let crossRefs = senseNode |> extractCrossRefs
+                let thesauruses = senseNode |> extractThesauruses
+
+                return
+                    { Id = id
+                      Definition = definition
+                      Examples = examples
+                      CrossRefs = crossRefs
+                      Thesauruses = thesauruses }
+            }
 
     module SubsenseData =
         /// Root node: class="Subsense"
-        let extract (subsenseNode: HtmlNode) : SubsenseData =
-            { Definition = extractDefinition subsenseNode |> Option.get
-              Examples = Example.extract subsenseNode
-              CrossRefs = extractCrossRefs subsenseNode }
+        let extract (subsenseNode: HtmlNode) : Result<SubsenseData, string> =
+            result {
+                let definition = subsenseNode |> extractDefinition |> Option.get
+                let! examples = subsenseNode |> Example.extract
+                let crossRefs = subsenseNode |> extractCrossRefs
 
-    let private (|SubsenseGroup|_|) subsenseGroupNode =
+                return
+                    { Definition = definition
+                      Examples = examples
+                      CrossRefs = crossRefs }
+            }
+
+    let private (|SubsenseGroup|_|) (subsenseGroupNode: HtmlNode) : Result<Sense, string> option =
         option {
             let! subsenseNodes = subsenseGroupNode |> HtmlNode.cssSelectR ".Subsense" |> NonEmptyList.tryOfList
 
             return
                 subsenseNodes
-                |> NonEmptyList.map SubsenseData.extract
-                |> fun xs ->
+                |> NonEmptyList.traverse SubsenseData.extract
+                |> Result.map (fun subsenses ->
                     Sense.SubsenseGroup
-                        { Id = extractId subsenseGroupNode
-                          Subsenses = xs |> toList
-                          Thesauruses = extractThesauruses subsenseGroupNode }
+                        { Id = subsenseGroupNode |> extractId
+                          Subsenses = subsenses
+                          Thesauruses = subsenseGroupNode |> extractThesauruses })
         }
 
     let private (|Sense|_|) senseNode =
-        try
-            senseNode |> SenseData.extract |> Sense.Sense |> Ok
-        with ex ->
-            Error("Unexpected sense node", ex)
-        |> Some
+        senseNode |> SenseData.extract |> Result.map Sense.Sense |> Some
 
     /// Root node: class="Sense"
-    let extract (senseNode: HtmlNode) : Sense =
+    let extract (senseNode: HtmlNode) : Result<Sense, string> =
         match senseNode with
-        | SubsenseGroup s -> s
-        | Sense(Ok s) -> s
-        | Sense(Error(msg, ex)) -> failwith $"Failed to parse sense: {msg}. Exception: {ex}"
-        | _ -> failwith $"Unexpected sense or subsenses node: {senseNode |> string}"
+        | SubsenseGroup s
+        | Sense s -> s
+        | _ ->
+            $"Unknown sense or subsenses node: {senseNode}. This should not happen as Sense always returns Some."
+            |> Error
 
 type Entry =
     { Id: string option
@@ -301,16 +354,27 @@ module Entry =
         >> List.collect (HtmlNode.cssSelectR ".crossRef")
         >> List.map HtmlNode.innerText
 
-    let private extractSenses = HtmlNode.cssSelectR ".Sense" >> List.map Sense.extract
+    let private extractSenses =
+        HtmlNode.cssSelectR ".Sense" >> List.traverseResultM Sense.extract
 
     /// Root node: class="ldoceEntry"
-    let extract (entryNode: HtmlNode) : Entry =
-        { Id = extractId entryNode
-          No = extractNo entryNode
-          Word = Word.extract entryNode
-          Pronunciation = Pronunciation.extract entryNode
-          Senses = extractSenses entryNode
-          CrossRefs = extractCrossRefs entryNode }
+    let extract (entryNode: HtmlNode) : Result<Entry, string> =
+        result {
+            let id = entryNode |> extractId
+            let no = entryNode |> extractNo
+            let! word = entryNode |> Word.extract
+            let! pronunciation = entryNode |> Pronunciation.extract
+            let! senses = entryNode |> extractSenses
+            let crossRefs = entryNode |> extractCrossRefs
+
+            return
+                { Id = id
+                  No = no
+                  Word = word
+                  Pronunciation = pronunciation
+                  Senses = senses
+                  CrossRefs = crossRefs }
+        }
 
 type Dictionary =
     { WordFamily: WordFamily option
@@ -319,18 +383,28 @@ type Dictionary =
 module Dictionary =
     let private extractWordFamily =
         HtmlNode.cssSelectR ".wordfams"
-        >> List.tryExactlyOne
-        >> Option.map WordFamily.extract
+        >> function
+            | [] -> Ok None
+            | [ node ] -> Ok(Some(node |> WordFamily.extract))
+            | _ -> Error "There should be at most one word family node."
 
-    let private extractEntries =
-        HtmlNode.cssSelectR ".dictentry .ldoceEntry" >> List.map Entry.extract
+    let private extractEntries node =
+        node
+        |> HtmlNode.cssSelectR ".dictentry .ldoceEntry"
+        |> List.traverseResultM Entry.extract
 
     /// Root node: class="dictionary"
-    let extract dictionaryNode : Dictionary =
-        { WordFamily = extractWordFamily dictionaryNode
-          Entries = extractEntries dictionaryNode }
+    let extract dictionaryNode : Result<Dictionary, string> =
+        result {
+            let! wordFamily = dictionaryNode |> extractWordFamily
+            let! entries = dictionaryNode |> extractEntries
 
-let lookup (word: string) : Dictionary =
+            return
+                { WordFamily = wordFamily
+                  Entries = entries }
+        }
+
+let lookup (word: string) : Result<Dictionary, string> =
     $"https://www.ldoceonline.com/search/english/direct/?q={word}"
     |> HtmlDocument.Load
     |> HtmlDocument.body
