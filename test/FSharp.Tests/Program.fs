@@ -716,8 +716,8 @@ module Fetch =
 
         let private blogChungKhoanAction () =
             async {
-                let! links = urls |> traverse VnEconomy.extractBlogChungKhoanLinks
-                let! articles = links |> List.concat |> distinct |> traverse VnEconomy.loadArticleMetadata
+                let! links = urls |> map VnEconomy.extractBlogChungKhoanLinks |> Async.Parallel
+                let! articles = links |> List.concat |> distinct |> map VnEconomy.loadArticleMetadata |> Async.Parallel
 
                 articles
                 |> sortByDescending _.Published

@@ -18,6 +18,7 @@
     <PackageReference Include="FSharp.Data.Dapper" />
     <PackageReference Include="FSharp.SystemCommandLine" />
     <PackageReference Include="FSharpPlus" />
+    <PackageReference Include="FsHttp" />
     <PackageReference Include="FsToolkit.ErrorHandling" />
     <PackageReference Include="Microsoft.Data.SQLite" />
     <PackageReference Include="TextCopy" />
