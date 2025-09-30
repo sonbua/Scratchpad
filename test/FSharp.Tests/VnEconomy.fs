@@ -2,6 +2,7 @@ module VnEconomy
 
 open FSharpPlus
 open FSharp.Data
+open FsHttp
 
 module Html =
     let private decimalCharToString (m: Match) =
@@ -18,17 +19,28 @@ module Html =
 
     let decode = decodeDecimal >> decodeHexadecimal
 
+[<Literal>]
+let private baseUrl = "https://vneconomy.vn"
+
+let private prependBaseUrl (url: string) =
+    if url |> String.startsWith baseUrl then
+        url
+    else
+        baseUrl + url
+
 let extractBlogChungKhoanLinks url =
     async {
-        let! doc = url |> HtmlDocument.AsyncLoad
+        let! response = http { GET url } |> Request.sendAsync
+        let! responseText = response |> Response.assert2xx |> Response.toTextAsync
 
         return
-            doc
+            responseText
+            |> HtmlDocument.Parse
             |> HtmlDocument.html
             |> HtmlNode.cssSelectR "a[href]"
             |> map (HtmlNode.attributeValue "href")
             |> filter (String.isSubString "blog-chung-khoan-")
-            |> map (sprintf "https://vneconomy.vn%s")
+            |> map prependBaseUrl
     }
 
 type Article =
@@ -38,7 +50,9 @@ type Article =
 
 let loadArticleMetadata url =
     async {
-        let! doc = HtmlDocument.AsyncLoad url
+        let! response = http { GET url } |> Request.sendAsync
+        let! responseText = response |> Response.assert2xx |> Response.toTextAsync
+        let doc = responseText |> HtmlDocument.Parse
 
         let title =
             doc
