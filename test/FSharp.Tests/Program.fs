@@ -717,7 +717,13 @@ module Fetch =
         let private blogChungKhoanAction () =
             async {
                 let! links = urls |> map VnEconomy.extractBlogChungKhoanLinks |> Async.Parallel
-                let! articles = links |> List.concat |> distinct |> map VnEconomy.loadArticleMetadata |> Async.Parallel
+
+                let! articles =
+                    links
+                    |> List.concat
+                    |> distinct
+                    |> map VnEconomy.loadArticleMetadata
+                    |> Async.Parallel
 
                 articles
                 |> sortByDescending _.Published
@@ -902,10 +908,16 @@ module Longman =
         module private SubsenseGroupData =
             module private SubsenseData =
                 let private render numbering subsense =
-                    let definition = subsense.Definition |> stringPrepend $"%s{numbering}) "
+                    let lexicalUnit =
+                        subsense.LexicalUnit
+                        |> Option.map (stringAppend ": ")
+                        |> Option.defaultValue ""
+                        |> stringPrepend $"%s{numbering}) "
+
+                    let definition = subsense.Definition
                     let examples = subsense.Examples |> Example.renderMany |> map indent1
 
-                    definition :: examples
+                    (lexicalUnit + definition) :: examples
 
                 let renderMany (subsenses: SubsenseData list) : string list =
                     subsenses |> List.map2Shortest render alphabeticalOrder |> List.concat

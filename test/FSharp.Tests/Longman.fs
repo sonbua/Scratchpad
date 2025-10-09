@@ -270,6 +270,8 @@ type SenseData =
 
 type SubsenseData =
     {
+        /// Example: big__4, go__1
+        LexicalUnit: string option
         Definition: string
         Examples: Example list
         /// Example: case__8
@@ -334,8 +336,20 @@ module Sense =
 
     module SubsenseData =
         /// Root node: class="Subsense"
+        let private extractLexicalUnit node =
+            node
+            |> HtmlNode.cssSelectR ".LEXUNIT"
+            |> function
+                | [] -> Ok None
+                | [ luNode ] -> Ok(Some(luNode |> HtmlNode.innerText))
+                | _ ->
+                    $"There should be at most one lexical unit (CSS selector '.LEXUNIT') in subsense node: '{node}'"
+                    |> Error
+
+        /// Root node: class="Subsense"
         let extract (subsenseNode: HtmlNode) : Result<SubsenseData, string> =
             result {
+                let! lexicalUnit = subsenseNode |> extractLexicalUnit
                 let! definitionOpt = subsenseNode |> extractDefinition
 
                 let! definition =
@@ -346,7 +360,8 @@ module Sense =
                 let crossRefs = subsenseNode |> extractCrossRefs
 
                 return
-                    { Definition = definition
+                    { LexicalUnit = lexicalUnit
+                      Definition = definition
                       Examples = examples
                       CrossRefs = crossRefs }
             }
