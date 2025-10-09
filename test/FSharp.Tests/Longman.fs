@@ -209,6 +209,38 @@ module Example =
     let private (|SimpleExample|_|) =
         Option.ifWith (HtmlNode.hasClass "EXAMPLE") (SimpleExample.extract >> Result.map Simple)
 
+    let private nonExampleElements = [ "img" ]
+
+    let private isNonExampleElement (node: HtmlNode) =
+        let nodeName = node |> HtmlNode.name
+        nonExampleElements |> List.contains nodeName
+
+    let private nonExampleClasses =
+        [ "sensenum"
+          "SIGNPOST"
+          "GRAM"
+          "ACTIV"
+          "DEF"
+          "Thesref"
+          "Crossref"
+          "REGISTERLAB"
+          "FIELD"
+          "SYN"
+          "OPP"
+          "GEO"
+          "BREQUIV"
+          "AMEQUIV"
+          "GramBox"
+          "RELATEDWD"
+          "Inflections"
+          "LEXUNIT"
+          "Variant"
+          // ads
+          "am-dictionary" ]
+
+    let private hasNonExampleClass (node: HtmlNode) =
+        nonExampleClasses |> exists (node |> flip HtmlNode.hasClass)
+
     let private tryParse node =
         match node with
         | GrammaticalExample e
@@ -218,7 +250,11 @@ module Example =
 
     /// Root node: class="Sense" or class="Subsense"
     let extract: HtmlNode -> Result<Example list, string> =
-        HtmlNode.elements >> List.choose tryParse >> List.sequenceResultM
+        HtmlNode.elements
+        >> List.filter (isNonExampleElement >> not)
+        >> List.filter (hasNonExampleClass >> not)
+        >> List.choose tryParse
+        >> List.sequenceResultM
 
 type SenseData =
     {
@@ -259,10 +295,16 @@ module Sense =
         HtmlNode.tryGetAttribute "id" >> Option.map HtmlAttribute.value
 
     /// Root node: class="Sense" or class="Subsense"
-    let private extractDefinition =
-        HtmlNode.cssSelectR ".DEF"
-        >> List.tryExactlyOne
-        >> Option.map (HtmlNode.innerText >> String.trimWhiteSpaces)
+    let private extractDefinition node =
+        let defs = node |> HtmlNode.cssSelectR ".DEF"
+
+        if defs |> length > 1 then
+            Error $"There should be at most one definition (CSS selector '.DEF') in sense or subsense node: '{node}'"
+        else
+            defs
+            |> List.tryExactlyOne
+            |> Option.map (HtmlNode.innerText >> String.trimWhiteSpaces)
+            |> Ok
 
     /// Root node: class="Sense" or class="Subsense"
     let private extractCrossRefs =
@@ -279,7 +321,7 @@ module Sense =
         let extract (senseNode: HtmlNode) : Result<SenseData, string> =
             result {
                 let id = senseNode |> extractId
-                let definition = senseNode |> extractDefinition
+                let! definition = senseNode |> extractDefinition
                 let! examples = senseNode |> Example.extract
                 let crossRefs = senseNode |> extractCrossRefs
                 let thesauruses = senseNode |> extractThesauruses
@@ -296,7 +338,12 @@ module Sense =
         /// Root node: class="Subsense"
         let extract (subsenseNode: HtmlNode) : Result<SubsenseData, string> =
             result {
-                let definition = subsenseNode |> extractDefinition |> Option.get
+                let! definitionOpt = subsenseNode |> extractDefinition
+
+                let! definition =
+                    definitionOpt
+                    |> Result.requireSome $"There should be exactly one definition in subsense node: '{subsenseNode}'"
+
                 let! examples = subsenseNode |> Example.extract
                 let crossRefs = subsenseNode |> extractCrossRefs
 
