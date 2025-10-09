@@ -137,10 +137,9 @@ module GrammaticalExamples =
         |> HtmlNode.cssSelectR cssSelector
         |> function
             | [] -> None
-            | [ node ] ->
+            | [ patternNode ] ->
                 result {
-                    let pattern = node |> HtmlNode.innerText |> String.trimWhiteSpaces // Example: get-on__1
-                    let grammaticalType = grammaticalType
+                    let pattern = patternNode |> HtmlNode.innerText |> String.trimWhiteSpaces // Example: get-on__1
                     let! examples = node |> SimpleExample.extractMany
 
                     return
@@ -150,7 +149,8 @@ module GrammaticalExamples =
                 }
                 |> Some
             | _ ->
-                Error $"There should be at most one grammatical type CSS selector '{cssSelector}'. Node: '{node}'"
+                $"There should be at most one grammatical type '{grammaticalType}' (CSS selector '{cssSelector}'). Node: '{node}'"
+                |> Error
                 |> Some
 
     let private (|Preposition|_|) =
