@@ -179,12 +179,11 @@ module CollocationalExamples =
         collocationNode
         |> HtmlNode.cssSelectR ".COLLO"
         |> map (HtmlNode.directInnerText >> String.trimWhiteSpaces) // Example: set__6
-        |> fun patterns ->
-            match patterns with
+        |> function
             | [] -> Error $"No collocational patterns found: '{collocationNode}'"
-            | ps ->
+            | patterns ->
                 result {
-                    let patterns = ps |> NonEmptyList.ofList
+                    let patterns = patterns |> NonEmptyList.ofList
                     let! examples = collocationNode |> SimpleExample.extractMany
 
                     return
@@ -296,15 +295,14 @@ module Sense =
 
     /// Root node: class="Sense" or class="Subsense"
     let private extractDefinition node =
-        let defs = node |> HtmlNode.cssSelectR ".DEF"
-
-        if defs |> length > 1 then
-            Error $"There should be at most one definition (CSS selector '.DEF') in sense or subsense node: '{node}'"
-        else
-            defs
-            |> List.tryExactlyOne
-            |> Option.map (HtmlNode.innerText >> String.trimWhiteSpaces)
-            |> Ok
+        node
+        |> HtmlNode.cssSelectR ".DEF"
+        |> function
+            | [] -> Ok None
+            | [ defNode ] -> Ok(Some(defNode |> HtmlNode.innerText |> String.trimWhiteSpaces))
+            | _ ->
+                $"There should be at most one definition (CSS selector '.DEF') in sense or subsense node: '{node}'"
+                |> Error
 
     /// Root node: class="Sense" or class="Subsense"
     let private extractCrossRefs =
@@ -376,7 +374,7 @@ module Sense =
         | SubsenseGroup s
         | Sense s -> s
         | _ ->
-            $"Unknown sense or subsenses node: {senseNode}. This should not happen as Sense always returns Some."
+            $"Unknown sense or subsenses node: '{senseNode}'. This should not happen as Sense always returns Some."
             |> Error
 
 type Entry =
@@ -428,12 +426,13 @@ type Dictionary =
       Entries: Entry list }
 
 module Dictionary =
-    let private extractWordFamily =
-        HtmlNode.cssSelectR ".wordfams"
-        >> function
+    let private extractWordFamily node =
+        node
+        |> HtmlNode.cssSelectR ".wordfams"
+        |> function
             | [] -> Ok None
-            | [ node ] -> Ok(Some(node |> WordFamily.extract))
-            | _ -> Error "There should be at most one word family node."
+            | [ wfNode ] -> Ok(Some(wfNode |> WordFamily.extract))
+            | _ -> Error $"There should be at most one word family node. Node: '{node}'"
 
     let private extractEntries node =
         node
